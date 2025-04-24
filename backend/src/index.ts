@@ -1,7 +1,8 @@
-import bodyParser from "body-parser";
-import * as dotenv from "dotenv";
+import * as dotenv from "dotenv"
 import express from "express";
 import mongoose from "mongoose";
+import urlRoutes from "./routes/url.route";
+import bodyParser from "body-parser";
 
 const app = express();
 
@@ -15,6 +16,8 @@ mongoose.connection.once("open", () => {
   );
 });
 
+app.use(bodyParser.json());
+
 app.use((req, res, next) => {
   res.setHeader("Content-type", "application/json");
   res.setHeader(
@@ -25,6 +28,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   next();
 });
+
 app.get("/", (req, res) => {
   res.send("caos");
 });
@@ -36,3 +40,5 @@ app.listen(process.env.PORT, () => {
       `\x1b[32m ${process.env.PORT} \x1b[0m`
   );
 });
+
+urlRoutes(app)
