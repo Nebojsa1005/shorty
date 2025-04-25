@@ -15,7 +15,7 @@
       </ion-item-group>
 
       <ion-item-group>
-        <ion-button (click)="onSubmit()">Create link</ion-button>
+        <ion-button [disabled]="!formGroup.valid" (click)="onSubmit()">Create link</ion-button>
       </ion-item-group>
     </ion-list>
   </form>

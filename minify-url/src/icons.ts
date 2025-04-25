@@ -1,5 +1,6 @@
 import * as icons from 'ionicons/icons'
 
 export const ionIcons = {
-	addCircleOutline: icons.addCircleOutline
+	addCircleOutline: icons.addCircleOutline,
+	listOutline: icons.listOutline
 }

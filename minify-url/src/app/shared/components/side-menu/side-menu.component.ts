@@ -4,11 +4,10 @@ import { ionIcons } from '../../../../icons';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-side-menu',
-  templateUrl: './side-menu.component.html',
-  styleUrls: ['./side-menu.component.scss'],
-  standalone: true,
-  imports: [IonicModule],
+    selector: 'app-side-menu',
+    templateUrl: './side-menu.component.html',
+    styleUrls: ['./side-menu.component.scss'],
+    imports: [IonicModule]
 })
 export class SideMenuComponent {
 
@@ -16,7 +15,7 @@ export class SideMenuComponent {
 
   ionIcons = ionIcons;
 
-  onAddNew() {
-    this.router.navigate(['/add-new-link'])
+  navigate(route: string) {
+    this.router.navigate([route])
   }
 }
