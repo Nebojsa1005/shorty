@@ -1,0 +1,15 @@
+.table-container {
+  border: 1px solid var(--ion-color-primary);
+  border-radius: 10px;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+th {
+  color: var(--ion-text-color-step-400);
+  border-bottom: 1px solid var(--ion-color-primary);
+  text-align: start;
+}

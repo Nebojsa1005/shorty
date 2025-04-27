@@ -1,0 +1,22 @@
+<div class="ion-padding">
+  <form [formGroup]="formGroup">
+    <ion-title class="px-0 mb-md">Add new Minified URL</ion-title>
+
+    <ion-list>
+      <ion-item-group>
+        <ion-input
+          label="Destination URL"
+          formControlName="destinationUrl"
+          fill="outline"
+          labelPlacement="floating"
+          placeholder="https://example.com"
+          [errorText]="destinationUrlError"
+        />
+      </ion-item-group>
+
+      <ion-item-group>
+        <ion-button [disabled]="!formGroup.valid" (click)="onSubmit()">Create link</ion-button>
+      </ion-item-group>
+    </ion-list>
+  </form>
+</div>

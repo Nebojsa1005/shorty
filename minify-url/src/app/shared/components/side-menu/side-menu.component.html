@@ -1,0 +1,15 @@
+<ion-list lines="none">
+  <ion-menu-toggle auto-hide="false">
+    <ion-item button (click)="navigate('/add-new-link')">
+      <ion-icon class="add-icon mr-sm" color="primary" [icon]="ionIcons.addCircleOutline"></ion-icon>
+      <ion-label>Add New Minified List</ion-label>
+    </ion-item>
+  </ion-menu-toggle>
+
+  <ion-menu-toggle auto-hide="false">
+    <ion-item button (click)="navigate('/')">
+      <ion-icon class="add-icon mr-sm" color="primary" [icon]="ionIcons.listOutline"></ion-icon>
+      <ion-label>View All Minified Links</ion-label>
+    </ion-item>
+  </ion-menu-toggle>
+</ion-list>
