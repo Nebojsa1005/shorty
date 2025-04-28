@@ -4,6 +4,7 @@ export interface UrlDocument extends Document {
   destinationUrl: string;
   shortUrl: string;
   createdAt: Date;
+  urlName: string
 }
 
 const UrlSchema = new Schema<UrlDocument>({
@@ -18,6 +19,10 @@ const UrlSchema = new Schema<UrlDocument>({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  urlName: {
+    type: String,
+    required: true
   },
 });
 

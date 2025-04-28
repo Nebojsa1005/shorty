@@ -15,6 +15,18 @@
       </ion-item-group>
 
       <ion-item-group>
+        <ion-input 
+          label="Name"
+          fill="outline"
+          labelPlacement="floating"
+          formControlName="urlName"
+          errorText="This Field is Required"
+          [counter]="true"
+          maxlength="50"
+        />
+      </ion-item-group>
+
+      <ion-item-group>
         <ion-button [disabled]="!formGroup.valid" (click)="onSubmit()">Create link</ion-button>
       </ion-item-group>
     </ion-list>
