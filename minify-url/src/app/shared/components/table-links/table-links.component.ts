@@ -1,51 +1,99 @@
-import { DatePipe } from '@angular/common';
-import { Component, effect, inject, input, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, input, signal } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { ColumnDef, createAngularTable, FlexRenderDirective, getCoreRowModel } from '@tanstack/angular-table';
+import {
+  ColumnDef,
+  createAngularTable,
+  flexRenderComponent,
+  FlexRenderDirective,
+  getCoreRowModel,
+  RowSelectionState,
+} from '@tanstack/angular-table';
+import { NgxTippyModule } from 'ngx-tippy-wrapper';
+import {
+  TableHeadSelectionComponent,
+  TableRowSelectionComponent,
+} from '../selection-column/selection-column.component';
+import { ionIcons } from '../../../../icons';
+
+interface CellDef {
+  accessorKey: string;
+  cell: (info: any) => { data: string; columnId: string };
+  header: string;
+  id: string;
+}
 
 @Component({
   selector: 'app-table-links',
   templateUrl: './table-links.component.html',
   styleUrls: ['./table-links.component.scss'],
   standalone: true,
-  imports: [IonicModule, FlexRenderDirective],
-  providers: [DatePipe]
+  imports: [IonicModule, FlexRenderDirective, NgxTippyModule, CommonModule],
 })
 export class TableLinksComponent {
-  private datePipe = inject(DatePipe)
+  data = input<any>();
 
-  data = input<any>()
+  rowSelection = signal<RowSelectionState>({});
 
-  defaultColumns: ColumnDef<any>[] = [
+  icons = ionIcons
+  defaultColumns: ColumnDef<CellDef>[] = [
     {
-      accessorKey: 'name',
-      cell: info => info.getValue(),
-      header: 'Name',
-      id: 'name'
+      id: 'select',
+      header: () => {
+        return flexRenderComponent(TableHeadSelectionComponent);
+      },
+      cell: () => {
+        return flexRenderComponent(TableRowSelectionComponent);
+      },
     },
     {
-      accessorFn: (row) => row.shortUrl,
-      cell: info => `<a href="${info.getValue()}" target="_blank">${info.getValue()}</a>`,
-      accessorKey: 'shortURL',
+      accessorKey: 'urlName',
+      cell: (info: any) => ({ data: info.getValue(), columnId: 'urlName' }),
+      header: 'Name',
+      id: 'urlName',
+    },
+    {
+      accessorKey: 'shortUrl',
+      cell: (info) => ({ data: info.getValue(), columnId: 'shortURL' }),
       id: 'shortURL',
       header: 'Minified URL',
     },
     {
       accessorKey: 'createdAt',
-      cell: info => this.datePipe.transform(info.getValue() as string, 'mediumDate'),
+      cell: (info) => ({ data: info.getValue(), columnId: 'createdAt' }),
       header: 'Created',
-      id: 'createdAt'
-    }
-  ]
+      id: 'createdAt',
+    },
+    {
+      id: 'actions',
+      header: 'Actions',
+      cell: (info) => ({ data: info.row, columnId: 'actions' }), // Pass the whole row object for actions
+    },
+  ];
 
   table = createAngularTable(() => ({
     data: this.data() ?? [],
     columns: this.defaultColumns,
     getCoreRowModel: getCoreRowModel(),
+    enableRowSelection: true,
+    onRowSelectionChange: (updaterOrValue) => {
+      this.rowSelection.set(
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue(this.rowSelection())
+          : updaterOrValue
+      );
+    },
+    state: {
+      rowSelection: this.rowSelection(),
+    },
     debugTable: true,
-  }))
+  }));
 
-  constructor() {
-    effect(() => console.log(this.data()))
+  onEdit(cell: any) {
+    console.log(cell)
+  }
+
+  onDelete(cell: any) {
+    console.log(cell)
   }
 }

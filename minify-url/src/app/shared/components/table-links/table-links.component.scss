@@ -13,3 +13,15 @@ th {
   border-bottom: 1px solid var(--ion-color-primary);
   text-align: start;
 }
+
+.url-name {
+  text-overflow: ellipsis;
+}
+
+td:first-of-type {
+  padding-left: 1rem;
+}
+
+td:last-of-type {
+  padding-right: 1rem;
+}
