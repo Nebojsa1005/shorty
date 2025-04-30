@@ -58,7 +58,7 @@ const urlRoutes = (app: Express) => {
           const url = await UrlModel.create({
             destinationUrl,
             shortUrl,
-            urlName
+            urlName,
           });
 
           return ServerResponse.serverSuccess(
@@ -77,6 +77,47 @@ const urlRoutes = (app: Express) => {
       }
     }
   );
+
+  app.put("/api/url/edit/:id", async (req, res) => {
+    const { urlForm } = req.body;
+    const id = req.params["id"];
+
+    try {
+      const updatedUrlLink = await UrlModel.findByIdAndUpdate(
+        id,
+        {
+          ...urlForm,
+        },
+        {
+          new: true,
+        }
+      );
+
+      return ServerResponse.serverSuccess(
+        res,
+        200,
+        "Successfully Updated Minified Link",
+        updatedUrlLink
+      );
+    } catch (error) {
+      return ServerResponse.serverError(res, 404, error.message, error);
+    }
+  });
+
+  app.post("/api/url/delete/:id", async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const deletedUrl = await UrlModel.findByIdAndRemove(id);
+      return ServerResponse.serverSuccess(
+        res,
+        200,
+        "Successfully Deleted Minified Url"
+      );
+    } catch (error) {
+      return ServerResponse.serverError(res, 404, error.message, error);
+    }
+  });
 };
 
 export default urlRoutes;
