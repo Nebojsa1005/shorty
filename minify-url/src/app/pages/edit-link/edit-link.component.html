@@ -1,5 +1,5 @@
 <div>
-  <app-url-form (formChanges)="onFormChange($event)" />
+  <app-url-form (formChanges)="onFormChange($event)" [existingUrlLink]="existingUrlLink"/>
 
   <ion-button [disabled]="!urlForm()?.valid" (click)="onSubmit()"
     >Create link</ion-button
