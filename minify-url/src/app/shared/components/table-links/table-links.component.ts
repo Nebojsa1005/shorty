@@ -96,7 +96,7 @@ export class TableLinksComponent {
   }));
 
   onEdit(cell: any) {
-    this.router.navigate(['/edit-link', cell.data.original._id]);
+    this.router.navigate(['/url/edit', cell.data.original._id]);
   }
 
   onDelete(cell: any) {    

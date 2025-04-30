@@ -1,8 +1,8 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IonicModule } from '@ionic/angular';
-import { UrlFormComponent } from '../../shared/components/url-form/url-form.component';
-import { UrlService } from '../services/url.service';
+import { UrlFormComponent } from '../../../shared/components/url-form/url-form.component';
+import { UrlService } from '../../services/url.service';
 
 @Component({
   selector: 'app-new-link',
