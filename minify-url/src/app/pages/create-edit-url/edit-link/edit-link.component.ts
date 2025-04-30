@@ -1,10 +1,9 @@
 import { Component, DestroyRef, inject } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
-import { UrlFormComponent } from '../../shared/components/url-form/url-form.component';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UrlService } from '../services/url.service';
+import { IonicModule } from '@ionic/angular';import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { UrlLink } from '../../types/url.interface';
+import { UrlFormComponent } from '../../../shared/components/url-form/url-form.component';
+import { UrlLink } from '../../../types/url.interface';
+import { UrlService } from '../../services/url.service';
 
 @Component({
   selector: 'app-edit-link',
