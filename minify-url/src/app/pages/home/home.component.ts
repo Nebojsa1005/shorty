@@ -1,7 +1,7 @@
 import { Component, computed, DestroyRef, effect, inject } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { TableLinksComponent } from '../../shared/components/table-links/table-links.component';
-import { HomeService } from '../services/home.service';
+import { UrlService } from '../services/url.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -11,7 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   imports: [IonicModule, TableLinksComponent],
 })
 export class HomeComponent {
-  private homeService = inject(HomeService);
+  private homeService = inject(UrlService);
   private destroyRef = inject(DestroyRef)
 
   allUrls = computed(() => this.homeService.allUrls());

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, signal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import {
   ColumnDef,
@@ -15,6 +15,9 @@ import {
   TableRowSelectionComponent,
 } from '../selection-column/selection-column.component';
 import { ionIcons } from '../../../../icons';
+import { Router } from '@angular/router';
+import { UrlService } from '../../../pages/services/url.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface CellDef {
   accessorKey: string;
@@ -31,11 +34,15 @@ interface CellDef {
   imports: [IonicModule, FlexRenderDirective, NgxTippyModule, CommonModule],
 })
 export class TableLinksComponent {
+  private router = inject(Router);
+  private urlService = inject(UrlService);
+  private destroyRef = inject(DestroyRef)
+
   data = input<any>();
 
   rowSelection = signal<RowSelectionState>({});
 
-  icons = ionIcons
+  icons = ionIcons;
   defaultColumns: ColumnDef<CellDef>[] = [
     {
       id: 'select',
@@ -86,14 +93,16 @@ export class TableLinksComponent {
     state: {
       rowSelection: this.rowSelection(),
     },
-    debugTable: true,
   }));
 
   onEdit(cell: any) {
-    console.log(cell)
+    this.router.navigate(['/edit-link', cell.data.original._id]);
   }
 
-  onDelete(cell: any) {
-    console.log(cell)
+  onDelete(cell: any) {    
+    this.urlService
+      .deleteLink(cell.data.original._id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 }
