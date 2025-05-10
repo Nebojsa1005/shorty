@@ -1,8 +1,15 @@
-import * as dotenv from "dotenv"
+import * as dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import urlRoutes from "./routes/url.route";
 import bodyParser from "body-parser";
+import authRoutes from "./routes/auth.routes";
+import cors from "cors";
+import cookieParser from 'cookie-parser'
+import './utils/mongoDb-connect'
+
+const passport = require("passport");
+const session = require("express-session");
 
 const app = express();
 
@@ -16,25 +23,40 @@ mongoose.connection.once("open", () => {
   );
 });
 
-
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: false }));
 
+app.use(
+  cors({
+    origin: 'http://localhost:4200',
+    credentials: true,
+  })
+);
+app.use(cookieParser());
 
-app.use((req, res, next) => {
-  res.setHeader("Content-type", "application/json");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  next();
-});
+app.use(
+  session({
+    secret: "your-session-secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, 
+      sameSite: "lax",
+    },
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.get("/", (req, res) => {
-  res.send("caos");
-});
+// app.use((req, res, next) => {
+//   res.setHeader("Content-type", "application/json");
+//   res.setHeader(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+//   );
+//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+//   next();
+// });
 
 app.listen(process.env.PORT, () => {
   console.log(
@@ -44,4 +66,5 @@ app.listen(process.env.PORT, () => {
   );
 });
 
-urlRoutes(app)
+urlRoutes(app);
+authRoutes(app);
