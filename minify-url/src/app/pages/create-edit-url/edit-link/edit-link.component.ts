@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject } from '@angular/core';
 import { IonicModule } from '@ionic/angular';import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { UrlFormComponent } from '../../../shared/components/url-form/url-form.component';
-import { UrlLink } from '../../../types/url.interface';
+import { UrlLink } from '../../../shared/types/url.interface';
 import { UrlService } from '../../services/url.service';
 
 @Component({

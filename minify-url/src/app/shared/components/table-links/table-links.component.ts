@@ -9,7 +9,6 @@ import {
   getCoreRowModel,
   RowSelectionState,
 } from '@tanstack/angular-table';
-import { NgxTippyModule } from 'ngx-tippy-wrapper';
 import {
   TableHeadSelectionComponent,
   TableRowSelectionComponent,
@@ -31,7 +30,7 @@ interface CellDef {
   templateUrl: './table-links.component.html',
   styleUrls: ['./table-links.component.scss'],
   standalone: true,
-  imports: [IonicModule, FlexRenderDirective, NgxTippyModule, CommonModule],
+  imports: [IonicModule, FlexRenderDirective, CommonModule],
 })
 export class TableLinksComponent {
   private router = inject(Router);

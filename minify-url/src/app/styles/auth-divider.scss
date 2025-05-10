@@ -1,0 +1,18 @@
+.divider-container {
+	position: relative;
+	height: 1.5rem;
+	display: flex;
+	align-items: center;
+}
+
+.line {
+	height: 0.5rem;
+	border-top: 1px solid var(--ion-text-color-step-700);
+	width: 100%;
+}
+
+.divider-text {
+	position: absolute;
+	z-index: 1;
+	background: white;
+}

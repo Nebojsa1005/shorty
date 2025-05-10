@@ -1,9 +1,11 @@
-import * as icons from 'ionicons/icons'
+import * as icons from 'ionicons/icons';
 
 export const ionIcons = {
-	addCircleOutline: icons.addCircleOutline,
-	listOutline: icons.listOutline,
-	ellipsisVerticalOutline: icons.ellipsisVerticalOutline,
-	pencilOutline: icons.pencilOutline,
-	trashOutline: icons.trashOutline,
-}
+  addCircleOutline: icons.addCircleOutline,
+  listOutline: icons.listOutline,
+  ellipsisVerticalOutline: icons.ellipsisVerticalOutline,
+  pencilOutline: icons.pencilOutline,
+  trashOutline: icons.trashOutline,
+  logoGoogle: icons.logoGoogle,
+  logOutOutline: icons.logOutOutline
+};

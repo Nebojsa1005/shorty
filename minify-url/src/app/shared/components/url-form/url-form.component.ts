@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { tap } from 'rxjs';
 import { urlValidator } from '../../validators/url-validator.validator';
-import { UrlLink } from '../../../types/url.interface';
+import { UrlLink } from '../../types/url.interface';
 
 @Component({
   selector: 'app-url-form',
