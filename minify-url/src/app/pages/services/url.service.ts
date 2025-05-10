@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { catchError, of, switchMap, take, tap } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { ToastServiceService } from '../../shared/services/toast-service.service';
-import { Response } from '../../types/response.type';
-import { UrlForm, UrlLink } from '../../types/url.interface';
+import { Response } from '../../shared/types/response.type';
+import { UrlForm, UrlLink } from '../../shared/types/url.interface';
 
 interface UrlState {
   allUrls: UrlLink[];
@@ -52,11 +52,6 @@ export class UrlService {
       .pipe(
         tap((response: Response) => {
           this.updateAllUrls(response.data);
-          this.toastService.presentToast({
-            position: 'top',
-            message: response.message,
-            color: 'primary',
-          });
         }),
         catchError((error) => {
           this.toastService.presentToast({

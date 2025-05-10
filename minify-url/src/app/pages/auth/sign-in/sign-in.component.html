@@ -1,0 +1,59 @@
+<form
+  [formGroup]="formGroup"
+  class="ion-padding h-12 w-12 d-flex flex-col justify-center align-center"
+>
+  <ion-row class="mb-sm">
+    <ion-col size="auto">
+      <ion-text class="mb-sm text-2xl"> Sign In </ion-text>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="mb-md">
+    <ion-col size="auto">
+      <ion-text color="medium"
+        >Don't Have an Account?
+        <a routerLink="/auth/sign-up">Sign Up</a></ion-text
+      >
+    </ion-col>
+  </ion-row>
+
+  <ion-input
+    [formControl]="controls.email"
+    label="Email"
+    label-placement="floating"
+    fill="outline"
+    class="mb-md"
+    [errorText]="emailErrorMessage"
+  />
+
+  <ion-input
+    [formControl]="controls.password"
+    type="password"
+    label="Password"
+    label-placement="floating"
+    fill="outline"
+    class="mb-md"
+    [errorText]="passwordErrorMessage"
+  >
+    <ion-input-password-toggle slot="end" />
+  </ion-input>
+
+  <ion-button
+    class="mb-sm"
+    expand="block"
+    [disabled]="!formGroup.valid"
+    (click)="signIn()"
+  >
+    Login
+  </ion-button>
+
+  <div class="divider-container w-12 d-flex justify-center">
+    <span class="line"></span>
+    <ion-text class="divider-text p-xs" color="medium">OR</ion-text>
+  </div>
+
+  <ion-button fill="outline" (click)="onGoogleLogin()">
+    <ion-icon [icon]="icons.logoGoogle" class="mr-sm" />
+    Login with google
+  </ion-button>
+</form>

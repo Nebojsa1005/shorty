@@ -5,7 +5,7 @@ interface ToastPayload {
   position: 'top' | 'bottom' | 'middle' | undefined;
   message: string;
   duration?: number;
-  color: 'primary' | 'warning';
+  color: 'primary' | 'warning' | 'danger';
 }
 
 @Injectable({
@@ -21,6 +21,8 @@ export class ToastServiceService {
       position,
       color,
       animated: true,
+      positionAnchor: 'header',
+      
     });
 
     await toast.present();

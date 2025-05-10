@@ -12,4 +12,11 @@
       <ion-label>View All Minified Links</ion-label>
     </ion-item>
   </ion-menu-toggle>
+
+  <ion-menu-toggle auto-hide="false">
+    <ion-item button (click)="onLogout()">
+      <ion-icon class="add-icon mr-sm" color="primary" [icon]="ionIcons.logOutOutline"></ion-icon>
+      <ion-label>Logout</ion-label>
+    </ion-item>
+  </ion-menu-toggle>
 </ion-list>

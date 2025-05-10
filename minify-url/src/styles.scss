@@ -1,2 +1,9 @@
 @use 'theme/spacing';
-@use 'tippy.js/dist/tippy.css';
+@use 'theme/sizes.scss';
+@use 'theme/display-flex.scss';
+@use 'theme/text.scss';
+@use './app/styles/auth-divider.scss';
+
+a {
+	text-decoration: none;
+}
