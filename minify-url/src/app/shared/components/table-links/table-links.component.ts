@@ -17,6 +17,9 @@ import { ionIcons } from '../../../../icons';
 import { Router } from '@angular/router';
 import { UrlService } from '../../../pages/services/url.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CopyClipboardDirective } from '../../../directives/copy-clipboard.directive';
+import { PopoverController } from '@ionic/angular/standalone';
+import { CopyClipboardPopoverComponent } from '../copy-clipboard-popover/copy-clipboard-popover.component';
 
 interface CellDef {
   accessorKey: string;
@@ -30,12 +33,13 @@ interface CellDef {
   templateUrl: './table-links.component.html',
   styleUrls: ['./table-links.component.scss'],
   standalone: true,
-  imports: [IonicModule, FlexRenderDirective, CommonModule],
+  imports: [IonicModule, FlexRenderDirective, CommonModule, CopyClipboardDirective, CopyClipboardPopoverComponent],
 })
 export class TableLinksComponent {
   private router = inject(Router);
   private urlService = inject(UrlService);
   private destroyRef = inject(DestroyRef)
+  private popoverController = inject(PopoverController)
 
   data = input<any>();
 
@@ -103,5 +107,26 @@ export class TableLinksComponent {
       .deleteLink(cell.data.original._id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
+  }
+
+  async presentPopover(e: Event) {
+    const popover = await this.popoverController.create({
+      component: CopyClipboardPopoverComponent,
+      event: e,
+      showBackdrop: false,
+      animated: true,
+      arrow: true,
+      mode: 'ios',
+      side: 'bottom',
+      alignment: 'start'
+    });
+
+    await popover.present();
+
+    setTimeout(() => {
+      popover.dismiss()
+    }, 3000)
+
+
   }
 }

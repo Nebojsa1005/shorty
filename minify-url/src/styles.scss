@@ -4,6 +4,17 @@
 @use 'theme/text.scss';
 @use './app/styles/auth-divider.scss';
 
+*{
+	margin: 0;
+	box-sizing: border-box;
+}
+
 a {
 	text-decoration: none;
+}
+
+.title {
+	font-size: 1.5rem;
+	font-weight: bold;
+	padding: 0;
 }

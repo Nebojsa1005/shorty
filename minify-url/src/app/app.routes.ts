@@ -17,5 +17,4 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () => import('./pages/create-edit-url/create-edit-url.routes').then(m => m.routes)
   },
-  { path: '**', redirectTo: '' },
 ];
