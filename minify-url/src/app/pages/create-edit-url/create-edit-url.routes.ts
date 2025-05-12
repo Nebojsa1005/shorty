@@ -11,6 +11,10 @@ export const routes: Routes = [
     loadComponent: () => import('./new-link/new-link.component').then(c => c.NewLinkComponent)
   },
   {
+    path: ':id',
+    loadComponent: () => import('../view-url/view-url.component').then(c => c.ViewUrlComponent)
+  },
+  {
     path: 'edit/:id',
     loadComponent: () => import('./edit-link/edit-link.component').then(c => c.EditLinkComponent)
   }

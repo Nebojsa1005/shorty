@@ -6,7 +6,7 @@ import { ServerResponse } from "../utils/server-response";
 
 dotenv.config();
 
-const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
+const BASE_URL = process.env.FRONT_END_ORIGIN;
 
 const urlRoutes = (app: Express) => {
   app.get("/api/url/get-all-urls", async (req, res) => {
@@ -21,11 +21,15 @@ const urlRoutes = (app: Express) => {
       return ServerResponse.serverError(res, 500, error.message, error);
     }
   });
-  app.get("/api/url/get-by-id/:id", async (req: Request, res: Response) => {
-    const { id } = req.params;
+  app.get("/api/url/get-by-id/:urlId", async (req: Request, res: Response) => {
+    const { urlId } = req.params;
+
+    const shortUrl = `${BASE_URL}/url/${urlId}`;
 
     try {
-      const record = await UrlModel.findById(id);
+      const record = await UrlModel.findOne({
+        shortUrl
+      });
 
       if (!record) {
         return ServerResponse.serverError(res, 404, "Minified URL not found");
@@ -52,7 +56,7 @@ const urlRoutes = (app: Express) => {
         }
 
         const shortId = nanoid(10);
-        const shortUrl = `${BASE_URL}/${shortId}`;
+        const shortUrl = `${BASE_URL}/url/${shortId}`;
 
         try {
           const url = await UrlModel.create({

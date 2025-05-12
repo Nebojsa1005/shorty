@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { SideMenuComponent } from './shared/components/side-menu/side-menu.component';
 
+declare var gtag: any;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

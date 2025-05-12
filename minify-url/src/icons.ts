@@ -7,5 +7,7 @@ export const ionIcons = {
   pencilOutline: icons.pencilOutline,
   trashOutline: icons.trashOutline,
   logoGoogle: icons.logoGoogle,
-  logOutOutline: icons.logOutOutline
+  logOutOutline: icons.logOutOutline,
+  searchOutline: icons.searchOutline,
+  copyOutline: icons.copyOutline,
 };

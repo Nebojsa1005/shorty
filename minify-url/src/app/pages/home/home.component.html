@@ -1,4 +1,29 @@
 <ion-content class="ion-padding">
-  <app-table-links [data]="allUrls()"/>
-</ion-content>
+  <ion-row class="d-flex justify-between items-center">
+    <ion-title class="title">All Links</ion-title>
+    <ion-col size="auto">
+      <ion-button color="primary" (click)="newLink()">New Link</ion-button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="4">
+      <ion-input
+        [formControl]="searchControl"
+        placeholder="Search"
+        fill="outline"
+        class="mb-md"
+        color="primary"
+      >
+        <ion-icon
+          slot="end"
+          color="primary"
+          [icon]="icons.searchOutline"
+        ></ion-icon>
+      </ion-input>
+    </ion-col>
+  </ion-row>
 
+  <app-table-links
+    [data]="allUrls() | tableSearch : (searchControlValueChanges$ | async)"
+  />
+</ion-content>

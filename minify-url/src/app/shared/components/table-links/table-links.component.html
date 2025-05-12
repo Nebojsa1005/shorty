@@ -33,7 +33,15 @@
             "
           >
             @if (cell.columnId=== 'shortURL') {
-            <a [href]="cell" target="_blank">
+            <ion-icon
+              [appCopyClipboard]="cell.data"
+              [icon]="icons.copyOutline"
+              color="primary"
+              class="mr-sm"
+              (click)="presentPopover($event)"
+            />
+
+            <a [href]="cell.data" target="_blank">
               {{ cell.data }}
             </a>
             } @else if (cell.columnId === 'createdAt') {
@@ -59,7 +67,11 @@
                 <ng-template>
                   <ion-content>
                     <ion-list lines="none">
-                      <ion-item [button]="true" [detail]="false" (click)="onEdit(cell)">
+                      <ion-item
+                        [button]="true"
+                        [detail]="false"
+                        (click)="onEdit(cell)"
+                      >
                         <ion-icon
                           [icon]="icons.pencilOutline"
                           color="success"
@@ -67,7 +79,11 @@
                         ></ion-icon>
                         Edit
                       </ion-item>
-                      <ion-item [button]="true" [detail]="false" (click)="onDelete(cell)">
+                      <ion-item
+                        [button]="true"
+                        [detail]="false"
+                        (click)="onDelete(cell)"
+                      >
                         <ion-icon
                           [icon]="icons.trashOutline"
                           color="danger"
@@ -87,6 +103,12 @@
         </td>
         }
       </tr>
+      } @empty {
+        <tr>
+          <td [attr.colspan]="table.getHeaderGroups()[0].headers.length" class="no-data-row p-md">
+            No data available
+          </td>
+        </tr>
       }
     </tbody>
   </table>
