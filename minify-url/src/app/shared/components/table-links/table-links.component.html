@@ -21,7 +21,7 @@
       }
     </thead>
     <tbody>
-      @for (row of table.getRowModel().rows; track row.id) {
+      @for (row of table.getPaginationRowModel().rows; track row.id) {
       <tr>
         @for (cell of row.getVisibleCells(); track cell.id) {
         <td>
@@ -113,3 +113,31 @@
     </tbody>
   </table>
 </div>
+
+<ion-row class="justify-end items-center mt-md">
+  <ion-col size="auto">
+    <ion-button fill="clear" class="mr-sm" (click)="table.previousPage()" [disabled]="!table.getCanPreviousPage()">
+      <ion-icon slot="icon-only" [icon]="icons.arrowBackOutline"></ion-icon>
+    </ion-button>
+    <span>
+      Page {{ table.getState().pagination.pageIndex + 1 }}
+      of {{ table.getPageCount() }}
+    </span>
+    <ion-button fill="clear" class="ml-sm" (click)="table.nextPage()" [disabled]="!table.getCanNextPage()">
+      <ion-icon slot="icon-only" [icon]="icons.arrowForwardOutline"></ion-icon>
+    </ion-button>
+  </ion-col>
+
+  <ion-col size="auto">
+    <ion-select
+      [value]="table.getState().pagination.pageSize"
+      (ionChange)="table.setPageSize($event.detail.value)"
+      interface="popover"
+      placeholder="Rows per page"
+    >
+      <ion-select-option *ngFor="let size of [2, 5, 10]" [value]="size">
+        {{ size }} per page
+      </ion-select-option>
+    </ion-select>
+  </ion-col>
+</ion-row>
