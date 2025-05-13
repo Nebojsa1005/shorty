@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { SideMenuComponent } from './shared/components/side-menu/side-menu.component';
+import { AuthService } from './pages/auth/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,10 @@ import { SideMenuComponent } from './shared/components/side-menu/side-menu.compo
   imports: [IonicModule, SideMenuComponent],
 })
 export class AppComponent {
+  private authService = inject(AuthService)
 
+  constructor() {
+    effect(() => console.log(this.authService.user()))
+  }
 
 }

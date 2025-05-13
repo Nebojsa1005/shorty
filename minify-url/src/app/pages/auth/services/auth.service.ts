@@ -51,8 +51,8 @@ export class AuthService {
       })
       .pipe(
         tap((res) => {
-          this.updateUser(res.data);
-          this.saveUserToLocalStorage(res.data);
+          this.updateUser(res.data.user);
+          this.saveUserToLocalStorage(res.data.user);
 
           this.router.navigate(['']);
 
@@ -79,8 +79,8 @@ export class AuthService {
       .post<Response>(`${environment.apiUrl}/api/auth/sign-in`, { userData })
       .pipe(
         tap((res) => {
-          this.updateUser(res.data);
-          this.saveUserToLocalStorage(res.data);
+          this.updateUser(res.data.user);
+          this.saveUserToLocalStorage(res.data.user);
 
           this.router.navigate(['']);
 
