@@ -5,6 +5,7 @@ import "../utils/auth";
 import { ServerResponse } from "../utils/server-response";
 import { getUserByEmail } from "../services/auth.service";
 import { compare, hash } from "bcrypt";
+import { createTokenFromEmailAndId } from "../utils/token";
 
 const passport = require("passport");
 
@@ -33,12 +34,10 @@ const authRoutes = (app: Express) => {
 
       const createdUser = await newUser.save();
 
-      ServerResponse.serverSuccess(
-        res,
-        200,
-        "Successfully Registered",
-        createdUser
-      );
+      ServerResponse.serverSuccess(res, 200, "Successfully Registered", {
+        token: createTokenFromEmailAndId(createdUser.email, createdUser._id),
+        data: createdUser,
+      });
     } catch (error) {
       return ServerResponse.serverError(
         res,
@@ -61,7 +60,7 @@ const authRoutes = (app: Express) => {
         "There is No User with Entered Email"
       );
     }
-    
+
     const verifiedPassword: boolean | null = await compare(
       userData.password,
       user.password
@@ -71,6 +70,7 @@ const authRoutes = (app: Express) => {
       return ServerResponse.serverError(res, 401, "Invalid Password");
 
     return ServerResponse.serverSuccess(res, 200, "Successfully Signed In", {
+      token: createTokenFromEmailAndId(user.email, user._id),
       user,
     });
   });
@@ -92,23 +92,27 @@ const authRoutes = (app: Express) => {
   // );
 
   app.get("/api/auth/google/callback", (req: any, res, next) => {
-    passport.authenticate("google", { failureRedirect: "/api/auth/google/failure", session: true }, (err, user, info) => {
-      if (err || !user) {
-        return res.redirect("/api/auth/google/failure");
-      }
-  
-      // Manually establish session
-      req.logIn(user, (err) => {
-        if (err) {
-          return next(err);
+    passport.authenticate(
+      "google",
+      { failureRedirect: "/api/auth/google/failure", session: true },
+      (err, user, info) => {
+        if (err || !user) {
+          return res.redirect("/api/auth/google/failure");
         }
-  
-        console.log("✅ Logged in user:", req.user);
-        console.log("✅ Session after login:", req.session);
-  
-        return res.redirect("http://localhost:4200/auth/login");
-      });
-    })(req, res, next);
+
+        // Manually establish session
+        req.logIn(user, (err) => {
+          if (err) {
+            return next(err);
+          }
+
+          console.log("✅ Logged in user:", req.user);
+          console.log("✅ Session after login:", req.session);
+
+          return res.redirect("http://localhost:4200/auth/login");
+        });
+      }
+    )(req, res, next);
   });
 
   app.get("/api/auth/google/failure", (_req, res) => {

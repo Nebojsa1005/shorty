@@ -1,5 +1,6 @@
 import { Schema, model, Document } from "mongoose";
 import { AnalyticsDocument, AnalyticsModel } from "./analytics.model";
+import { UserDocument } from "./user.model";
 
 export interface UrlDocument extends Document {
   destinationUrl: string;
@@ -7,6 +8,7 @@ export interface UrlDocument extends Document {
   createdAt: Date;
   urlName: string;
   analytics: AnalyticsDocument;
+  user: UserDocument
 }
 
 const UrlSchema = new Schema<UrlDocument>({
@@ -27,6 +29,7 @@ const UrlSchema = new Schema<UrlDocument>({
     required: true,
   },
   analytics: { type: Schema.Types.ObjectId, ref: "Analytics", required: true },
+  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 UrlSchema.post("findOneAndDelete", async function (doc) {
