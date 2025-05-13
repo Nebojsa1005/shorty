@@ -1,12 +1,12 @@
+import bodyParser from "body-parser";
+import cookieParser from 'cookie-parser';
+import cors from "cors";
 import * as dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
-import urlRoutes from "./routes/url.route";
-import bodyParser from "body-parser";
 import authRoutes from "./routes/auth.routes";
-import cors from "cors";
-import cookieParser from 'cookie-parser'
-import './utils/mongoDb-connect'
+import urlRoutes from "./routes/url.route";
+import './utils/mongoDb-connect';
 
 const passport = require("passport");
 const session = require("express-session");
@@ -48,16 +48,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.use((req, res, next) => {
-//   res.setHeader("Content-type", "application/json");
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-//   );
-//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-//   next();
-// });
-
 app.listen(process.env.PORT, () => {
   console.log(
     "\x1b[32m[SERVER]\x1b[0m" +
@@ -68,3 +58,4 @@ app.listen(process.env.PORT, () => {
 
 urlRoutes(app);
 authRoutes(app);
+

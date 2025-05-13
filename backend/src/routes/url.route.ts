@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import { nanoid } from "nanoid";
 import { UrlModel } from "../models/url.model";
 import { ServerResponse } from "../utils/server-response";
+import { analyticsShortLinkCreated, analyticsShortLinkVisited } from "../services/analytics.service";
 
 dotenv.config();
 
@@ -11,7 +12,7 @@ const BASE_URL = process.env.FRONT_END_ORIGIN;
 const urlRoutes = (app: Express) => {
   app.get("/api/url/get-all-urls", async (req, res) => {
     try {
-      const allUrls = await UrlModel.find({});
+      const allUrls = await UrlModel.find({}).populate('analytics')
       if (!allUrls) {
         return ServerResponse.serverError(res, 404, "No minified urls found");
       }
@@ -29,11 +30,13 @@ const urlRoutes = (app: Express) => {
     try {
       const record = await UrlModel.findOne({
         shortUrl
-      });
+      }).populate('analytics')
 
       if (!record) {
         return ServerResponse.serverError(res, 404, "Minified URL not found");
       }
+
+      await analyticsShortLinkVisited(shortUrl)
 
       ServerResponse.serverSuccess(res, 200, "Successfully fetched", record);
     } catch (error) {
@@ -59,10 +62,13 @@ const urlRoutes = (app: Express) => {
         const shortUrl = `${BASE_URL}/url/${shortId}`;
 
         try {
+          const analytics = await analyticsShortLinkCreated(shortUrl)
+
           const url = await UrlModel.create({
             destinationUrl,
             shortUrl,
             urlName,
+            analytics: analytics._id
           });
 
           return ServerResponse.serverSuccess(
@@ -75,8 +81,6 @@ const urlRoutes = (app: Express) => {
           return ServerResponse.serverError(res, 500, error.message, error);
         }
       } catch (error) {
-        console.log(error);
-
         return ServerResponse.serverError(res, 500, error.message, error);
       }
     }
@@ -112,7 +116,8 @@ const urlRoutes = (app: Express) => {
     const { id } = req.params;
 
     try {
-      const deletedUrl = await UrlModel.findByIdAndRemove(id);
+      const deletedUrl = await UrlModel.findOneAndDelete({ _id: id });
+
       return ServerResponse.serverSuccess(
         res,
         200,
