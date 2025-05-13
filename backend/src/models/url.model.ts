@@ -1,10 +1,12 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document } from "mongoose";
+import { AnalyticsDocument, AnalyticsModel } from "./analytics.model";
 
 export interface UrlDocument extends Document {
   destinationUrl: string;
   shortUrl: string;
   createdAt: Date;
-  urlName: string
+  urlName: string;
+  analytics: AnalyticsDocument;
 }
 
 const UrlSchema = new Schema<UrlDocument>({
@@ -22,8 +24,15 @@ const UrlSchema = new Schema<UrlDocument>({
   },
   urlName: {
     type: String,
-    required: true
+    required: true,
   },
+  analytics: { type: Schema.Types.ObjectId, ref: "Analytics", required: true },
 });
 
-export const UrlModel = model<UrlDocument>('Url', UrlSchema);
+UrlSchema.post("findOneAndDelete", async function (doc) {
+  if (doc && doc.analytics) {
+    await AnalyticsModel.deleteOne({ _id: doc.analytics });
+  }
+});
+
+export const UrlModel = model<UrlDocument>("Url", UrlSchema);
