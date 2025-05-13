@@ -10,4 +10,6 @@ export const ionIcons = {
   logOutOutline: icons.logOutOutline,
   searchOutline: icons.searchOutline,
   copyOutline: icons.copyOutline,
+  arrowBackOutline: icons.arrowBackOutline,
+  arrowForwardOutline: icons.arrowForwardOutline
 };
