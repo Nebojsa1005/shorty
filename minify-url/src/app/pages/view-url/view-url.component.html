@@ -1,3 +1,36 @@
-<p>
-  view-url works!
-</p>
+<ion-row class="h-12 w-12 items-center justify-center">
+  <ion-col size="6" class="d-flex items-center justiy-center">
+    @if (shortLink()) { 
+    
+      @if (shortLink()?.security === SecurityOptions.PASSWORD) {
+        <ion-row>
+          <ion-col size="12">
+            <ion-title class="title mb-md">
+              Please Enter the Password to the Link
+            </ion-title>
+            
+            <ion-input
+            class="mb-md"
+              type="password"
+              fill="outline"
+              [formControl]="passwordControl"
+              errorText="This Field is Required"
+            >
+              <ion-input-password-toggle slot="end" />
+            </ion-input>   
+          </ion-col>
+
+          <ion-col size="12">
+            <ion-row class="justify-center">
+              <ion-button [disabled]="!passwordControl.valid" expand  (click)="passwordCheck()">Next</ion-button>
+            </ion-row>
+            </ion-col>
+        </ion-row>
+      }
+    } @else {
+      <ion-row class="justify-center w-12">
+        <ion-spinner color="primary" name="crescent"></ion-spinner>
+      </ion-row>
+    }
+    </ion-col>
+</ion-row>

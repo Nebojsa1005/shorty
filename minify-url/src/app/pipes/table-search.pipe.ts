@@ -9,7 +9,7 @@ export class TableSearchPipe implements PipeTransform {
   transform(links: UrlLink[], criteria: string | null): UrlLink[] {
     if (criteria) {
       return links.filter((link) => {
-        return link.urlName.includes(criteria);
+        return link.urlName.toLocaleLowerCase().includes(criteria.toLocaleLowerCase());
       });
     }
 

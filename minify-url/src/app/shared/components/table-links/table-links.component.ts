@@ -14,7 +14,7 @@ import {
 } from '@tanstack/angular-table';
 import { ionIcons } from '../../../../icons';
 import { CopyClipboardDirective } from '../../../directives/copy-clipboard.directive';
-import { UrlService } from '../../../pages/services/url.service';
+import { UrlService } from '../../../services/url.service';
 import { CopyClipboardPopoverComponent } from '../copy-clipboard-popover/copy-clipboard-popover.component';
 
 interface CellDef {
@@ -60,10 +60,17 @@ export class TableLinksComponent {
       id: 'urlName',
     },
     {
-      accessorKey: 'shortUrl',
-      cell: (info) => ({ data: info.getValue(), columnId: 'shortURL' }),
-      id: 'shortURL',
+      accessorKey: 'shortLink',
+      cell: (info) => ({ data: info.getValue(), columnId: 'shortLink' }),
+      id: 'shortLink',
       header: 'Minified URL',
+    },
+    {
+      accessorKey: 'expirationDate',
+      cell: (info) => ({ data: info.getValue(), columnId: 'expirationDate' }),
+
+      id: 'expirationDate',
+      header: 'Expiration Date',
     },
     {
       accessorKey: 'createdAt',
@@ -80,35 +87,35 @@ export class TableLinksComponent {
 
   table = createAngularTable(() => ({
     data: this.data() ?? [],
-  columns: this.defaultColumns,
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel: getPaginationRowModel(),
-  enableRowSelection: true,
+    columns: this.defaultColumns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    enableRowSelection: true,
 
-  onRowSelectionChange: (updaterOrValue) => {
-    this.rowSelection.set(
-      typeof updaterOrValue === 'function'
-        ? updaterOrValue(this.rowSelection())
-        : updaterOrValue
-    );
-  },
+    onRowSelectionChange: (updaterOrValue) => {
+      this.rowSelection.set(
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue(this.rowSelection())
+          : updaterOrValue
+      );
+    },
 
-  onPaginationChange: (updaterOrValue) => {
-    this.pagination.set(
-      typeof updaterOrValue === 'function'
-        ? updaterOrValue(this.pagination())
-        : updaterOrValue
-    );
-  },
+    onPaginationChange: (updaterOrValue) => {
+      this.pagination.set(
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue(this.pagination())
+          : updaterOrValue
+      );
+    },
 
-  state: {
-    rowSelection: this.rowSelection(),
-    pagination: this.pagination(),
-  },
+    state: {
+      rowSelection: this.rowSelection(),
+      pagination: this.pagination(),
+    },
   }));
 
   onEdit(cell: any) {
-    this.router.navigate(['/url/edit', cell.data.original._id]);
+    this.router.navigate(['/edit', cell.data.original._id]);
   }
 
   onDelete(cell: any) {

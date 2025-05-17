@@ -17,5 +17,9 @@ export const routes: Routes = [
   {
     path: 'edit/:id',
     loadComponent: () => import('./edit-link/edit-link.component').then(c => c.EditLinkComponent)
-  }
+  },
+  {
+    path: ":suffix/:id",
+    loadComponent: () => import('../view-url/view-url.component').then(c => c.ViewUrlComponent)
+  },
 ];

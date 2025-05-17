@@ -32,7 +32,7 @@
               let cell
             "
           >
-            @if (cell.columnId=== 'shortURL') {
+            @if (cell.columnId=== 'shortLink') {
             <ion-icon
               [appCopyClipboard]="cell.data"
               [icon]="icons.copyOutline"
@@ -46,7 +46,10 @@
             </a>
             } @else if (cell.columnId === 'createdAt') {
             <div>{{ cell.data | date : "mediumDate" }}</div>
-            } @else if (cell.columnId === 'actions') {
+            } @else if (cell.columnId === 'expirationDate') {
+              <div>{{ cell.data | date : "MMM d, y h:mm a" }}</div>
+            }
+             @else if (cell.columnId === 'actions') {
             <ion-list class="ion-no-padding">
               <ion-button [id]="row.id" fill="clear">
                 <ion-icon
@@ -115,7 +118,7 @@
 </div>
 
 <ion-row class="justify-end items-center mt-md">
-  <ion-col size="auto">
+  <ion-col size="auto" class="d-flex items-center">
     <ion-button fill="clear" class="mr-sm" (click)="table.previousPage()" [disabled]="!table.getCanPreviousPage()">
       <ion-icon slot="icon-only" [icon]="icons.arrowBackOutline"></ion-icon>
     </ion-button>

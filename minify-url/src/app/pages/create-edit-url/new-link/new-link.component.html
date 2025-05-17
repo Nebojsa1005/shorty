@@ -1,7 +1,13 @@
-<div>
+<div class="p-md">
+  <ion-title class="px-0 mb-md">Add new ShortLink</ion-title>
+
   <app-url-form (formChanges)="onFormChange($event)" />
 
-  <ion-button [disabled]="!urlForm()?.valid" (click)="onSubmit()"
-    >Create link</ion-button
-  >
+  <ion-row class="justify-end items-center">
+    <ion-col size="auto">
+      <ion-button [disabled]="!urlForm()?.valid" (click)="onSubmit()"
+        >Create link</ion-button
+      >
+    </ion-col>
+  </ion-row>
 </div>

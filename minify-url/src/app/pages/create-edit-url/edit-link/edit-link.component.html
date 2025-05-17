@@ -1,7 +1,9 @@
-<div>
+<div class="p-md">
+  <ion-title class="px-0 mb-md">Edit ShortLink</ion-title>
+
   <app-url-form (formChanges)="onFormChange($event)" [existingUrlLink]="existingUrlLink"/>
 
   <ion-button [disabled]="!urlForm()?.valid" (click)="onSubmit()"
-    >Create link</ion-button
+    >Edit link</ion-button
   >
 </div>

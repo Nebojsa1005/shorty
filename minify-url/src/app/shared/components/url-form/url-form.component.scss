@@ -1,0 +1,28 @@
+ion-item-group {
+  margin-bottom: 1rem;
+}
+
+.modal-wrapper {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+ion-popover.datetime-popover {
+  --width: 300px !important;
+  --height: auto !important;
+}
+
+
+ion-col.expiration-date-col {
+	position: relative;
+}
+
+ion-datetime.expiration-date-datetime .ion-popover {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
