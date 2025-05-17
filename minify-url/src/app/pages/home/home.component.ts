@@ -1,14 +1,20 @@
-import { Component, computed, DestroyRef, effect, inject, OnDestroy, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
-import { TableLinksComponent } from '../../shared/components/table-links/table-links.component';
-import { UrlService } from '../services/url.service';
+import { CommonModule } from '@angular/common';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  OnInit
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TableSearchPipe } from '../../pipes/table-search.pipe';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { ionIcons } from '../../../icons';
 import { Router } from '@angular/router';
+import { IonicModule } from '@ionic/angular';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { ionIcons } from '../../../icons';
+import { TableSearchPipe } from '../../pipes/table-search.pipe';
+import { UrlService } from '../../services/url.service';
+import { TableLinksComponent } from '../../shared/components/table-links/table-links.component';
 
 @Component({
   selector: 'app-home',
@@ -25,14 +31,14 @@ import { Router } from '@angular/router';
 export class HomeComponent implements OnInit {
   private homeService = inject(UrlService);
   private destroyRef = inject(DestroyRef);
-  private router = inject(Router)
+  private router = inject(Router);
 
-  searchControl = new FormControl('');
-  icons = ionIcons
+  searchControl = new FormControl<string>('');
+  icons = ionIcons;
 
   searchControlValueChanges$ = this.searchControl.valueChanges.pipe(
     debounceTime(300),
-    distinctUntilChanged()
+    distinctUntilChanged(),
   );
 
   allUrls = computed(() => this.homeService.allUrls());
@@ -45,10 +51,10 @@ export class HomeComponent implements OnInit {
   }
 
   ionViewDidLeave() {
-    this.searchControl.reset()
+    this.searchControl.reset();
   }
 
   newLink() {
-    this.router.navigate(['url', 'new'])
+    this.router.navigate(['new']);
   }
 }

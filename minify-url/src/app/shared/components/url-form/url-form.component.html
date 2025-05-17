@@ -1,30 +1,140 @@
-<div class="ion-padding">
-  <form [formGroup]="formGroup">
-    <ion-title class="px-0 mb-md">Add new Minified URL</ion-title>
+<form [formGroup]="formGroup">
+  <ion-list>
+    <ion-item-group>
+      <ion-input
+        label="Destination URL"
+        [formControl]="controls.destinationUrl"
+        fill="outline"
+        labelPlacement="floating"
+        placeholder="https://example.com"
+        [errorText]="destinationUrlError"
+      />
+    </ion-item-group>
 
-    <ion-list>
-      <ion-item-group>
-        <ion-input
-          label="Destination URL"
-          formControlName="destinationUrl"
-          fill="outline"
-          labelPlacement="floating"
-          placeholder="https://example.com"
-          [errorText]="destinationUrlError"
-        />
-      </ion-item-group>
+    <ion-item-group>
+      <ion-input
+        label="Name"
+        fill="outline"
+        labelPlacement="floating"
+        [formControl]="controls.urlName"
+        errorText="This Field is Required"
+      />
+    </ion-item-group>
 
-      <ion-item-group>
-        <ion-input 
-          label="Name"
-          fill="outline"
-          labelPlacement="floating"
-          formControlName="urlName"
-          errorText="This Field is Required"
-          [counter]="true"
-          maxlength="50"
-        />
-      </ion-item-group>
-    </ion-list>
-  </form>
-</div>
+    <ion-item-group>
+      <ion-input
+        label="Short Suffix"
+        fill="outline"
+        labelPlacement="floating"
+        [formControl]="controls.suffix"
+        errorText=" "
+      />
+    </ion-item-group>
+
+    <ion-item-group>
+      <ion-row class="items-center">
+        <ion-col class="p-0" size="4">
+          <ion-select
+            label="Security Option"
+            labelPlacement="floating"
+            fill="outline"
+            interface="popover"
+            [formControl]="controls.security"
+            [errorText]="''"
+          >
+            @for (option of securityOptions(); track option) {
+            <ion-select-option [value]="option.value">{{
+              option.description
+            }}</ion-select-option>
+            }
+          </ion-select>
+        </ion-col>
+        <ion-col class="p-0 pl-sm" size="8">
+          <ion-input
+            type="password"
+            label="Password"
+            labelPlacement="floating"
+            fill="outline"
+            [formControl]="controls.password"
+            [errorText]="passwordError"
+          >
+            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+          </ion-input>
+        </ion-col>
+      </ion-row>
+    </ion-item-group>
+
+    <ion-item-group>
+      <ion-row class="items-center">
+        <ion-col class="expiration-date-col" size="6">
+          <!-- READ-ONLY ion-input that will trigger the modal -->
+          <ion-input
+            aria-hidden="true"
+            id="expirationDate"
+            label="Expiration Date"
+            labelPlacement="floating"
+            readonly
+            fill="outline"
+            [value]="controls.expirationDate.value | date : 'mediumDate'"
+          >
+          </ion-input>
+
+          <ion-popover
+            class="datetime-popover"
+            mode="ios"
+            trigger="expirationDate"
+            side="top"
+            alignment="start"
+            [animated]="true"
+            [showBackdrop]="false"
+            [keepContentsMounted]="true"
+          >
+            <ng-template>
+              <ion-datetime
+                [min]="currentTime"
+                [formControl]="controls.expirationDate"
+                mode="ios"
+                id="expirationDate"
+                presentation="date"
+              ></ion-datetime>
+            </ng-template>
+          </ion-popover>
+        </ion-col>
+
+        <ion-col size="3">
+          <ion-input
+            aria-hidden="true"
+            readonly
+            label="Expiration Time"
+            labelPlacement="floating"
+            fill="outline"
+            type="time"
+            id="expirationTime"
+            [value]="controls.expirationDate.value | date : 'HH:mm'"
+          ></ion-input>
+
+          <ion-popover
+            class="datetime-popover"
+            mode="ios"
+            trigger="expirationTime"
+            side="top"
+            alignment="start"
+            [animated]="true"
+            [showBackdrop]="false"
+            [keepContentsMounted]="true"
+          >
+            <ng-template>
+              <ion-datetime
+                [min]="currentTime"
+                [formControl]="controls.expirationDate"
+                mode="ios"
+                id="expirationTime"
+                presentation="time"
+              ></ion-datetime>
+            </ng-template>
+          </ion-popover>
+        </ion-col>
+      </ion-row>
+    </ion-item-group>
+  </ion-list>
+</form>

@@ -3,7 +3,7 @@ import { IonicModule } from '@ionic/angular';import { takeUntilDestroyed } from 
 import { ActivatedRoute } from '@angular/router';
 import { UrlFormComponent } from '../../../shared/components/url-form/url-form.component';
 import { UrlLink } from '../../../shared/types/url.interface';
-import { UrlService } from '../../services/url.service';
+import { UrlService } from '../../../services/url.service';
 
 @Component({
   selector: 'app-edit-link',
@@ -20,11 +20,12 @@ export class EditLinkComponent {
   urlForm = this.urlService.urlForm
 
   id = this.route.snapshot.params['id']
+  suffix = this.route.snapshot.params['suffix']
   existingUrlLink?: UrlLink
 
 
   constructor() {
-    this.urlService.getUrlLinkById(this.id).pipe(
+    this.urlService.getShortLinkById(this.id).pipe(
       takeUntilDestroyed()  
     ).subscribe(e => this.existingUrlLink = e?.data)
   }

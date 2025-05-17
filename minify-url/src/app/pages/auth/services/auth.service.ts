@@ -4,7 +4,7 @@ import { Response } from '../../../shared/types/response.type';
 import { User } from '../../../shared/types/user.type';
 import { LocalStorageKeys } from '../../../shared/enums/local-storage.enum';
 import { catchError, of, tap } from 'rxjs';
-import { ToastServiceService } from '../../../shared/services/toast-service.service';
+import { ToastServiceService } from '../../../services/toast-service.service';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment.development';
 
