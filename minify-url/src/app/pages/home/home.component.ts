@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  DestroyRef,
-  inject,
-  OnInit
-} from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -38,7 +32,7 @@ export class HomeComponent implements OnInit {
 
   searchControlValueChanges$ = this.searchControl.valueChanges.pipe(
     debounceTime(300),
-    distinctUntilChanged(),
+    distinctUntilChanged()
   );
 
   allUrls = computed(() => this.homeService.allUrls());
@@ -47,7 +41,7 @@ export class HomeComponent implements OnInit {
     this.homeService
       .fetchAllUrls()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((e) => console.log(e));
+      .subscribe();
   }
 
   ionViewDidLeave() {

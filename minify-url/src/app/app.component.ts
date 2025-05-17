@@ -9,11 +9,4 @@ import { AuthService } from './pages/auth/services/auth.service';
   styleUrl: './app.component.scss',
   imports: [IonicModule, SideMenuComponent],
 })
-export class AppComponent {
-  private authService = inject(AuthService)
-
-  constructor() {
-    effect(() => console.log(this.authService.user()))
-  }
-
-}
+export class AppComponent {}

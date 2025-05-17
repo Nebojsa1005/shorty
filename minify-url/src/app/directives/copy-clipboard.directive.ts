@@ -12,7 +12,6 @@ export class CopyClipboardDirective {
     if (!this.copyText) return;
 
     navigator.clipboard.writeText(this.copyText).then(() => {
-      console.log('Copied to clipboard:', this.copyText);
       // Optional: Show a toast or feedback
     }).catch(err => {
       console.error('Failed to copy:', err);

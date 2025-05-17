@@ -3,6 +3,10 @@
     "module": "commonjs", // or "esnext" or "nodenext"
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "target": "ES6",
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": false,
   }
 }
