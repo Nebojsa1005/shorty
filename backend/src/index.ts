@@ -48,6 +48,10 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get('/', (req, res) => {
+  res.send('caos')
+})
+
 app.listen(process.env.PORT, () => {
   console.log(
     "\x1b[32m[SERVER]\x1b[0m" +
