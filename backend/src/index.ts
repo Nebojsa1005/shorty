@@ -13,7 +13,7 @@ const session = require("express-session");
 
 const app = express();
 
-dotenv.config();
+dotenv.config({ path: process.env.NODE_ENV  === 'production' ? '.env.production' : '.env'});
 
 mongoose.connect(`${process.env.MONGO_DB_URL}`);
 mongoose.connection.once("open", () => {
@@ -28,7 +28,13 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: false }));
 
 app.use(
   cors({
-    origin: 'http://localhost:4200',
+    origin: process.env.FRONT_END_ORIGIN,
+    credentials: true,
+  })
+);
+app.use(
+  cors({
+    origin: process.env.FRONT_END_ORIGIN_PROD,
     credentials: true,
   })
 );
