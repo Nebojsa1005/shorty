@@ -67,7 +67,7 @@ export class SignInComponent {
 
   constructor() {
     this.formGroup = this.fb.group({
-      email: ['', [Validators.required, Validators.pattern(EmailRegEx)]],
+      email: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(4)]],
     });
   }

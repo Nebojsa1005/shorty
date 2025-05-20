@@ -13,6 +13,7 @@ const session = require("express-session");
 
 const app = express();
 
+console.log(process.env.NODE_ENV)
 dotenv.config({ path: process.env.NODE_ENV  === 'production' ? '.env.production' : '.env'});
 
 mongoose.connect(`${process.env.MONGO_DB_URL}`);
@@ -32,12 +33,7 @@ app.use(
     credentials: true,
   })
 );
-app.use(
-  cors({
-    origin: process.env.FRONT_END_ORIGIN_PROD,
-    credentials: true,
-  })
-);
+
 app.use(cookieParser());
 
 app.use(
