@@ -1,0 +1,47 @@
+<div class="h-12 w-12 d-flex flex-col justify-center items-center">
+  @if (shortLink()) { 
+	@if (shortLink()?.security === SecurityOptions.PASSWORD) {
+  <!-- Title -->
+  <h2 class="mat-headline mb-md">Please Enter the Password to the Link</h2>
+
+  <!-- Password Input -->
+  <mat-form-field appearance="outline" class="full-width mb-md">
+    <mat-label>Password</mat-label>
+    <input
+      matInput
+      [formControl]="passwordControl"
+      [type]="showPassword ? 'text' : 'password'"
+    />
+    <button
+      mat-icon-button
+      matSuffix
+      (click)="togglePasswordVisibility()"
+      type="button"
+      [attr.aria-label]="'Toggle password visibility'"
+    >
+      <mat-icon>{{ showPassword ? "visibility_off" : "visibility" }}</mat-icon>
+    </button>
+    <mat-error *ngIf="passwordControl.invalid"
+      >This field is required</mat-error
+    >
+  </mat-form-field>
+
+  <!-- Next Button -->
+  <div class="button-row">
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!passwordControl.valid"
+      (click)="passwordCheck()"
+    >
+      Next
+    </button>
+  </div>
+  } 
+} @else {
+  <div class="h-12 w-12 d-flex items-center justify-center">
+    <mat-spinner color="primary" diameter="40"></mat-spinner>
+  </div>
+
+  }
+</div>

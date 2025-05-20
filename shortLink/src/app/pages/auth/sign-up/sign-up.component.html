@@ -1,0 +1,69 @@
+<form [formGroup]="formGroup" class="sign-up-form">
+  <!-- Heading -->
+  <div class="mb-sm text-center">
+    <h2 class="text-2xl">Sign In</h2>
+  </div>
+
+  <!-- Redirect link -->
+  <div class="mb-md text-center">
+    <span class="text-medium">
+      Already Have an Account?
+      <a routerLink="/auth/sign-in">Sign In</a>
+    </span>
+  </div>
+
+  <!-- Email -->
+  <mat-form-field appearance="outline" class="w-12 mb-sm">
+    <mat-label>Email</mat-label>
+    <input matInput [formControl]="controls.email" />
+  </mat-form-field>
+
+  <!-- Password -->
+  <mat-form-field appearance="outline" class="w-12 mb-sm">
+    <mat-label>Password</mat-label>
+    <input
+      matInput
+      [type]="showPassword ? 'text' : 'password'"
+      [formControl]="controls.password"
+    />
+    <button
+      mat-icon-button
+      matSuffix
+      (click)="togglePasswordVisibility()"
+      type="button"
+    >
+      <mat-icon>visibility</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <div class="d-flex justify-center flex-col items-center">
+    <!-- Sign Up Button -->
+    <button
+      mat-raised-button
+      color="primary"
+      class="full-width mb-sm"
+      [disabled]="!formGroup.valid"
+      (click)="onSignUp()"
+    >
+      Sign Up
+    </button>
+  
+    <!-- Divider -->
+    <div class="divider-container mb-sm">
+      <span class="line"></span>
+      <span class="divider-text px-sm text-medium">OR</span>
+      <span class="line"></span>
+    </div>
+  
+    <!-- Google Login Button -->
+    <button
+      mat-stroked-button
+      color="primary"
+      class="full-width"
+      (click)="onGoogleLogin()"
+    >
+      <mat-icon class="mr-sm">login</mat-icon>
+      Login with Google
+    </button>
+  </div>
+</form>

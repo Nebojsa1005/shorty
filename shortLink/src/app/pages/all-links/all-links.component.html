@@ -1,0 +1,25 @@
+<div class="content-container">
+  <!-- Header Row -->
+  <div class="header-row mb-md">
+    <h2 class="title">All Links</h2>
+    <button mat-raised-button color="primary" (click)="newLink()">
+      New Link
+    </button>
+  </div>
+
+  <!-- Search Input -->
+  <mat-form-field
+    appearance="outline"
+    class="search-field mb-md"
+    color="primary"
+  >
+    <mat-label>Search</mat-label>
+    <input matInput [formControl]="searchControl" placeholder="Search" />
+    <button mat-icon-button matSuffix disabled>
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <!-- Table Component -->
+  <app-table-links [data]="allUrls()"/>
+</div>

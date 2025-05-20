@@ -1,0 +1,56 @@
+<form [formGroup]="formGroup" class="form-fields">
+
+  <!-- Destination URL -->
+  <mat-form-field appearance="outline" class="w-12">
+    <mat-label>Destination URL</mat-label>
+    <input matInput placeholder="https://example.com" [formControl]="controls.destinationUrl">
+    <mat-error *ngIf="destinationUrlError">{{ destinationUrlError }}</mat-error>
+  </mat-form-field>
+
+  <!-- Name -->
+  <mat-form-field appearance="outline" class="w-12">
+    <mat-label>Name</mat-label>
+    <input matInput [formControl]="controls.urlName">
+    <mat-error *ngIf="controls.urlName.hasError('required')">This field is required</mat-error>
+  </mat-form-field>
+
+  <!-- Short Suffix -->
+  <mat-form-field appearance="outline" class="w-12">
+    <mat-label>Short Suffix</mat-label>
+    <input matInput [formControl]="controls.suffix">
+  </mat-form-field>
+
+  <!-- Security Option + Password -->
+  <div class="form-row">
+    <mat-form-field appearance="outline" class="w-4 mr-md">
+      <mat-label>Security Option</mat-label>
+      <mat-select [formControl]="controls.security">
+        <mat-option *ngFor="let option of securityOptions()" [value]="option.value">
+          {{ option.description }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-7">
+      <mat-label>Password</mat-label>
+      <input matInput [formControl]="controls.password" type="password">
+      <mat-error *ngIf="passwordError">{{ passwordError }}</mat-error>
+    </mat-form-field>
+  </div>
+
+  <!-- Expiration Date + Time -->
+  <div class="form-row">
+    <mat-form-field appearance="outline" class="w-6 mr-md">
+      <mat-label>Expiration Date</mat-label>
+      <input matInput [matDatepicker]="picker" [formControl]="controls.expirationDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker [startAt]="currentTime"></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-3">
+      <mat-label>Expiration Time</mat-label>
+      <input matInput type="time" [value]="controls.expirationDate.value | date:'HH:mm'" readonly>
+    </mat-form-field>
+  </div>
+
+</form>

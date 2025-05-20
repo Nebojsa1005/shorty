@@ -1,0 +1,25 @@
+<mat-sidenav-container class="h-12">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    mode="side"
+    [opened]="isDrawerOpened()"
+    fixedInViewport
+  >
+    <mat-toolbar></mat-toolbar>
+    <app-side-menu />
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="drawer.toggle()" class="menu-button">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Menu</span>
+    </mat-toolbar>
+
+    <main class="p-md main-container">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,52 @@
+<form [formGroup]="formGroup" class="sign-in-form">
+
+  <!-- Title -->
+  <div class="mb-sm text-center">
+    <h2 class="text-2xl">Sign In</h2>
+  </div>
+
+  <!-- Redirect to sign-up -->
+  <div class="mb-md text-center">
+    <span class="text-medium">
+      Don’t Have an Account?
+      <a routerLink="/auth/sign-up">Sign Up</a>
+    </span>
+  </div>
+
+  <!-- Email Input -->
+  <mat-form-field appearance="outline" class="w-12 mb-md">
+    <mat-label>Email</mat-label>
+    <input matInput [formControl]="controls.email" />
+    <mat-error *ngIf="emailErrorMessage">{{ emailErrorMessage }}</mat-error>
+  </mat-form-field>
+
+  <!-- Password Input with Toggle -->
+  <mat-form-field appearance="outline" class="w-12 mb-md">
+    <mat-label>Password</mat-label>
+    <input matInput [type]="showPassword ? 'text' : 'password'" [formControl]="controls.password" />
+    <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button">
+      <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+    <mat-error *ngIf="passwordErrorMessage">{{ passwordErrorMessage }}</mat-error>
+  </mat-form-field>
+
+  <div class="d-flex flex-col items-center justify-center">
+	  <!-- Login Button -->
+	  <button mat-raised-button color="primary" class="mb-sm" [disabled]="!formGroup.valid" (click)="signIn()">
+		Sign In
+	  </button>
+	
+	  <!-- Divider -->
+	  <div class="divider-container mb-sm">
+		<span class="line"></span>
+		<span class="divider-text px-sm text-medium">OR</span>
+		<span class="line"></span>
+	  </div>
+	
+	  <!-- Google Login Button -->
+	  <button mat-stroked-button color="primary" class="full-width" (click)="onGoogleLogin()">
+		<mat-icon class="mr-sm">login</mat-icon>
+		Sign In with Google
+	  </button>
+  </div>
+</form>
