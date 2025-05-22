@@ -1,5 +1,5 @@
 import { Express, Request, Response } from "express";
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 import { nanoid } from "nanoid";
 import { UrlModel } from "../models/url.model";
 import { ServerResponse } from "../utils/server-response";

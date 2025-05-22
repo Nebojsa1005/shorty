@@ -1,17 +1,16 @@
-import * as bodyParser from "body-parser";
-import * as cookieParser from 'cookie-parser';
-import * as cors from "cors";
-import * as dotenv from "dotenv";
-import * as express from "express";
+import bodyParser from "body-parser";
+import cookieParser from 'cookie-parser';
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
 import mongoose from "mongoose";
 import authRoutes from "./routes/auth.routes";
 import urlRoutes from "./routes/url.route";
 import './utils/mongoDb-connect';
-import * as path from "path";
-
-const MongoStore = require('connect-mongo')
-const passport = require("passport");
-const session = require("express-session");
+import path from "path";
+import MongoStore from "connect-mongo";
+import passport from 'passport'
+import session from 'express-session'
 
 const app = express();
 const env = process.env.NODE_ENV || 'development';

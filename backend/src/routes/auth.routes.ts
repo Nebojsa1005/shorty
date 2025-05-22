@@ -5,8 +5,7 @@ import { ServerResponse } from "../utils/server-response";
 import { getUserByEmail } from "../services/auth.service";
 import { compare, hash } from "bcrypt";
 import { createTokenFromEmailAndId } from "../utils/token";
-
-const passport = require("passport");
+import passport from 'passport'
 
 dotenv.config();
 
@@ -60,9 +59,9 @@ const authRoutes = (app: Express) => {
       );
     }
 
-    const verifiedPassword: boolean | null = await compare(
+    const verifiedPassword = await compare(
       userData.password,
-      user.password
+      user.password as string
     );
 
     if (!verifiedPassword)
