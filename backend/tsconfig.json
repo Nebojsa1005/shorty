@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "module": "commonjs", // or "esnext" or "nodenext"
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
+    "target": "ES2020",
+    "module": "ESNext",
     "moduleResolution": "node",
-    "target": "ES6",
     "outDir": "dist",
     "rootDir": "src",
+    "esModuleInterop": false,
+    "forceConsistentCasingInFileNames": false,
+    "allowSyntheticDefaultImports": true,
     "strict": false,
+    "skipLibCheck": true
   }
 }

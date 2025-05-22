@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ServerResponse = void 0;
 const serverError = (res, status, message, error) => {
     res.status(status).send({
         message: message ? message : "Something Went Wrong",
@@ -15,7 +12,7 @@ const serverSuccess = (res, status, message, data) => {
         data: data,
     });
 };
-exports.ServerResponse = {
+export const ServerResponse = {
     serverError,
     serverSuccess,
 };

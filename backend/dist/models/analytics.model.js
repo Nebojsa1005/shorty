@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AnalyticsModel = void 0;
-const mongoose_1 = require("mongoose");
-const AnalyticsSchema = new mongoose_1.Schema({
+import { Schema, model } from 'mongoose';
+const AnalyticsSchema = new Schema({
     viewCount: {
         type: Number,
         required: true,
@@ -21,4 +18,4 @@ const AnalyticsSchema = new mongoose_1.Schema({
         required: true
     }
 });
-exports.AnalyticsModel = (0, mongoose_1.model)('Analytics', AnalyticsSchema);
+export const AnalyticsModel = model('Analytics', AnalyticsSchema);

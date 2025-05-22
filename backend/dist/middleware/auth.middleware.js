@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.authMiddleware = void 0;
-const jwt = require("jsonwebtoken");
+import * as jwt from 'jsonwebtoken';
 const verifyToken = (req, res, next) => {
     try {
         const token = req.headers.authorization;
@@ -16,6 +13,6 @@ const verifyToken = (req, res, next) => {
         res.status(401).json({ message: "You are not authenticated!" });
     }
 };
-exports.authMiddleware = {
+export const authMiddleware = {
     verifyToken,
 };

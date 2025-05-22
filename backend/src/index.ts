@@ -1,20 +1,23 @@
 import bodyParser from "body-parser";
 import cookieParser from 'cookie-parser';
 import cors from "cors";
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import authRoutes from "./routes/auth.routes";
 import urlRoutes from "./routes/url.route";
 import './utils/mongoDb-connect';
-
-const passport = require("passport");
-const session = require("express-session");
+import MongoStore from 'connect-mongo';
+import path from "path";
+import passport from 'passport'
+import session from 'express-session'
 
 const app = express();
+const env = process.env.NODE_ENV || 'development';
 
-console.log(process.env.NODE_ENV)
-dotenv.config({ path: process.env.NODE_ENV  === 'production' ? '.env.production' : '.env'});
+const envPath = path.resolve(process.cwd(), `.env${env === 'development' ? '' : '.' + env}`);
+
+dotenv.config({ path: envPath});
 
 mongoose.connect(`${process.env.MONGO_DB_URL}`);
 mongoose.connection.once("open", () => {
@@ -38,15 +41,22 @@ app.use(cookieParser());
 
 app.use(
   session({
-    secret: "your-session-secret",
+    secret: process.env.SESSION_SECRET || 'your-session-secret',
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_DB_URL,
+      collectionName: 'sessions',
+    }),
     cookie: {
-      secure: false, 
-      sameSite: "lax",
+      secure: process.env.NODE_ENV === 'production', // true only in production
+      sameSite: 'lax',
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
     },
   })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 
