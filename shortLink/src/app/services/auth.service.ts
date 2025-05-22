@@ -4,7 +4,7 @@ import { catchError, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from '../shared/types/user.type';
 import { LocalStorageKeys } from '../shared/enums/local-storage.enum';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { Response } from '../shared/types/response.type';
 import { ToastService } from './toast-service.service';
 
