@@ -7,7 +7,6 @@
     "rootDir": "src",
     "esModuleInterop": false,
     "forceConsistentCasingInFileNames": false,
-    "allowSyntheticDefaultImports": true,
     "strict": false,
     "skipLibCheck": true
   }

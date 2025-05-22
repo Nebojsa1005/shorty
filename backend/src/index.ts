@@ -1,16 +1,17 @@
-import bodyParser from "body-parser";
-import cookieParser from 'cookie-parser';
-import cors from "cors";
-import dotenv from "dotenv";
-import express from "express";
+import * as bodyParser from "body-parser";
+import * as cookieParser from 'cookie-parser';
+import * as cors from "cors";
+import * as dotenv from "dotenv";
+import * as express from "express";
 import mongoose from "mongoose";
 import authRoutes from "./routes/auth.routes";
 import urlRoutes from "./routes/url.route";
 import './utils/mongoDb-connect';
-import MongoStore from 'connect-mongo';
-import path from "path";
-import passport from 'passport'
-import session from 'express-session'
+import * as path from "path";
+
+const MongoStore = require('connect-mongo')
+const passport = require("passport");
+const session = require("express-session");
 
 const app = express();
 const env = process.env.NODE_ENV || 'development';
@@ -29,20 +30,6 @@ mongoose.connection.once("open", () => {
 
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: false }));
-
-const corsOpts = {
-  origin: '*',
-
-  methods: [
-    'GET',
-    'POST',
-  ],
-
-  allowedHeaders: [
-    'Content-Type',
-    'Application-json'
-  ],
-};
 
 app.use(
   cors({

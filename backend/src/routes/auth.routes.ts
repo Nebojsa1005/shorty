@@ -1,11 +1,12 @@
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 import { Express } from "express";
 import { UserModel } from "../models/user.model";
 import { ServerResponse } from "../utils/server-response";
 import { getUserByEmail } from "../services/auth.service";
 import { compare, hash } from "bcrypt";
 import { createTokenFromEmailAndId } from "../utils/token";
-import passport from 'passport'
+
+const passport = require("passport");
 
 dotenv.config();
 
