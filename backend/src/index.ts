@@ -33,15 +33,7 @@ mongoose.connection.once("open", () => {
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: false }));
 
-const corsOpts = {
-  origin: "*",
-
-  methods: ["GET", "POST"],
-
-  allowedHeaders: ["Content-Type"],
-};
-
-app.use(cors(corsOpts));
+app.use(cors());
 
 app.use(cookieParser());
 
