@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: false }));
 
 app.use(
   cors({
-    origin: process.env.FRONT_END_ORIGIN,
+    origin: '*',
     credentials: true,
   })
 );
