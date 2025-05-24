@@ -64,7 +64,7 @@ app.get('/', (req, res) => {
   res.send('caossss')
 })
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || '3000', () => {
   console.log(
     "\x1b[32m[SERVER]\x1b[0m" +
       "\x1b[33m Server Started On Port \x1b[0m" +
