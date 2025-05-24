@@ -11,6 +11,7 @@
 // // import MongoStore from "connect-mongo";
 // import passport from 'passport'
 // // import session from 'express-session'
+export {};
 // const app = express();
 // const env = process.env.NODE_ENV || 'development';
 // const envPath = path.resolve(process.cwd(), `.env${env === 'development' ? '' : '.' + env}`);
