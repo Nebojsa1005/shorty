@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon --watch src --ext ts --exec tsx src/index.ts",
     "build": "tsc",
-    "prod": "npm run build"
+    "prod": "npm run build",
+    "start:prod": "node src/index.js"
   },
   "devDependencies": {
     "@types/bcrypt": "5.0.0",
