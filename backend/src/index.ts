@@ -30,9 +30,16 @@ mongoose.connection.once("open", () => {
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: false }));
 
-app.use(
-  cors()
-);
+
+const allowedOrigins = [
+  'http://localhost:4200', // local dev
+  'https://minylinks.netlify.app' // your frontend prod domain
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
 
 app.use(cookieParser());
 
