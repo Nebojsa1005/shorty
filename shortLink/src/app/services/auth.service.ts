@@ -46,9 +46,13 @@ export class AuthService {
 
   signUp(userData: UserCredentials) {
     return this.http
-      .post<Response>(`${environment.apiUrl}/api/auth/sign-up`, {
-        userData,
-      }, { withCredentials: true })
+      .post<Response>(
+        `${environment.apiUrl}/api/auth/sign-up`,
+        {
+          userData,
+        },
+        { withCredentials: true }
+      )
       .pipe(
         tap((res) => {
           this.updateUser(res.data.user);
@@ -76,7 +80,11 @@ export class AuthService {
 
   signIn(userData: UserCredentials) {
     return this.http
-      .post<Response>(`${environment.apiUrl}/api/auth/sign-in`, { userData }, {withCredentials: true})
+      .post<Response>(
+        `${environment.apiUrl}/api/auth/sign-in`,
+        { userData },
+        { withCredentials: true }
+      )
       .pipe(
         tap((res) => {
           this.updateUser(res.data.user);
@@ -91,7 +99,7 @@ export class AuthService {
             color: 'primary',
           });
         }),
-        catchError((error) => {          
+        catchError((error) => {
           this.toastService.presentToast({
             position: 'top',
             message: error.error.message,
@@ -143,8 +151,8 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.setItem(LocalStorageKeys.USER, '')
-    this.updateUser(null)
-    this.router.navigate(['auth/sign-in'])    
+    localStorage.setItem(LocalStorageKeys.USER, '');
+    this.updateUser(null);
+    this.router.navigate(['auth/sign-in']);
   }
 }
