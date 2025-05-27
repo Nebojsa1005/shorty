@@ -48,7 +48,7 @@ export class AuthService {
     return this.http
       .post<Response>(`${environment.apiUrl}/api/auth/sign-up`, {
         userData,
-      })
+      }, { withCredentials: true })
       .pipe(
         tap((res) => {
           this.updateUser(res.data.user);
@@ -76,7 +76,7 @@ export class AuthService {
 
   signIn(userData: UserCredentials) {
     return this.http
-      .post<Response>(`${environment.apiUrl}/api/auth/sign-in`, { userData })
+      .post<Response>(`${environment.apiUrl}/api/auth/sign-in`, { userData }, {withCredentials: true})
       .pipe(
         tap((res) => {
           this.updateUser(res.data.user);
