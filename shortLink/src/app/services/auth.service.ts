@@ -143,6 +143,11 @@ export class AuthService {
   saveUserToLocalStorage(user: User) {
     const userStringified = JSON.stringify(user);
     localStorage.setItem(LocalStorageKeys.USER, userStringified);
+    console.log('upisan', {
+      userStringified,
+      local: this.getUserFromLocalStorage()
+    });
+    
   }
 
   getUserFromLocalStorage() {
