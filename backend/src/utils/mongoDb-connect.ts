@@ -1,14 +1,22 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
+import path from "path";
+import dotenv from "dotenv";
 
-const uri = "mongodb+srv://lazarevicnebojsa1005:KJGgrrxQDzWL8fLI@cluster0.cou0exr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const env = process.env.NODE_ENV || "development";
+const envPath = path.resolve(
+  process.cwd(),
+  `.env${env === "development" ? "" : "." + env}`
+);
+
+dotenv.config({ path: envPath });
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
+const client = new MongoClient(process.env.MONGO_DB_URL, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
     deprecationErrors: true,
-  }
+  },
 });
 
 async function run() {
@@ -17,7 +25,9 @@ async function run() {
     await client.connect();
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
   } finally {
     // Ensures that the client will close when you finish/error
     await client.close();

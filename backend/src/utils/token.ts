@@ -1,7 +1,7 @@
-import * as jwt from "jsonwebtoken";
+import { sign } from "jsonwebtoken";
 
 export const createTokenFromEmailAndId = (email: string, id: string) => {
-  return jwt.sign(
+  return sign(
     {
       email,
       id,
