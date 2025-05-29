@@ -11,7 +11,6 @@ import path from "path";
 import MongoStore from "connect-mongo";
 import passport from "passport";
 import session from "express-session";
-import './utils/mongoDb-connect'
 
 const app = express();
 const env = process.env.NODE_ENV || "development";
@@ -81,6 +80,9 @@ app.get("/", (req, res) => {
   res.send("cao");
 });
 
+urlRoutes(app);
+authRoutes(app);
+
 app.listen(process.env.PORT || "3000", () => {
   console.log(
     "\x1b[32m[SERVER]\x1b[0m" +
@@ -88,6 +90,3 @@ app.listen(process.env.PORT || "3000", () => {
       `\x1b[32m ${process.env.PORT} \x1b[0m`
   );
 });
-
-urlRoutes(app);
-authRoutes(app);
