@@ -11,6 +11,7 @@ import path from "path";
 import MongoStore from "connect-mongo";
 import passport from "passport";
 import session from "express-session";
+import './utils/mongoDb-connect'
 
 const app = express();
 const env = process.env.NODE_ENV || "development";
@@ -22,7 +23,7 @@ const envPath = path.resolve(
 
 dotenv.config({ path: envPath });
 
-mongoose.connect(`${process.env.MONGO_DB_URL}`);
+// mongoose.connect(`${process.env.MONGO_DB_URL}`);
 mongoose.connection.once("open", () => {
   console.log(
     "\x1b[32m[MongoDB]\x1b[0m" +
