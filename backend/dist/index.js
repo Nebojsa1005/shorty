@@ -322,10 +322,9 @@ var getUserByEmail = async (email) => {
 import { compare as compare2, hash as hash2 } from "bcrypt";
 
 // src/utils/token.ts
-import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 var createTokenFromEmailAndId = (email, id) => {
-  return true;
-  return sign(
+  return jwt.sign(
     {
       email,
       id
@@ -446,31 +445,21 @@ var authRoutes = (app2) => {
 var auth_routes_default = authRoutes;
 
 // src/utils/mongoDb-connect.ts
-import { MongoClient, ServerApiVersion } from "mongodb";
-import path from "path";
 import dotenv3 from "dotenv";
+import { connect } from "mongoose";
+import path from "path";
 var env = process.env.NODE_ENV || "development";
 var envPath = path.resolve(
   process.cwd(),
   `.env${env === "development" ? "" : "." + env}`
 );
 dotenv3.config({ path: envPath });
-var client = new MongoClient(process.env.MONGO_DB_URL, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true
-  }
-});
 async function run() {
   try {
-    await client.connect();
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
-  } finally {
-    await client.close();
+    await connect(process.env.MONGO_DB_URL);
+    console.log("Connected to Database");
+  } catch (error) {
+    console.log("error", error);
   }
 }
 run().catch(console.dir);
@@ -536,10 +525,10 @@ app.use(passport2.session());
 app.get("/", (req, res) => {
   res.send("cao");
 });
+url_route_default(app);
+auth_routes_default(app);
 app.listen(process.env.PORT || "3000", () => {
   console.log(
     `\x1B[32m[SERVER]\x1B[0m\x1B[33m Server Started On Port \x1B[0m\x1B[32m ${process.env.PORT} \x1B[0m`
   );
 });
-url_route_default(app);
-auth_routes_default(app);
