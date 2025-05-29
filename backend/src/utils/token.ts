@@ -1,6 +1,7 @@
 import { sign } from "jsonwebtoken";
 
 export const createTokenFromEmailAndId = (email: string, id: string) => {
+  return true
   return sign(
     {
       email,
