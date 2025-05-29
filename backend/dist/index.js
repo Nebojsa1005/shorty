@@ -2,7 +2,7 @@
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import dotenv3 from "dotenv";
+import dotenv4 from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 
@@ -322,9 +322,10 @@ var getUserByEmail = async (email) => {
 import { compare as compare2, hash as hash2 } from "bcrypt";
 
 // src/utils/token.ts
-import * as jwt from "jsonwebtoken";
+import { sign } from "jsonwebtoken";
 var createTokenFromEmailAndId = (email, id) => {
-  return jwt.sign(
+  return true;
+  return sign(
     {
       email,
       id
@@ -446,8 +447,15 @@ var auth_routes_default = authRoutes;
 
 // src/utils/mongoDb-connect.ts
 import { MongoClient, ServerApiVersion } from "mongodb";
-var uri = "mongodb+srv://lazarevicnebojsa1005:KJGgrrxQDzWL8fLI@cluster0.cou0exr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-var client = new MongoClient(uri, {
+import path from "path";
+import dotenv3 from "dotenv";
+var env = process.env.NODE_ENV || "development";
+var envPath = path.resolve(
+  process.cwd(),
+  `.env${env === "development" ? "" : "." + env}`
+);
+dotenv3.config({ path: envPath });
+var client = new MongoClient(process.env.MONGO_DB_URL, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
@@ -458,7 +466,9 @@ async function run() {
   try {
     await client.connect();
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
   } finally {
     await client.close();
   }
@@ -466,18 +476,17 @@ async function run() {
 run().catch(console.dir);
 
 // src/index.ts
-import path from "path";
+import path2 from "path";
 import MongoStore from "connect-mongo";
 import passport2 from "passport";
 import session from "express-session";
 var app = express();
-var env = process.env.NODE_ENV || "development";
-var envPath = path.resolve(
+var env2 = process.env.NODE_ENV || "development";
+var envPath2 = path2.resolve(
   process.cwd(),
-  `.env${env === "development" ? "" : "." + env}`
+  `.env${env2 === "development" ? "" : "." + env2}`
 );
-dotenv3.config({ path: envPath });
-mongoose.connect(`${process.env.MONGO_DB_URL}`);
+dotenv4.config({ path: envPath2 });
 mongoose.connection.once("open", () => {
   console.log(
     "\x1B[32m[MongoDB]\x1B[0m\x1B[33m Successfully connected to database \x1B[0m"
