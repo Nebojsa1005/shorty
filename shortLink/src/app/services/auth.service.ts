@@ -145,7 +145,7 @@ export class AuthService {
     localStorage.setItem(LocalStorageKeys.USER, userStringified);
     console.log('upisan', {
       userStringified,
-      local: this.getUserFromLocalStorage()
+      local: this.getUserFromLocalStorage();
     });
     
   }
