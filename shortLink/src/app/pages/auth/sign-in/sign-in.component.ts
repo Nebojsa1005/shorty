@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -15,7 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { take } from 'rxjs';
 import { AuthService, UserCredentials } from '../../../services/auth.service';
-import { EmailRegEx } from '../../../shared/regex/regex';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 interface LoginForm {
   email: FormControl;
@@ -34,6 +34,7 @@ interface LoginForm {
     MatButtonModule,
     MatIconModule,
     MatDividerModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.scss',
@@ -41,8 +42,12 @@ interface LoginForm {
 export class SignInComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
-  showPassword = false;
 
+  isSignInButtonLoading = computed(() =>
+    this.authService.isSignInButtonLoading()
+  );
+
+  showPassword = false;
   formGroup: FormGroup<LoginForm>;
 
   get controls() {
@@ -73,10 +78,13 @@ export class SignInComponent {
   }
 
   signIn() {
+    this.authService.updateState('isSignInButtonLoading', true);
     this.authService
       .signIn(this.formGroup.value as UserCredentials)
       .pipe(take(1))
-      .subscribe();
+      .subscribe(() =>
+        this.authService.updateState('isSignInButtonLoading', false)
+      );
   }
 
   onGoogleLogin() {

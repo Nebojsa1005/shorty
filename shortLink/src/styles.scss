@@ -29,3 +29,29 @@ a {
   font-weight: bold;
   padding: 0;
 }
+
+.button-loading-spinner {
+  height: 20px !important;
+  width: 20px !important;
+  margin-left: 0.5rem;
+}
+
+.divider-container {
+  @extend .d-flex;
+  @extend .flex-col; 
+  @extend .justify-center;
+  @extend .items-center;
+  @extend .w-12;
+  
+  height: 3rem;
+}
+
+.auth-divider {
+	width: 30%;
+}
+
+.auth-divider-text {
+  @extend .p-sm;
+  position: absolute;
+  background: white;
+}

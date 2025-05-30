@@ -37,11 +37,6 @@ export const homeRoutes: Routes = [
           ),
       },
       {
-        path: 'auth',
-        loadChildren: () =>
-          import('../auth/auth.routes').then((r) => r.authRoutes),
-      },
-      {
         path: ':id',
         loadComponent: () =>
           import('../view-link/view-link.component').then(

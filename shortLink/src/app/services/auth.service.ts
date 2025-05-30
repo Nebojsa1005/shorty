@@ -10,6 +10,8 @@ import { ToastService } from './toast-service.service';
 
 interface AuthState {
   user: User | null;
+  isSignInButtonLoading: boolean
+  isSignUpButtonLoading: boolean
 }
 
 export interface UserCredentials {
@@ -27,14 +29,25 @@ export class AuthService {
 
   state = signal<AuthState>({
     user: null,
+    isSignInButtonLoading: false,
+    isSignUpButtonLoading: false
   });
 
   user = computed(() => this.state().user);
+  isSignInButtonLoading = computed(() => this.state().isSignInButtonLoading)
+  isSignUpButtonLoading = computed(() => this.state().isSignUpButtonLoading)
 
   constructor() {
     const user = this.getUserFromLocalStorage();
 
     if (user) this.updateUser(user);
+  }
+
+  updateState<K extends keyof AuthState>(prop: K, value: AuthState[K]) {
+    this.state.update(state => ({
+      ...state,
+      [prop]: value
+    }))
   }
 
   updateUser(newUser: User | null) {

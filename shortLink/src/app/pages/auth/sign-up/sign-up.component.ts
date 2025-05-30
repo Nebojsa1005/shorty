@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -41,6 +41,10 @@ export class SignUpComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
 
+  isSignUpButtonLoading = computed(() =>
+    this.authService.isSignUpButtonLoading()
+  );
+
   formGroup: FormGroup<SignUpForm>;
   showPassword = false;
 
@@ -60,10 +64,13 @@ export class SignUpComponent {
   }
 
   onSignUp() {
+    this.authService.updateState('isSignUpButtonLoading', true);
     this.authService
       .signUp(this.formGroup.value as UserCredentials)
       .pipe(take(1))
-      .subscribe();
+      .subscribe(() =>
+        this.authService.updateState('isSignUpButtonLoading', false)
+      );
   }
 
   onGoogleLogin() {}
