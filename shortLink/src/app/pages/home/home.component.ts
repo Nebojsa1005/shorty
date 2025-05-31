@@ -9,19 +9,18 @@ import { RouterOutlet } from '@angular/router';
 import { SideMenuComponent } from 'src/app/shared/components/side-menu/side-menu.component';
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [
-    MatSidenavModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatListModule,
-    RouterOutlet,
-    SideMenuComponent,
-  ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+    selector: 'app-home',
+    imports: [
+        MatSidenavModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatListModule,
+        RouterOutlet,
+        SideMenuComponent,
+    ],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent {
   private breakpointObserver = inject(BreakpointObserver);

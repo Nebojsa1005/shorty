@@ -40,23 +40,22 @@ export interface ShortLink {
 }
 
 @Component({
-  selector: 'app-table-links',
-  standalone: true,
-  imports: [
-    MatProgressSpinnerModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-    MatIconModule,
-    MatMenuModule,
-    MatMenuTrigger,
-    MatButtonModule,
-    DatePipe,
-    MatTooltipModule,
-    CopyClipboardDirective,
-  ],
-  templateUrl: './table-links.component.html',
-  styleUrls: ['./table-links.component.scss'],
+    selector: 'app-table-links',
+    imports: [
+        MatProgressSpinnerModule,
+        MatTableModule,
+        MatSortModule,
+        MatPaginatorModule,
+        MatIconModule,
+        MatMenuModule,
+        MatMenuTrigger,
+        MatButtonModule,
+        DatePipe,
+        MatTooltipModule,
+        CopyClipboardDirective,
+    ],
+    templateUrl: './table-links.component.html',
+    styleUrls: ['./table-links.component.scss']
 })
 export class TableLinksComponent {
   private router = inject(Router);

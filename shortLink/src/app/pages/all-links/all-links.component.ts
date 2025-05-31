@@ -12,19 +12,18 @@ import { UrlService } from '../../services/url.service';
 import { TableLinksComponent } from '../../shared/components/table-links/table-links.component';
 
 @Component({
-  selector: 'app-all-links',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    TableLinksComponent,
-  ],
-  templateUrl: './all-links.component.html',
-  styleUrl: './all-links.component.scss',
+    selector: 'app-all-links',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        TableLinksComponent,
+    ],
+    templateUrl: './all-links.component.html',
+    styleUrl: './all-links.component.scss'
 })
 export class AllLinksComponent {
   private destroyRef = inject(DestroyRef);

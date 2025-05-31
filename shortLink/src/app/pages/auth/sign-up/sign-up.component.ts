@@ -22,20 +22,19 @@ interface SignUpForm {
 }
 
 @Component({
-  selector: 'app-sign-up',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDividerModule,
-  ],
-  templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.scss',
+    selector: 'app-sign-up',
+    imports: [
+        CommonModule,
+        RouterLink,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDividerModule,
+    ],
+    templateUrl: './sign-up.component.html',
+    styleUrl: './sign-up.component.scss'
 })
 export class SignUpComponent {
   private fb = inject(FormBuilder);

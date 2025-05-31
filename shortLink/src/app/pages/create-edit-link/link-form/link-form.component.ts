@@ -16,22 +16,21 @@ import { UrlLink } from '../../../shared/types/url.interface';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-link-form',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatOptionModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-  ],
-  templateUrl: './link-form.component.html',
-  styleUrl: './link-form.component.scss',
+    selector: 'app-link-form',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+    ],
+    templateUrl: './link-form.component.html',
+    styleUrl: './link-form.component.scss'
 })
 export class LinkFormComponent {
    private fb = inject(FormBuilder);

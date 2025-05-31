@@ -15,20 +15,19 @@ import { UrlLink } from '../../shared/types/url.interface';
 import { ToastService } from '../../services/toast-service.service';
 
 @Component({
-  selector: 'app-view-link',
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    MatError,
-    CommonModule,
-    ReactiveFormsModule
-  ],
-  templateUrl: './view-link.component.html',
-  styleUrl: './view-link.component.scss',
+    selector: 'app-view-link',
+    imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+        MatError,
+        CommonModule,
+        ReactiveFormsModule
+    ],
+    templateUrl: './view-link.component.html',
+    styleUrl: './view-link.component.scss'
 })
 export class ViewLinkComponent {
   showPassword = false;

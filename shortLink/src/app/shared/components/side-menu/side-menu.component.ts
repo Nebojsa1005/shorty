@@ -5,11 +5,10 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
-  selector: 'app-side-menu',
-  standalone: true,
-  imports: [MatListModule, MatIconModule],
-  templateUrl: './side-menu.component.html',
-  styleUrls: ['./side-menu.component.scss'],
+    selector: 'app-side-menu',
+    imports: [MatListModule, MatIconModule],
+    templateUrl: './side-menu.component.html',
+    styleUrls: ['./side-menu.component.scss']
 })
 export class SideMenuComponent {
   private authService = inject(AuthService);

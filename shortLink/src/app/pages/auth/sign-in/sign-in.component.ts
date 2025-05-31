@@ -23,21 +23,20 @@ interface LoginForm {
 }
 
 @Component({
-  selector: 'app-sign-in',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDividerModule,
-    MatProgressSpinnerModule,
-  ],
-  templateUrl: './sign-in.component.html',
-  styleUrl: './sign-in.component.scss',
+    selector: 'app-sign-in',
+    imports: [
+        CommonModule,
+        RouterLink,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDividerModule,
+        MatProgressSpinnerModule,
+    ],
+    templateUrl: './sign-in.component.html',
+    styleUrl: './sign-in.component.scss'
 })
 export class SignInComponent {
   private fb = inject(FormBuilder);

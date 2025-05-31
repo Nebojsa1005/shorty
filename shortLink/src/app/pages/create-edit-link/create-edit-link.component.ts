@@ -7,11 +7,10 @@ import { ActivatedRoute } from '@angular/router';
 import { UrlLink } from '../../shared/types/url.interface';
 
 @Component({
-  selector: 'app-create-edit-link',
-  standalone: true,
-  imports: [LinkFormComponent, MatButton],
-  templateUrl: './create-edit-link.component.html',
-  styleUrl: './create-edit-link.component.scss',
+    selector: 'app-create-edit-link',
+    imports: [LinkFormComponent, MatButton],
+    templateUrl: './create-edit-link.component.html',
+    styleUrl: './create-edit-link.component.scss'
 })
 export class CreateEditLinkComponent {
   private urlService = inject(UrlService);
