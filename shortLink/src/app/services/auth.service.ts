@@ -103,7 +103,7 @@ export class AuthService {
           this.updateUser(res.data.user);
           this.saveUserToLocalStorage(res.data.user);
 
-          this.router.navigate(['']);
+          this.router.navigate(['all-links']);
 
           this.toastService.presentToast({
             position: 'top',

@@ -34,7 +34,7 @@ const authRoutes = (app: Express) => {
 
       ServerResponse.serverSuccess(res, 200, "Successfully Registered", {
         token: createTokenFromEmailAndId(createdUser.email, createdUser._id),
-        data: createdUser,
+        user: createdUser,
       });
     } catch (error) {
       return ServerResponse.serverError(

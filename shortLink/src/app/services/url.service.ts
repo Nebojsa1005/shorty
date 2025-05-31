@@ -15,6 +15,7 @@ import { AuthService } from './auth.service';
 
 interface UrlState {
   allUrls: UrlLink[];
+  allUrlsLoading: boolean;
   urlForm: UrlForm | null;
   securityOptions: UrlSecurityOption[];
 }
@@ -31,6 +32,7 @@ export class UrlService {
   // State
   state = signal<UrlState>({
     allUrls: [],
+    allUrlsLoading: false,
     urlForm: null,
     securityOptions: [
       {
@@ -45,8 +47,16 @@ export class UrlService {
   urlForm = computed(() => this.state().urlForm);
   user = computed(() => this.authService.user());
   securityOptions = computed(() => this.state().securityOptions);
+  allUrlsLoading = computed(() => this.state().allUrlsLoading);
 
   // State updaters
+  updateState<K extends keyof UrlState>(prop: K, value: UrlState[K]) {
+    this.state.update((state) => ({
+      ...state,
+      [prop]: value,
+    }));
+  }
+
   updateAllUrls(allUrls: UrlLink[]) {
     this.state.update((state) => ({
       ...state,
@@ -83,16 +93,18 @@ export class UrlService {
   }
 
   getShortLinkById(id: string) {
-    return this.http.get<Response>(`${environment.apiUrl}/api/url/get-by-id/${id}`).pipe(
-      catchError((error) => {
-        this.toastService.presentToast({
-          position: 'top',
-          message: error.error.message,
-          color: 'danger',
-        });
-        return of(null);
-      })
-    )
+    return this.http
+      .get<Response>(`${environment.apiUrl}/api/url/get-by-id/${id}`)
+      .pipe(
+        catchError((error) => {
+          this.toastService.presentToast({
+            position: 'top',
+            message: error.error.message,
+            color: 'danger',
+          });
+          return of(null);
+        })
+      );
   }
 
   getShortLinkByShortLinkId(id: string, suffix: string) {
@@ -101,7 +113,10 @@ export class UrlService {
       : {};
 
     return this.http
-      .get<Response>(`${environment.apiUrl}/api/url/get-by-short-link-id/${id}`, options)
+      .get<Response>(
+        `${environment.apiUrl}/api/url/get-by-short-link-id/${id}`,
+        options
+      )
       .pipe(
         catchError((error) => {
           this.toastService.presentToast({
@@ -152,7 +167,7 @@ export class UrlService {
       })
       .pipe(
         tap((response: Response) => {
-          this.router.navigate(['all-links'])
+          this.router.navigate(['all-links']);
           this.toastService.presentToast({
             position: 'top',
             message: response.message,

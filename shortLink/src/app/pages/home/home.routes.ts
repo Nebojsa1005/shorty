@@ -5,7 +5,7 @@ export const homeRoutes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'new-link',
+    redirectTo: 'all-links',
   },
   {
     path: '',

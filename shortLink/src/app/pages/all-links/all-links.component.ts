@@ -27,9 +27,12 @@ import { TableLinksComponent } from '../../shared/components/table-links/table-l
   styleUrl: './all-links.component.scss',
 })
 export class AllLinksComponent {
-   private homeService = inject(UrlService);
   private destroyRef = inject(DestroyRef);
+  private urlService = inject(UrlService);
   private router = inject(Router);
+
+  tableLoading = computed(() => this.urlService.allUrlsLoading());
+  allUrls = computed(() => this.urlService.allUrls());
 
   searchControl = new FormControl<string>('');
 
@@ -38,13 +41,12 @@ export class AllLinksComponent {
     distinctUntilChanged()
   );
 
-  allUrls = computed(() => this.homeService.allUrls());
-
   ngOnInit() {
-    this.homeService
+    this.urlService.updateState('allUrlsLoading', true);
+    this.urlService
       .fetchAllUrls()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+      .subscribe(() => this.urlService.updateState('allUrlsLoading', false));
   }
 
   ionViewDidLeave() {
