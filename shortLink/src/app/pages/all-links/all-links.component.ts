@@ -53,6 +53,6 @@ export class AllLinksComponent {
   }
 
   newLink() {
-    this.router.navigate(['']);
+    this.router.navigate(['new-link']);
   }
 }
