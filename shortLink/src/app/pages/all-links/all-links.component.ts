@@ -10,25 +10,27 @@ import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { UrlService } from '../../services/url.service';
 import { TableLinksComponent } from '../../shared/components/table-links/table-links.component';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
-    selector: 'app-all-links',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        TableLinksComponent,
-    ],
-    templateUrl: './all-links.component.html',
-    styleUrl: './all-links.component.scss'
+  selector: 'app-all-links',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    TableLinksComponent,
+  ],
+  templateUrl: './all-links.component.html',
+  styleUrl: './all-links.component.scss',
 })
 export class AllLinksComponent {
   private destroyRef = inject(DestroyRef);
   private urlService = inject(UrlService);
   private router = inject(Router);
+  private analyticsService = inject(AnalyticsService)
 
   tableLoading = computed(() => this.urlService.allUrlsLoading());
   allUrls = computed(() => this.urlService.allUrls());
@@ -41,6 +43,11 @@ export class AllLinksComponent {
   );
 
   ngOnInit() {
+    this.analyticsService.trackEvent(
+      'view all links loaded',
+      'all links viewed',
+      'allLinks'
+    );
     this.urlService.updateState('allUrlsLoading', true);
     this.urlService
       .fetchAllUrls()
