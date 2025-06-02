@@ -13,6 +13,7 @@ import { UrlService } from '../../services/url.service';
 import { SecurityOptions } from '../../shared/enums/security-options.enum';
 import { UrlLink } from '../../shared/types/url.interface';
 import { ToastService } from '../../services/toast-service.service';
+import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
     selector: 'app-view-link',
@@ -35,6 +36,7 @@ export class ViewLinkComponent {
   private route = inject(ActivatedRoute);
   private urlService = inject(UrlService);
   private toastService = inject(ToastService);
+  private analyticsService = inject(AnalyticsService)
 
   SecurityOptions = SecurityOptions;
 
@@ -46,6 +48,7 @@ export class ViewLinkComponent {
   passwordControl = new FormControl('');
 
   ngOnInit() {
+    this.analyticsService.trackEvent('view link loaded', 'link viewed', 'viewLink')
     this.urlService
       .getShortLinkByShortLinkId(this.linkId, this.suffix)
       .pipe(
