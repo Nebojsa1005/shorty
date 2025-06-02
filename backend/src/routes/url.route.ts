@@ -14,7 +14,7 @@ import { compare, hash } from "bcrypt";
 
 dotenv.config();
 
-const BASE_URL = process.env.FRONT_END_ORIGIN;
+const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.FRONT_END_ORIGIN : process.env.CLIENT_ORIGIN;
 
 const urlRoutes = (app: Express) => {
   app.get("/api/url/get-all-urls/:userId", async (req, res) => {
@@ -61,15 +61,16 @@ const urlRoutes = (app: Express) => {
       if (suffix) link = `${link}/${suffix}`;
 
       const shortLink = `${link}/${shortLinkId}`;
-      console.log({
-        shortLink
-      });
       
       try {
         const record = await UrlModel.findOne({
-          shortLink,
+          shortLinkId,
         }).populate("analytics");
-
+        
+        console.log({
+          shortLinkId,
+          record
+        });
         if (!record) {
           return ServerResponse.serverError(res, 404, "Minified URL not found");
         }

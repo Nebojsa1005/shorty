@@ -96,7 +96,7 @@ export class UrlService {
     return this.http
       .get<Response>(`${environment.apiUrl}/api/url/get-by-id/${id}`)
       .pipe(
-        catchError((error) => {
+        catchError((error) => {          
           this.toastService.presentToast({
             position: 'top',
             message: error.error.message,
