@@ -7,6 +7,10 @@ declare var gtag: any;
 })
 export class AnalyticsService {
   trackEvent(eventName: string, eventDetails: string, eventCategory: string) {
+    console.log({
+      eventName, eventDetails, eventCategory
+    });
+    
     gtag('event', eventName, {
       // event Type - example: 'SCROLL_TO_TOP_CLICKED'
       event_category: eventCategory,

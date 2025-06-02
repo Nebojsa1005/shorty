@@ -66,11 +66,7 @@ const urlRoutes = (app: Express) => {
         const record = await UrlModel.findOne({
           shortLinkId,
         }).populate("analytics");
-        
-        console.log({
-          shortLinkId,
-          record
-        });
+
         if (!record) {
           return ServerResponse.serverError(res, 404, "Minified URL not found");
         }
