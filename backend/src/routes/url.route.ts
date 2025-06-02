@@ -61,6 +61,9 @@ const urlRoutes = (app: Express) => {
       if (suffix) link = `${link}/${suffix}`;
 
       const shortLink = `${link}/${shortLinkId}`;
+      console.log({
+        shortLink
+      });
       
       try {
         const record = await UrlModel.findOne({
