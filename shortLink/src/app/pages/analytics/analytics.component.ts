@@ -17,7 +17,13 @@ import { BestPreformingComponent } from './best-preforming/best-preforming.compo
 export class AnalyticsComponent {
   private urlService = inject(UrlService);
 
-  allLinks = computed(() => this.urlService.allUrls());
+  bestPreformingLinks = computed(() =>
+    this.urlService.allUrls().sort((a, b) => {
+      const aViews = a.analytics?.viewCount ?? 0;
+      const bViews = b.analytics?.viewCount ?? 0;
+      return bViews - aViews;
+    }).slice(0, 3)
+  );
   allLinksLoading = computed(() => this.urlService.allUrlsLoading());
 
   constructor() {

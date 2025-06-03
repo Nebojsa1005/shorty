@@ -37,6 +37,13 @@ export const homeRoutes: Routes = [
           ),
       },
       {
+        path: 'analytics',
+        loadChildren: () =>
+          import('../analytics/analytics.routes').then(
+            (r) => r.analyticsRoutes
+          ),
+      },
+      {
         path: ':id',
         loadComponent: () =>
           import('../view-link/view-link.component').then(
