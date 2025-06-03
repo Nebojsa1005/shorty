@@ -73,6 +73,7 @@ export class UrlService {
 
   // Actions
   fetchAllUrls() {
+    this.updateState('allUrlsLoading', true)
     return this.http
       .get<Response>(
         `${environment.apiUrl}/api/url/get-all-urls/${this.user()?._id}`
@@ -80,6 +81,7 @@ export class UrlService {
       .pipe(
         tap((response: Response) => {
           this.updateAllUrls(response.data);
+          this.updateState('allUrlsLoading', false)
         }),
         catchError((error) => {
           this.toastService.presentToast({

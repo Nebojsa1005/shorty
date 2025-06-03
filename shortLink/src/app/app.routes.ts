@@ -7,6 +7,10 @@ export const routes: Routes = [
       import('./pages/auth/auth.routes').then((r) => r.authRoutes),
   },
   {
+    path: 'analytics',
+    loadChildren: () => import('./pages/analytics/analytics.routes').then(r => r.analyticsRoutes)
+  },
+  {
     path: '',
     loadChildren: () =>
       import('./pages/home/home.routes').then((r) => r.homeRoutes),

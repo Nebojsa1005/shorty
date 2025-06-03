@@ -1,4 +1,5 @@
 import { SecurityOptions } from '../enums/security-options.enum';
+import { Analytics } from './analytics.interface';
 
 export interface UrlLink {
   _id: string;
@@ -8,6 +9,7 @@ export interface UrlLink {
   suffix?: string;
   password?: string;
   expirationDate?: string
+  analytics: Analytics
 }
 
 export interface UrlForm {

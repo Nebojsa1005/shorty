@@ -14,7 +14,10 @@ import { compare, hash } from "bcrypt";
 
 dotenv.config();
 
-const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.FRONT_END_ORIGIN : process.env.CLIENT_ORIGIN;
+const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.FRONT_END_ORIGIN
+    : process.env.CLIENT_ORIGIN;
 
 const urlRoutes = (app: Express) => {
   app.get("/api/url/get-all-urls/:userId", async (req, res) => {
@@ -22,7 +25,12 @@ const urlRoutes = (app: Express) => {
       const { userId } = req.params;
 
       const allUserUrls = (
-        await UserModel.findById(userId).populate("shortLinks")
+        await UserModel.findById(userId).populate({
+          path: "shortLinks",
+          populate: {
+            path: "analytics",
+          },
+        })
       ).shortLinks;
 
       if (!allUserUrls) {
@@ -35,33 +43,38 @@ const urlRoutes = (app: Express) => {
     }
   });
 
-  app.get('/api/url/get-by-id/:id', async (req, res) => {
-    const { id } = req.params
+  app.get("/api/url/get-by-id/:id", async (req, res) => {
+    const { id } = req.params;
 
     try {
-      const record = await UrlModel.findById(id)
+      const record = await UrlModel.findById(id);
 
       if (!record) {
         return ServerResponse.serverError(res, 404, "Minified URL not found");
       }
 
-      return ServerResponse.serverSuccess(res, 200, "Successfully Fetched", record)
-    } catch(error) {
+      return ServerResponse.serverSuccess(
+        res,
+        200,
+        "Successfully Fetched",
+        record
+      );
+    } catch (error) {
       return ServerResponse.serverError(res, 500, error.message, error);
     }
-  })
+  });
 
   app.get(
     "/api/url/get-by-short-link-id/:shortLinkId",
     async (req: Request, res: Response) => {
       const { shortLinkId } = req.params;
-      const { suffix } = req.query
-      let link = `${BASE_URL}`;      
+      const { suffix } = req.query;
+      let link = `${BASE_URL}`;
 
       if (suffix) link = `${link}/${suffix}`;
 
       const shortLink = `${link}/${shortLinkId}`;
-      
+
       try {
         const record = await UrlModel.findOne({
           shortLinkId,
@@ -99,7 +112,9 @@ const urlRoutes = (app: Express) => {
         const expirationDate = formData.expirationDate;
         const shortLinkId = nanoid(10);
 
-        const shortLink = `${BASE_URL}${suffix ? "/" + suffix : ""}/${shortLinkId}`;
+        const shortLink = `${BASE_URL}${
+          suffix ? "/" + suffix : ""
+        }/${shortLinkId}`;
 
         let password = "";
 
@@ -120,7 +135,7 @@ const urlRoutes = (app: Express) => {
             security,
             analytics: analytics._id,
             user: userId,
-            shortLinkId
+            shortLinkId,
           });
 
           await updateUserShortLinks(userId, url._id);
@@ -197,7 +212,7 @@ const urlRoutes = (app: Express) => {
       }
 
       console.log(shortLink);
-      
+
       const verifiedPassword: boolean | null = await compare(
         password,
         shortLink.password
