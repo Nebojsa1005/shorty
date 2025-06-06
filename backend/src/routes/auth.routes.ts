@@ -103,10 +103,7 @@ const authRoutes = (app: Express) => {
           if (err) {
             return next(err);
           }
-
-          console.log("✅ Logged in user:", req.user);
-          console.log("✅ Session after login:", req.session);
-
+          
           return res.redirect("http://localhost:4200/auth/login");
         });
       }
