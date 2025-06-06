@@ -33,3 +33,19 @@ export function getLast30Days(): string[] {
   }
   return result;
 }
+
+export function get1Month() {
+  return (365.25 / 12) * 24 * 60 * 60 * 1000;
+}
+
+export function get1MonthAgo() {
+  return new Date().getTime() - get1Month()
+}
+
+export function get6MonthsAgo() {
+  return new Date().getTime() - get1Month() * 6
+}
+
+export function get12MonthsAgo() {
+  return new Date().getTime() - get1Month() * 12
+}
