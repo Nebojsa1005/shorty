@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { UrlLink } from '../shared/types/url.interface';
+import { UrlLink } from '../types/url.interface';
 
 @Pipe({
   name: 'tableSearch',

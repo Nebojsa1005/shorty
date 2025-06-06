@@ -1,23 +1,7 @@
 import { Component, computed, input } from '@angular/core';
 import { EChartsCoreOption } from 'echarts/core';
-import { UrlLink } from 'src/app/shared/types/url.interface';
-import { BarChart, LineChart } from 'echarts/charts';
-import {
-  GridComponent,
-  TitleComponent,
-  TooltipComponent,
-} from 'echarts/components';
-import * as echarts from 'echarts/core';
-import { CanvasRenderer } from 'echarts/renderers';
 import { NgxEchartsDirective } from 'ngx-echarts';
-
-echarts.use([
-  BarChart,
-  GridComponent,
-  TooltipComponent,
-  TitleComponent,
-  CanvasRenderer,
-]);
+import { UrlLink } from 'src/app/shared/types/url.interface';
 
 @Component({
   selector: 'app-best-preforming',
@@ -34,10 +18,16 @@ export class BestPreformingComponent {
 
     return {
       title: {
-        text: 'All Time Visits',
+        text: 'Best Preforming Links',
       },
       tooltip: {
         trigger: 'axis',
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true,
       },
       xAxis: {
         type: 'category',

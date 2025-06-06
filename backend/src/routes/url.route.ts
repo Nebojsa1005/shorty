@@ -211,8 +211,6 @@ const urlRoutes = (app: Express) => {
         );
       }
 
-      console.log(shortLink);
-
       const verifiedPassword: boolean | null = await compare(
         password,
         shortLink.password

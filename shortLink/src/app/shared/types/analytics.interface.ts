@@ -3,4 +3,8 @@ export interface Analytics {
   lastViewedOn: Date;
   firstViewedOn: Date;
   shortLink: string;
+  entries: {
+    date: Date
+    viewCount: number
+  }[]
 }

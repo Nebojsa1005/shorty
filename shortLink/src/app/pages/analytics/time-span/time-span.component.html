@@ -1,0 +1,60 @@
+<div class="d-flex justify-between items-center">
+  <mat-form-field
+    class="w-6"
+    appearance="outline"
+    class="search-field mb-md"
+    color="primary"
+  >
+    <mat-label>Search</mat-label>
+    <input matInput [formControl]="searchControl" placeholder="Search" />
+    <button mat-icon-button matSuffix disabled>
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <div class="w-6">
+    <button
+      mat-button
+      (click)="updateOptions('1m')"
+      [class.active]="activeOptionButton == '1m'"
+    >
+      1M
+    </button>
+    <button
+      mat-button
+      (click)="updateOptions('6m')"
+      [class.active]="activeOptionButton == '6m'"
+    >
+      6M
+    </button>
+    <button
+      mat-button
+      (click)="updateOptions('1y')"
+      [class.active]="activeOptionButton == '1y'"
+    >
+      1Y
+    </button>
+    <button
+      mat-button
+      (click)="updateOptions('all')"
+      [class.active]="activeOptionButton == 'all'"
+    >
+      All
+    </button>
+  </div>
+</div>
+
+<apx-chart
+  #chart
+  [series]="chartOptions().series"
+  [chart]="chartOptions().chart"
+  [colors]="chartOptions().colors"
+  [yaxis]="chartOptions().yaxis"
+  [dataLabels]="chartOptions().dataLabels"
+  [markers]="chartOptions().markers"
+  [stroke]="chartOptions().stroke"
+  [grid]="chartOptions().grid"
+  [xaxis]="chartOptions().xaxis"
+  [tooltip]="chartOptions().tooltip"
+  [annotations]="chartOptions().annotations"
+></apx-chart>
