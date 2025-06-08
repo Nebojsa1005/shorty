@@ -11,6 +11,7 @@ import path from "path";
 import MongoStore from "connect-mongo";
 import passport from "passport";
 import session from "express-session";
+import pricingRoutes from "./routes/pricing";
 
 const app = express();
 const env = process.env.NODE_ENV || "development";
@@ -82,6 +83,7 @@ app.get("/", (req, res) => {
 
 urlRoutes(app);
 authRoutes(app);
+pricingRoutes(app)
 
 app.listen(process.env.PORT || "3000", () => {
   console.log(

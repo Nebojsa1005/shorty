@@ -1,0 +1,13 @@
+<div class="p-md d-flex items-center justify-between">
+	@for(product of products(); track product) {
+		<div class="d-flex flex-col items-center ">
+			<p>
+				{{ product.attributes.name }}
+			</p>
+
+			<p>{{ product.attributes.price_formatted }}</p>
+
+			<a [href]="product.attributes.buy_now_url">Buy now</a>
+		</div>
+	}
+</div>
