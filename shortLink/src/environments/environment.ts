@@ -1,9 +1,13 @@
 export const environment = {
-	apiUrl: 'http://localhost:3000',
-	oAuthClientId: '1004194683376-tg9e67nqgdmbtjhinc9o2o6hj5lge7b9.apps.googleusercontent.com',
-	oAuthClientSecret: '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'
-}
+  apiUrl: 'http://localhost:3000',
+  oAuthClientId:
+    '1004194683376-tg9e67nqgdmbtjhinc9o2o6hj5lge7b9.apps.googleusercontent.com',
+  oAuthClientSecret: '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',
+  lemonSquezzyApiKey:
+    'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5NGQ1OWNlZi1kYmI4LTRlYTUtYjE3OC1kMjU0MGZjZDY5MTkiLCJqdGkiOiJlZjdiZmFmMDYyOTc3Mzg2ZTg3YjZiYTU3NzIwNmQ2ODEyZDE0NGQ0NDU4ZjE5YzgyOWEzZjZhNThmNTZhMmU2OWYwODI4YjlmNDNlZDEzZCIsImlhdCI6MTc0OTMwNDIwMS45NDA2ODYsIm5iZiI6MTc0OTMwNDIwMS45NDA2ODksImV4cCI6MjA2NDgzNzAwMS44NTAyMzYsInN1YiI6IjUwMTUzMTAiLCJzY29wZXMiOltdfQ.EusydizkINxMW5sEf-_p9eURkLhjmHp7GMPi6Iv73qg6uyTEK4QfWeEL10M0Tw8dWFEsO-ay4E4Lg3Q24vD9lXWfYoo_rlY7jVTBkDZx-yWJWbF7amuajH99BzkvcVDlRPzye2bwys-9MzBec97TnMfGElSKQ0DTN3kZ8j2QD6GQ6RY8g-hzdc4RkGf1_ywCDddL3qQnoB6yJvAvsHmojzhXyQTC7weV2KNiS6tPkpxdSEe2ZL1rWM4TN7H4gE5hu3fqfqSrdCulCvacZHr29AMwQLIAgzKcL-d7vTanXiui-OglR-qPjdUaQn-fkFdp0eHPsZx5I7ZsKpXhQ7MxoA6FOOxk-VIahEY3CaADblZ7Pmhl4JtLoKGOY3paH5aDEgqHHPdWqbJdMQopC0DunsDeJwKMnbWze0hVHjBBEeiNFUyFN4YVsF2P9-JScpvVogkHzqD8YbswXJ_fXMNu12-eC6i3X2n-S5TXsEfZ_JTUWovXp9TVxQoS44265F55',
+  lemonSquezzyRootUrl: 'https://api.lemonsqueezy.com/v1',
+};
 
-  //Email address: a4-service-account@minify-url-
-  // 
-  // 458417.iam.gserviceaccount.com 
+//Email address: a4-service-account@minify-url-
+//
+// 458417.iam.gserviceaccount.com
