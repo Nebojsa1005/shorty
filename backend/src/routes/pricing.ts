@@ -31,6 +31,14 @@ const pricingRoutes = (app: Express) => {
       console.log(error);
     }
   });
+
+  app.post('/api/webhook', async (req, res) => {
+	try {
+		return ServerResponse.serverSuccess(res, 200, 'Webhook recived', res)
+	} catch(error) {
+		return ServerResponse.serverError(res, 400, 'Webhook error', error)
+	}
+  })
 };
 
 export default pricingRoutes;
