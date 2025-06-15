@@ -7,7 +7,7 @@
 
 			<p>{{ product.attributes.price_formatted }}</p>
 
-			<a [href]="product.attributes.buy_now_url">Buy now</a>
+			<button mat-button (click)="onBuyNow(product.attributes.buy_now_url)">Buy now</button>
 		</div>
 	}
 </div>

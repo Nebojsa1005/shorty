@@ -16,4 +16,8 @@ export class PricingComponent {
   constructor() {
     this.pricingService.getAllProducts().pipe(takeUntilDestroyed()).subscribe();
   }
+
+  onBuyNow(buyNowUrl: string) {
+    window.location.href = `${buyNowUrl}[custom][userId]=${1234}`;
+  }
 }

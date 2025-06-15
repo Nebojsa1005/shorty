@@ -35,39 +35,38 @@ const pricingRoutes = (app: Express) => {
   });
 
   app.post("/api/webhook", async (req, res) => {
-    console.log(req);
-     try {
-    const event = req.body;
+    try {
+      const event = req.body;
 
-    console.log('[Webhook] Event:', event.meta?.event_name);
+      console.log("[Webhook] Event:", event);
 
-    if (event.meta?.event_name === 'order_created') {
-      const order = event.data;
-      const email = order.attributes.user_email;
-      const product = order.attributes.product_name;
-      const customData = order.attributes.custom_data;
+      if (event.meta?.event_name === "order_created") {
+        const order = event.data;
+        const email = order.attributes.user_email;
+        const product = order.attributes.product_name;
+        const customData = order.attributes.custom_data;
 
-      const userId = customData?.userId;
+        const userId = customData?.userId;
 
-      console.log(`✅ Order created: ${email} bought ${product}`);
-      console.log(`🔗 userId (from custom_data): ${userId}`);
+        console.log(`✅ Order created: ${email} bought ${product}`);
+        console.log(`🔗 userId (from custom_data): ${userId}`);
 
-      // TODO: Update your DB here
-      // Example:
-      // await UserModel.findByIdAndUpdate(userId, {
-      //   subscribed: true,
-      //   subscriptionPlan: product,
-      //   subscribedAt: new Date(),
-      // });
+        // TODO: Update your DB here
+        // Example:
+        // await UserModel.findByIdAndUpdate(userId, {
+        //   subscribed: true,
+        //   subscriptionPlan: product,
+        //   subscribedAt: new Date(),
+        // });
 
-      return res.sendStatus(200);
+        return res.sendStatus(200);
+      }
+
+      return res.status(200).send("Unhandled event type");
+    } catch (err) {
+      console.error("[Webhook] Error:", err);
+      return res.status(400).send("Webhook processing failed");
     }
-
-    return res.status(200).send('Unhandled event type');
-  } catch (err) {
-    console.error('[Webhook] Error:', err);
-    return res.status(400).send('Webhook processing failed');
-  }
   });
 };
 
