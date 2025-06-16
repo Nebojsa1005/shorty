@@ -38,16 +38,17 @@ const pricingRoutes = (app: Express) => {
   app.post("/api/webhook", async (req, res) => {
     try {
       const event = req.body;
+      console.log(event);
+      
       const productId = event.attributes.product_id
       const eventName = event.meta?.event_name
       const userId = event.meta?.custom_data.userId
       
       if (eventName === SubscriptionEventTypes.subscription_created || eventName === SubscriptionEventTypes.subscription_payment_success) {
         const product = await axios(`${lemonUrl}/products/${productId}`)
-        console.log(product);
         
         const user = await UserModel.findByIdAndUpdate(userId, {
-
+          subsctiptionPlanId: productId
         })
 
         console.log(user);

@@ -7,6 +7,7 @@ export interface UserDocument extends Document {
   createdAt: Date
   password?: string,
   shortLinks: UrlDocument[]
+  subscriptionPlanId: string
 }
 
 const UserSchema = new Schema<UserDocument>({
@@ -25,7 +26,8 @@ const UserSchema = new Schema<UserDocument>({
     type: Date,
     default: Date.now,
   },
-  shortLinks: [{ type: Schema.Types.ObjectId, ref: "Url", required: true }]
+  shortLinks: [{ type: Schema.Types.ObjectId, ref: "Url", required: true }],
+  subscriptionPlanId: { type: String, required: true, default: '' }
 });
 
 export const UserModel = model<UserDocument>('User', UserSchema);
