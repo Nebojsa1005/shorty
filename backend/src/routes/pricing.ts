@@ -40,9 +40,7 @@ const pricingRoutes = (app: Express) => {
     try {
       const event = req.body;
       const eventName = event.meta?.event_name
-      const userId = event.meta?.userId
-
-      console.log(event);
+      const userId = event.meta?.custom_data.userId
       
       if (eventName === SubscriptionEventTypes.subscription_created || eventName === SubscriptionEventTypes.subscription_payment_success) {
         const user = await UserModel.findById(userId)
