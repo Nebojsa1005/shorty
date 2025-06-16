@@ -44,11 +44,12 @@ const pricingRoutes = (app: Express) => {
       console.log('product id', productId);
       
       if (
+        productId &&
         eventName === SubscriptionEventTypes.subscription_created ||
         eventName === SubscriptionEventTypes.subscription_payment_success
       ) {
         const user = await UserModel.findByIdAndUpdate(userId, {
-          subsctiptionPlanId: productId,
+          subsctiptionPlanId: `${productId}`,
         });
 
         console.log(user);
