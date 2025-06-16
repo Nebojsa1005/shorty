@@ -38,7 +38,7 @@ const pricingRoutes = (app: Express) => {
   app.post("/api/webhook", async (req, res) => {
     try {
       const event = req.body;
-      const eventName = event.meta?.event.event_name
+      const eventName = event
 
       if (eventName === SubscriptionEventTypes.subscription_created) {
 
