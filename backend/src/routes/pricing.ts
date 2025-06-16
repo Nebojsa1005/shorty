@@ -3,6 +3,7 @@ import { Express } from "express";
 import axios from "axios";
 import { ServerResponse } from "../utils/server-response";
 import { SubscriptionEventTypes } from "../types/subscription-event-types.enum";
+import { UserModel } from "../models/user.model";
 
 dotenv.config();
 
@@ -39,9 +40,13 @@ const pricingRoutes = (app: Express) => {
     try {
       const event = req.body;
       const eventName = event.meta?.event_name
+      const userId = event.meta?.userId
 
-      if (eventName === SubscriptionEventTypes.subscription_created) {
+      if (eventName === SubscriptionEventTypes.subscription_created || eventName === SubscriptionEventTypes.subscription_payment_success) {
+        const user = await UserModel.findById(userId)
 
+        console.log(user);
+        
       }
 
       console.log("[Webhook] Event name:", eventName);
