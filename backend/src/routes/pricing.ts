@@ -44,7 +44,7 @@ const pricingRoutes = (app: Express) => {
       console.log('product id', productId);
       
       if (
-        productId &&
+        (productId !== 'undefined' && productId) &&
         eventName === SubscriptionEventTypes.subscription_created ||
         eventName === SubscriptionEventTypes.subscription_payment_success
       ) {
