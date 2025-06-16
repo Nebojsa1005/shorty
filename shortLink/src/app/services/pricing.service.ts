@@ -19,32 +19,42 @@ export class PricingService {
     products: null,
   });
 
-  products = computed(() => this.state().products)
+  products = computed(() => this.state().products);
 
   getAllProducts() {
-    return (
-      this.http
-        .get(`${environment.lemonSquezzyRootUrl}/products`, {
-          headers: {
-            Accept: 'application/vnd.api+json',
-            'Content-Type': 'application/vnd.api+json',
-            Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
-          },
+    return this.http
+      .get(`${environment.lemonSquezzyRootUrl}/products`, {
+        headers: {
+          Accept: 'application/vnd.api+json',
+          'Content-Type': 'application/vnd.api+json',
+          Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
+        },
+      })
+      .pipe(
+        tap((data: any) => {
+          this.updateState('products', data.data);
+        }),
+        catchError((error) => {
+          this.toastService.presentToast({
+            position: 'top',
+            message: error.error.message,
+            color: 'danger',
+          });
+          return of(null);
         })
-        .pipe(
-          tap((data: any) => {
-            this.updateState('products', data.data);
-          }),
-          catchError((error) => {
-            this.toastService.presentToast({
-              position: 'top',
-              message: error.error.message,
-              color: 'danger',
-            });
-            return of(null);
-          })
-        )
-    );
+      );
+  }
+
+  getSubscription(subId: string) {
+    return this.http
+      .get(`${environment.lemonSquezzyRootUrl}/products/${subId}`, {
+        headers: {
+          Accept: 'application/vnd.api+json',
+          'Content-Type': 'application/vnd.api+json',
+          Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
+        },
+      })
+      .pipe(tap((data) => console.log(data)));
   }
 
   // State updaters

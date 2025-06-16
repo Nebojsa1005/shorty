@@ -2,6 +2,7 @@ import * as dotenv from "dotenv";
 import { Express } from "express";
 import axios from "axios";
 import { ServerResponse } from "../utils/server-response";
+import { SubscriptionEventTypes } from "../types/subscription-event-types.enum";
 
 dotenv.config();
 
@@ -37,8 +38,13 @@ const pricingRoutes = (app: Express) => {
   app.post("/api/webhook", async (req, res) => {
     try {
       const event = req.body;
+      const eventName = event.meta.event.event_name
 
-      console.log("[Webhook] Event:", event);
+      if (eventName === SubscriptionEventTypes.subscription_created) {
+
+      }
+
+      console.log("[Webhook] Event name:", eventName);
 
       if (event.meta?.event_name === "order_created") {
         const order = event.data;
@@ -47,17 +53,6 @@ const pricingRoutes = (app: Express) => {
         const customData = order.attributes.custom_data;
 
         const userId = customData?.userId;
-
-        console.log(`✅ Order created: ${email} bought ${product}`);
-        console.log(`🔗 userId (from custom_data): ${userId}`);
-
-        // TODO: Update your DB here
-        // Example:
-        // await UserModel.findByIdAndUpdate(userId, {
-        //   subscribed: true,
-        //   subscriptionPlan: product,
-        //   subscribedAt: new Date(),
-        // });
 
         return res.sendStatus(200);
       }

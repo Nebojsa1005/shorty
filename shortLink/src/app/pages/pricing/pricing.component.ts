@@ -1,5 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AuthService } from 'src/app/services/auth.service';
 import { PricingService } from 'src/app/services/pricing.service';
 
 @Component({
@@ -10,14 +11,20 @@ import { PricingService } from 'src/app/services/pricing.service';
 })
 export class PricingComponent {
   private pricingService = inject(PricingService);
+  private authService = inject(AuthService);
 
   products = computed(() => this.pricingService.products());
+  user = computed(() => this.authService.user());
 
   constructor() {
     this.pricingService.getAllProducts().pipe(takeUntilDestroyed()).subscribe();
+    this.pricingService.getSubscription('541888').subscribe()
   }
 
   onBuyNow(buyNowUrl: string) {
-    window.location.href = `${buyNowUrl}[custom][userId]=${1234}`;
+    window.open(
+      `${buyNowUrl}?checkout[custom][userId]=${this.user()?._id}`,
+      '_blank'
+    );
   }
 }
