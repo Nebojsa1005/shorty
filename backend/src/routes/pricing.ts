@@ -1,9 +1,9 @@
+import axios from "axios";
 import * as dotenv from "dotenv";
 import { Express } from "express";
-import axios from "axios";
-import { ServerResponse } from "../utils/server-response";
-import { SubscriptionEventTypes } from "../types/subscription-event-types.enum";
 import { UserModel } from "../models/user.model";
+import { SubscriptionEventTypes } from "../types/subscription-event-types.enum";
+import { ServerResponse } from "../utils/server-response";
 
 dotenv.config();
 
@@ -38,38 +38,22 @@ const pricingRoutes = (app: Express) => {
   app.post("/api/webhook", async (req, res) => {
     try {
       const event = req.body;
-      console.log(event);
-      
-      const productId = event.attributes.product_id
-      const eventName = event.meta?.event_name
-      const userId = event.meta?.custom_data.userId
-      
-      if (eventName === SubscriptionEventTypes.subscription_created || eventName === SubscriptionEventTypes.subscription_payment_success) {
-        const product = await axios(`${lemonUrl}/products/${productId}`)
-        
+      const productId = event.data.attributes.product_id;
+      const eventName = event.meta?.event_name;
+      const userId = event.meta?.custom_data.userId;
+
+      if (
+        eventName === SubscriptionEventTypes.subscription_created ||
+        eventName === SubscriptionEventTypes.subscription_payment_success
+      ) {
         const user = await UserModel.findByIdAndUpdate(userId, {
-          subsctiptionPlanId: productId
-        })
+          subsctiptionPlanId: productId,
+        });
 
         console.log(user);
-        
       }
-
-      if (event.meta?.event_name === "order_created") {
-        const order = event.data;
-        const email = order.attributes.user_email;
-        const product = order.attributes.product_name;
-        const customData = order.attributes.custom_data;
-
-        const userId = customData?.userId;
-
-        return res.sendStatus(200);
-      }
-
-      return res.status(200).send("Unhandled event type");
     } catch (err) {
       console.error("[Webhook] Error:", err);
-      return res.status(400).send("Webhook processing failed");
     }
   });
 };
