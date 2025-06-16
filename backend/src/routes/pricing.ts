@@ -42,14 +42,14 @@ const pricingRoutes = (app: Express) => {
       const eventName = event.meta?.event_name
       const userId = event.meta?.userId
 
+      console.log(event);
+      
       if (eventName === SubscriptionEventTypes.subscription_created || eventName === SubscriptionEventTypes.subscription_payment_success) {
         const user = await UserModel.findById(userId)
 
         console.log(user);
         
       }
-
-      console.log("[Webhook] Event name:", eventName);
 
       if (event.meta?.event_name === "order_created") {
         const order = event.data;
