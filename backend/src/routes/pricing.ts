@@ -38,10 +38,11 @@ const pricingRoutes = (app: Express) => {
   app.post("/api/webhook", async (req, res) => {
     try {
       const event = req.body;
-      const productId = event.data.attributes.product_id;
+      const productId = event.data?.attributes.product_id;
       const eventName = event.meta?.event_name;
       const userId = event.meta?.custom_data.userId;
-
+      console.log('product id', productId);
+      
       if (
         eventName === SubscriptionEventTypes.subscription_created ||
         eventName === SubscriptionEventTypes.subscription_payment_success
