@@ -13,7 +13,6 @@ const lemonUrl = process.env.LEMON_SQUEZZY_URL;
 const pricingRoutes = (app: Express) => {
   app.get("/api/products", async (req, res) => {
     try {
-      console.log(123999);
       const response = await axios.get(
         `https://api.lemonsqueezy.com/v1/products`,
         {
@@ -39,11 +38,17 @@ const pricingRoutes = (app: Express) => {
   app.post("/api/webhook", async (req, res) => {
     try {
       const event = req.body;
+      const productId = event.attributes.product_id
       const eventName = event.meta?.event_name
       const userId = event.meta?.custom_data.userId
       
       if (eventName === SubscriptionEventTypes.subscription_created || eventName === SubscriptionEventTypes.subscription_payment_success) {
-        const user = await UserModel.findById(userId)
+        const product = await axios(`${lemonUrl}/products/${productId}`)
+        console.log(product);
+        
+        const user = await UserModel.findByIdAndUpdate(userId, {
+
+        })
 
         console.log(user);
         
