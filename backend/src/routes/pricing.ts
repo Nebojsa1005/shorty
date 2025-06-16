@@ -41,7 +41,7 @@ const pricingRoutes = (app: Express) => {
       const productId = event.data?.attributes.product_id;
       const eventName = event.meta?.event_name;
       const userId = event.meta?.custom_data.userId;
-      console.log('product id', productId);
+      console.log(`${eventName} - productId: ${productId}, type: ${typeof productId}`);
       
       if (
         (productId !== 'undefined' && productId) &&
