@@ -28,7 +28,7 @@ const UserSchema = new Schema<UserDocument>({
     default: Date.now,
   },
   shortLinks: [{ type: Schema.Types.ObjectId, ref: "Url", required: true }],
-  subscription: { type: Schema.Types.ObjectId, ref: "Subscription", required: true }
+  subscription: { type: Schema.Types.ObjectId, ref: "Subscription" }
 });
 
 export const UserModel = model<UserDocument>("User", UserSchema);
