@@ -4,6 +4,9 @@ import { Express } from "express";
 import { UserModel } from "../models/user.model";
 import { SubscriptionEventTypes } from "../types/subscription-event-types.enum";
 import { ServerResponse } from "../utils/server-response";
+import { populateUserSubscription } from "../services/user.service";
+import { SubscriptionModel } from "../models/subscription.model";
+import { createSubscription } from "../services/subscription.service";
 
 dotenv.config();
 
@@ -44,15 +47,24 @@ const pricingRoutes = (app: Express) => {
       console.log(`${eventName} - productId: ${productId}, type: ${typeof productId}`);
       
       if (
-        (productId !== 'undefined' && productId) &&
         eventName === SubscriptionEventTypes.subscription_created ||
-        eventName === SubscriptionEventTypes.subscription_payment_success
+        eventName === SubscriptionEventTypes.subscription_updated
       ) {
-        const user = await UserModel.findByIdAndUpdate(userId, {
-          subscriptionPlanId: `${productId}`,
-        }, { new: true });
+        const user = await UserModel.findById(userId)
+        const populatedUser = await populateUserSubscription(user)
 
-        console.log(user);
+        if (populatedUser.subscription.subscriptionId) {
+          await SubscriptionModel.findByIdAndUpdate(populatedUser.subscription._id, {
+            subscriptionId:  event.id,
+            productId
+          })
+        } else {
+          const subscription = await createSubscription({ subscriptionId: event.id, productId })
+          
+          user.subscription = subscription._id
+          await user.save()
+        }
+        
       }
     } catch (err) {
       console.error("[Webhook] Error:", err);

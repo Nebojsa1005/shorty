@@ -1,13 +1,14 @@
-import { Schema, model, Document } from 'mongoose';
-import { UrlDocument } from './url.model';
+import { Schema, model, Document } from "mongoose";
+import { UrlDocument } from "./url.model";
+import { SubscriptionDocument } from "./subscription.model";
 
 export interface UserDocument extends Document {
-  email: string
-  name: string
-  createdAt: Date
-  password?: string,
-  shortLinks: UrlDocument[]
-  subscriptionPlanId: string
+  email: string;
+  name: string;
+  createdAt: Date;
+  password?: string;
+  shortLinks: UrlDocument[];
+  subscription: SubscriptionDocument
 }
 
 const UserSchema = new Schema<UserDocument>({
@@ -27,7 +28,7 @@ const UserSchema = new Schema<UserDocument>({
     default: Date.now,
   },
   shortLinks: [{ type: Schema.Types.ObjectId, ref: "Url", required: true }],
-  subscriptionPlanId: { type: String, required: true, default: '' }
+  subscription: { type: Schema.Types.ObjectId, ref: "Subscription", required: true }
 });
 
-export const UserModel = model<UserDocument>('User', UserSchema);
+export const UserModel = model<UserDocument>("User", UserSchema);
