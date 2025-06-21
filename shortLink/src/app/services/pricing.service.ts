@@ -47,7 +47,7 @@ export class PricingService {
 
   getSubscription(subId: string) {
     return this.http
-      .get(`${environment.lemonSquezzyRootUrl}/products/${subId}`, {
+      .get(`${environment.lemonSquezzyRootUrl}/subscriptions/${subId}`, {
         headers: {
           Accept: 'application/vnd.api+json',
           'Content-Type': 'application/vnd.api+json',
@@ -56,6 +56,17 @@ export class PricingService {
       })
       .pipe(tap((data) => console.log(data)));
   }
+
+  cancelSubscription(subId: string) {
+    return this.http.delete(`${environment.lemonSquezzyRootUrl}/subscriptions/${subId}`, {
+       headers: {
+          Accept: 'application/vnd.api+json',
+          'Content-Type': 'application/vnd.api+json',
+          Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
+        },
+    })
+  }
+
 
   // State updaters
   updateState<K extends keyof PricingState>(prop: K, value: PricingState[K]) {
