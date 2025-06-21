@@ -55,7 +55,7 @@ const pricingRoutes = (app: Express) => {
 
         if (populatedUser.subscription.subscriptionId) {
           await SubscriptionModel.findByIdAndUpdate(populatedUser.subscription._id, {
-            subscriptionId:  event.id,
+            subscriptionId: event.id,
             productId
           })
         } else {

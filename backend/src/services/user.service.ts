@@ -9,5 +9,5 @@ export const updateUserShortLinks = async (userId: string, urlId: string) => {
 };
 
 export const populateUserSubscription = async (user: UserDocument) => {
-  return user.populate("subscriptionPlanId");
+  return user.populate("subscription");
 };
