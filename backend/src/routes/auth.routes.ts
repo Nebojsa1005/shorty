@@ -5,7 +5,8 @@ import { ServerResponse } from "../utils/server-response";
 import { getUserByEmail } from "../services/auth.service";
 import { compare, hash } from "bcrypt";
 import { createTokenFromEmailAndId } from "../utils/token";
-import passport from 'passport'
+import passport from "passport";
+import { SubscriptionModel } from "../models/subscription.model";
 
 dotenv.config();
 
@@ -24,10 +25,14 @@ const authRoutes = (app: Express) => {
       // Hash candidate password
       const hashedPassword = await hash(userData.password, 10);
 
+      // Crating subscription model
+      const subscriptionModel = await new SubscriptionModel().save();
+
       // Creating instance of Candidate
       const newUser = new UserModel({
         ...userData,
         password: hashedPassword,
+        subscription: subscriptionModel._id,
       });
 
       const createdUser = await newUser.save();
@@ -103,7 +108,7 @@ const authRoutes = (app: Express) => {
           if (err) {
             return next(err);
           }
-          
+
           return res.redirect("http://localhost:4200/auth/login");
         });
       }

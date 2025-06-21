@@ -6,8 +6,8 @@ export interface SubscriptionDocument extends Document {
 }
 
 const SubscriptionSchema = new Schema<SubscriptionDocument>({
-  subscriptionId: { type: String, required: true, default: "" },
-  productId: { type: String, required: true, default: "" },
+  subscriptionId: { type: String, default: "" },
+  productId: { type: String, default: "" },
 });
 
 export const SubscriptionModel = model<SubscriptionDocument>(

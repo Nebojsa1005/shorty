@@ -44,27 +44,26 @@ const pricingRoutes = (app: Express) => {
       const productId = event.data?.attributes.product_id;
       const eventName = event.meta?.event_name;
       const userId = event.meta?.custom_data.userId;
-      console.log(`${eventName} - productId: ${productId}, type: ${typeof productId}`);
-      
+      console.log(
+        `${eventName} - productId: ${productId}, type: ${typeof productId}`
+      );
+
       if (
         eventName === SubscriptionEventTypes.subscription_created ||
         eventName === SubscriptionEventTypes.subscription_updated
       ) {
-        const user = await UserModel.findById(userId)
-        const populatedUser = await populateUserSubscription(user)
+        const user = await UserModel.findById(userId);
+        const populatedUser = await populateUserSubscription(user);
 
-        if (populatedUser.subscription && populatedUser.subscription.subscriptionId) {
-          await SubscriptionModel.findByIdAndUpdate(populatedUser.subscription._id, {
+        await SubscriptionModel.findByIdAndUpdate(
+          populatedUser.subscription._id,
+          {
             subscriptionId: event.id,
-            productId
-          })
-        } else {
-          const subscription = await createSubscription({ subscriptionId: event.id, productId })
-          
-          user.subscription = subscription._id
-          await user.save()
-        }
-        
+            productId,
+          }
+        );
+
+        await user.save();
       }
     } catch (err) {
       console.error("[Webhook] Error:", err);
