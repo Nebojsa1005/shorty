@@ -7,6 +7,7 @@ import { compare, hash } from "bcrypt";
 import { createTokenFromEmailAndId } from "../utils/token";
 import passport from "passport";
 import { SubscriptionModel } from "../models/subscription.model";
+import { populateUserSubscription } from "../services/user.service";
 
 dotenv.config();
 
@@ -36,10 +37,11 @@ const authRoutes = (app: Express) => {
       });
 
       const createdUser = await newUser.save();
+      const populatedUser = await populateUserSubscription(newUser)
 
       ServerResponse.serverSuccess(res, 200, "Successfully Registered", {
         token: createTokenFromEmailAndId(createdUser.email, createdUser._id),
-        user: createdUser,
+        user: populatedUser,
       });
     } catch (error) {
       return ServerResponse.serverError(
@@ -72,9 +74,11 @@ const authRoutes = (app: Express) => {
     if (!verifiedPassword)
       return ServerResponse.serverError(res, 401, "Invalid Password");
 
+    const populatedUser = await populateUserSubscription(user)
+
     return ServerResponse.serverSuccess(res, 200, "Successfully Signed In", {
       token: createTokenFromEmailAndId(user.email, user._id),
-      user,
+      user: populatedUser,
     });
   });
 
