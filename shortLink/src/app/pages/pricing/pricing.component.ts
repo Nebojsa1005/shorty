@@ -18,7 +18,7 @@ export class PricingComponent {
 
   constructor() {
     this.pricingService.getAllProducts().pipe(takeUntilDestroyed()).subscribe();
-    this.pricingService.getSubscription('1286719').subscribe()
+    this.pricingService.getSubscription('1286801').subscribe()
   }
 
   onBuyNow(buyNowUrl: string) {
@@ -29,6 +29,6 @@ export class PricingComponent {
   }
 
   onCancel() {
-    this.pricingService.cancelSubscription('1286719').subscribe()
+    this.pricingService.cancelSubscription().subscribe()
   }
 }

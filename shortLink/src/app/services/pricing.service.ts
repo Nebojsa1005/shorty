@@ -3,6 +3,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ToastService } from './toast-service.service';
+import { AuthService } from './auth.service';
 
 interface PricingState {
   products: any;
@@ -14,12 +15,14 @@ interface PricingState {
 export class PricingService {
   private http = inject(HttpClient);
   private toastService = inject(ToastService);
+  private authService = inject(AuthService);
 
   state = signal<PricingState>({
     products: null,
   });
 
   products = computed(() => this.state().products);
+  user = computed(() => this.authService.user());
 
   getAllProducts() {
     return this.http
@@ -57,16 +60,20 @@ export class PricingService {
       .pipe(tap((data) => console.log(data)));
   }
 
-  cancelSubscription(subId: string) {
-    return this.http.delete(`${environment.lemonSquezzyRootUrl}/subscriptions/${subId}`, {
-       headers: {
+  cancelSubscription() {
+    return this.http.delete(
+      `${environment.lemonSquezzyRootUrl}/subscriptions/${
+        this.user()?.subscription.subscriptionId
+      }`,
+      {
+        headers: {
           Accept: 'application/vnd.api+json',
           'Content-Type': 'application/vnd.api+json',
           Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
         },
-    })
+      }
+    );
   }
-
 
   // State updaters
   updateState<K extends keyof PricingState>(prop: K, value: PricingState[K]) {
