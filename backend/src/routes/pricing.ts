@@ -58,7 +58,7 @@ const pricingRoutes = (app: Express) => {
         await SubscriptionModel.findByIdAndUpdate(
           populatedUser.subscription._id,
           {
-            subscriptionId: event.id,
+            subscriptionId: event.data.id,
             productId,
           }
         );
