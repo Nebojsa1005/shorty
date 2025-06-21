@@ -49,7 +49,8 @@ const pricingRoutes = (app: Express) => {
       const eventName = event.meta?.event_name;
       const userId = event.meta?.custom_data.userId;
       const subscriptionId = event.data.id;
-
+      console.log({eventName});
+      
       // subscription creation
       createSubscriptionWebhook({
         eventName,
