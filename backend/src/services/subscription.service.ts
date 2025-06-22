@@ -54,10 +54,8 @@ export const deleteSubscriptionWebhook = async ({
   eventName,
   userId,
 }: DeleteSubscriptionPayload) => {
-  if (eventName === SubscriptionEventTypes.subscription_cancelled) {
-	console.log(userId);
-	
-    const user = await UserModel.findByIdAndUpdate(userId, {
+  if (eventName === SubscriptionEventTypes.subscription_cancelled) {	
+    await UserModel.findByIdAndUpdate(userId, {
       subscriptionId: "",
       productId: "",
     });
