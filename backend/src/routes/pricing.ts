@@ -1,16 +1,11 @@
 import axios from "axios";
 import * as dotenv from "dotenv";
 import { Express } from "express";
-import { UserModel } from "../models/user.model";
-import { SubscriptionEventTypes } from "../types/subscription-event-types.enum";
-import { ServerResponse } from "../utils/server-response";
-import { populateUserSubscription } from "../services/user.service";
-import { SubscriptionModel } from "../models/subscription.model";
 import {
-  createSubscription,
   createSubscriptionWebhook,
-  deleteSubscriptionWebhook,
+  deleteSubscriptionWebhook
 } from "../services/subscription.service";
+import { ServerResponse } from "../utils/server-response";
 
 dotenv.config();
 
@@ -59,11 +54,11 @@ const pricingRoutes = (app: Express) => {
         productId,
       });
 
-      // subscription deletion
-      deleteSubscriptionWebhook({
-        eventName,
-        userId,
-      });
+      // // subscription deletion
+      // deleteSubscriptionWebhook({
+      //   eventName,
+      //   userId,
+      // });
     } catch (err) {
       console.error("[Webhook] Error:", err);
     }
