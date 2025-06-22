@@ -55,10 +55,10 @@ const pricingRoutes = (app: Express) => {
       });
 
       // // subscription deletion
-      // deleteSubscriptionWebhook({
-      //   eventName,
-      //   userId,
-      // });
+      deleteSubscriptionWebhook({
+        eventName,
+        userId,
+      });
     } catch (err) {
       console.error("[Webhook] Error:", err);
     }
