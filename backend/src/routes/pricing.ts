@@ -44,7 +44,7 @@ const pricingRoutes = (app: Express) => {
       const eventName = event.meta?.event_name;
       const userId = event.meta?.custom_data.userId;
       const subscriptionId = event.data.id;
-      const isCancelled = event.data.cancelled
+      const isCancelled = event.data?.attributes.cancelled
       console.log({eventName});
       
       if (!isCancelled) {
