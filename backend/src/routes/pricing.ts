@@ -3,16 +3,23 @@ import * as dotenv from "dotenv";
 import { Express } from "express";
 import {
   createSubscriptionWebhook,
-  deleteSubscriptionWebhook
+  deleteSubscriptionWebhook,
 } from "../services/subscription.service";
 import { ServerResponse } from "../utils/server-response";
+import { Server } from "socket.io";
+import http from "http";
 
 dotenv.config();
 
-const lemonApiKey = process.env.LEMON_SQUEZZY_API_KEY;
-const lemonUrl = process.env.LEMON_SQUEZZY_URL;
-
 const pricingRoutes = (app: Express) => {
+  const server = http.createServer(app);
+  const io = new Server(server, {
+    cors: {
+      origin: "*", // Later: restrict to Netlify domain
+      methods: ["GET", "POST"],
+    },
+  });
+
   app.get("/api/products", async (req, res) => {
     try {
       const response = await axios.get(
@@ -44,9 +51,8 @@ const pricingRoutes = (app: Express) => {
       const eventName = event.meta?.event_name;
       const userId = event.meta?.custom_data.userId;
       const subscriptionId = event.data.id;
-      const isCancelled = event.data?.attributes.cancelled
-      console.log({eventName});
-      
+      const isCancelled = event.data?.attributes.cancelled;
+
       if (!isCancelled) {
         // subscription creation
         createSubscriptionWebhook({
@@ -55,6 +61,9 @@ const pricingRoutes = (app: Express) => {
           subscriptionId,
           productId,
         });
+
+        io.to(userId).emit('subscription-updated', { status: 'active' })
+        
       } else {
         // subscription deletion
         deleteSubscriptionWebhook({
@@ -62,7 +71,6 @@ const pricingRoutes = (app: Express) => {
           userId,
         });
       }
-
     } catch (err) {
       console.error("[Webhook] Error:", err);
     }
