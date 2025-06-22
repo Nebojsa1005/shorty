@@ -44,21 +44,25 @@ const pricingRoutes = (app: Express) => {
       const eventName = event.meta?.event_name;
       const userId = event.meta?.custom_data.userId;
       const subscriptionId = event.data.id;
+      const isCancelled = event.data.cancelled
       console.log({eventName});
       
-      // subscription creation
-      createSubscriptionWebhook({
-        eventName,
-        userId,
-        subscriptionId,
-        productId,
-      });
+      if (!isCancelled) {
+        // subscription creation
+        createSubscriptionWebhook({
+          eventName,
+          userId,
+          subscriptionId,
+          productId,
+        });
+      } else {
+        // subscription deletion
+        deleteSubscriptionWebhook({
+          eventName,
+          userId,
+        });
+      }
 
-      // // subscription deletion
-      deleteSubscriptionWebhook({
-        eventName,
-        userId,
-      });
     } catch (err) {
       console.error("[Webhook] Error:", err);
     }
