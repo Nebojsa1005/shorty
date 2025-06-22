@@ -20,6 +20,10 @@ const pricingRoutes = (app: Express) => {
     },
   });
 
+  io.on("connection", (socket) => {
+    console.log("New WebSocket client connected:", socket.id);
+  });
+
   app.get("/api/products", async (req, res) => {
     try {
       const response = await axios.get(
@@ -54,17 +58,17 @@ const pricingRoutes = (app: Express) => {
       const isCancelled = event.data?.attributes.cancelled;
 
       // if (!isCancelled) {
-        // subscription creation
-        createSubscriptionWebhook({
-          eventName,
-          userId,
-          subscriptionId,
-          productId,
-        });
+      // subscription creation
+      createSubscriptionWebhook({
+        eventName,
+        userId,
+        subscriptionId,
+        productId,
+      });
 
-        console.log(1234);
-        
-        io.to(userId).emit('subscription-updated', { status: 'active' })
+      console.log(1234);
+
+      io.to(userId).emit("subscription-updated", { status: "active" });
 
       // } else {
       //   // subscription deletion
