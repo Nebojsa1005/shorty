@@ -53,7 +53,7 @@ const pricingRoutes = (app: Express) => {
       const subscriptionId = event.data.id;
       const isCancelled = event.data?.attributes.cancelled;
 
-      if (!isCancelled) {
+      // if (!isCancelled) {
         // subscription creation
         createSubscriptionWebhook({
           eventName,
@@ -62,15 +62,17 @@ const pricingRoutes = (app: Express) => {
           productId,
         });
 
-        io.to(userId).emit('subscription-updated', { status: 'active' })
+        console.log(1234);
         
-      } else {
-        // subscription deletion
-        deleteSubscriptionWebhook({
-          eventName,
-          userId,
-        });
-      }
+        io.to(userId).emit('subscription-updated', { status: 'active' })
+
+      // } else {
+      //   // subscription deletion
+      //   deleteSubscriptionWebhook({
+      //     eventName,
+      //     userId,
+      //   });
+      // }
     } catch (err) {
       console.error("[Webhook] Error:", err);
     }
