@@ -12,9 +12,39 @@ import MongoStore from "connect-mongo";
 import passport from "passport";
 import session from "express-session";
 import pricingRoutes from "./routes/pricing";
+import { createServer } from "node:http";
+import { Server } from "socket.io";
 
 const app = express();
 const env = process.env.NODE_ENV || "development";
+
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by Socket.IO CORS"));
+      }
+    },
+    credentials: true,
+  },
+});
+
+// Socket.IO setup
+io.on('connection', (socket) => {
+  socket.on('join-room', (roomId) => {
+    socket.join(roomId);
+    socket.emit('subscription-updated', { userId: roomId });
+
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+  });
+});
 
 const envPath = path.resolve(
   process.cwd(),
@@ -83,9 +113,9 @@ app.get("/", (req, res) => {
 
 urlRoutes(app);
 authRoutes(app);
-pricingRoutes(app)
+pricingRoutes(app, io);
 
-app.listen(process.env.PORT || "3000", () => {
+server.listen(process.env.PORT || "3000", () => {
   console.log(
     "\x1b[32m[SERVER]\x1b[0m" +
       "\x1b[33m Server Started On Port \x1b[0m" +

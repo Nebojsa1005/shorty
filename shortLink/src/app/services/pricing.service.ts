@@ -48,15 +48,9 @@ export class PricingService {
       );
   }
 
-  getSubscription(subId: string) {
+  getSubscription() {
     return this.http
-      .get(`${environment.lemonSquezzyRootUrl}/subscriptions/${subId}`, {
-        headers: {
-          Accept: 'application/vnd.api+json',
-          'Content-Type': 'application/vnd.api+json',
-          Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
-        },
-      })
+      .get(`${environment.apiUrl}/api/products`)
       .pipe(tap((data) => console.log(data)));
   }
 

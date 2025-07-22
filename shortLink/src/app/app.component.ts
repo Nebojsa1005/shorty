@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { SocketService } from './services/socket.service';
 
 @Component({
   selector: 'app-root',
@@ -8,4 +9,10 @@ import { RouterModule } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {}
+export class AppComponent {
+  private socketService = inject(SocketService);
+
+  constructor() {
+    this.socketService.joinRoom();
+  }
+}

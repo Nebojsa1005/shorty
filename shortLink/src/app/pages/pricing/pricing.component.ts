@@ -1,9 +1,8 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from 'src/app/services/auth.service';
 import { PricingService } from 'src/app/services/pricing.service';
-import { io, Socket } from 'socket.io-client';
-import { environment } from 'src/environments/environment';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'app-pricing',
@@ -14,22 +13,13 @@ import { environment } from 'src/environments/environment';
 export class PricingComponent {
   private pricingService = inject(PricingService);
   private authService = inject(AuthService);
-
-  private socket: Socket;
+  private socketService = inject(SocketService);
 
   products = computed(() => this.pricingService.products());
   user = computed(() => this.authService.user());
 
   constructor() {
-    this.socket = io(environment.apiUrl);
-
-    this.socket.emit('join', this.user()?._id as string)
-    this.socket.on('subscription-updated', (data) => console.log(data));
-
     this.pricingService.getAllProducts().pipe(takeUntilDestroyed()).subscribe();
-    this.pricingService
-      .getSubscription(this.user()?.subscription.subscriptionId as string)
-      .subscribe();
   }
 
   onBuyNow(buyNowUrl: string) {
