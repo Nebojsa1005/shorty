@@ -1,22 +1,26 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { PricingService } from 'src/app/services/pricing.service';
-import { SocketService } from 'src/app/services/socket.service';
+import { IsSubscribedPipe } from 'src/app/shared/pipes/is-subscribed.pipe';
 
 @Component({
   selector: 'app-pricing',
-  imports: [],
+  imports: [MatToolbarModule, MatButtonModule, IsSubscribedPipe],
   templateUrl: './pricing.component.html',
   styleUrl: './pricing.component.scss',
 })
 export class PricingComponent {
   private pricingService = inject(PricingService);
   private authService = inject(AuthService);
-  private socketService = inject(SocketService);
+  private router = inject(Router)
 
   products = computed(() => this.pricingService.products());
   user = computed(() => this.authService.user());
+  
 
   constructor() {
     this.pricingService.getAllProducts().pipe(takeUntilDestroyed()).subscribe();
@@ -31,5 +35,9 @@ export class PricingComponent {
 
   onCancel() {
     this.pricingService.cancelSubscription().subscribe();
+  }
+
+  goHome() {
+    this.router.navigate([''])
   }
 }

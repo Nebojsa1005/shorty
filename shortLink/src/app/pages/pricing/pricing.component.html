@@ -1,15 +1,27 @@
+<mat-toolbar color="white">
+  <button mat-button (click)="goHome()">Go Home</button>
+</mat-toolbar>
+
 <div class="p-md d-flex items-center justify-between">
-	@for(product of products(); track product) {
-		<div class="d-flex flex-col items-center ">
-			<p>
-				{{ product.attributes.name }}
-			</p>
+  @for(product of products(); track product.id) {
+  <div class="d-flex flex-col items-center">
+    <p>
+      {{ product.attributes.name }}
+    </p>
 
-			<p>{{ product.attributes.price_formatted }}</p>
+    <p>{{ product.attributes.price_formatted }}</p>
 
-			<button mat-button (click)="onBuyNow(product.attributes.buy_now_url)">Buy now</button>
-		</div>
-	}
+    <button
+      mat-button
+      [disabled]="product.id | isSubscribed"
+      (click)="onBuyNow(product.attributes.buy_now_url)"
+    >
+      {{
+       (product.id | isSubscribed) ? "Current" : "Buy Now"
+      }}
+    </button>
+  </div>
+  }
 </div>
 
-<button (click)="onCancel()"> cancel</button>
+<button mat-button (click)="onCancel()">cancel</button>

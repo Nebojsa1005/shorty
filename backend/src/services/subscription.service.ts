@@ -44,6 +44,7 @@ export const createSubscriptionWebhook = async ({
     await SubscriptionModel.findByIdAndUpdate(populatedUser.subscription._id, {
       subscriptionId,
       productId,
+      userId
     });
 
     await user.save();

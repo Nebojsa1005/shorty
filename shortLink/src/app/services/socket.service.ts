@@ -29,7 +29,9 @@ export class SocketService {
       console.log('📩 Received message:', msg);
     });
 
-    this.socket.on('subscription-updated', (d) => console.log('This user', d.userId === this.userId()));
+    this.socket.on('subscription-updated', () => {
+      
+    });
   }
 
   sendMessage(msg: string) {

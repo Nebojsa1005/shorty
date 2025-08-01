@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, of, tap } from 'rxjs';
+import { catchError, of, switchMap, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ToastService } from './toast-service.service';
 import { AuthService } from './auth.service';
@@ -48,14 +48,8 @@ export class PricingService {
       );
   }
 
-  getSubscription() {
-    return this.http
-      .get(`${environment.apiUrl}/api/products`)
-      .pipe(tap((data) => console.log(data)));
-  }
-
-  cancelSubscription() {
-    return this.http.delete(
+  cancelSubscription() {    
+    this.http.delete(
       `${environment.lemonSquezzyRootUrl}/subscriptions/${
         this.user()?.subscription.subscriptionId
       }`,
