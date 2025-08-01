@@ -8,7 +8,7 @@
   <div class="mb-md text-center">
     <span class="text-medium">
       Don’t Have an Account?
-      <a routerLink="/auth/sign-up">Sign Up</a>
+      <a class="underline" routerLink="/auth/sign-up">Sign Up</a>
     </span>
   </div>
 
@@ -33,7 +33,7 @@
       (click)="togglePasswordVisibility()"
       type="button"
     >
-      <mat-icon>{{ showPassword ? "visibility_off" : "visibility" }}</mat-icon>
+      <mat-icon color="primary">{{ showPassword ? "visibility_off" : "visibility" }}</mat-icon>
     </button>
     <mat-error *ngIf="passwordErrorMessage">{{
       passwordErrorMessage
