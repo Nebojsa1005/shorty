@@ -6,6 +6,9 @@
 @import "theme/toast.scss";
 @import "theme/variables.scss";
 
+@import "tailwindcss";
+
+
 html,
 body {
   height: 100%;
@@ -18,10 +21,10 @@ body {
 * {
   margin: 0;
   box-sizing: border-box;
-}
 
-a {
-  text-decoration: none;
+  .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
+    border-right: none
+  }
 }
 
 .title {
