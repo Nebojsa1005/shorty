@@ -34,7 +34,7 @@ export class PricingComponent {
   }
 
   onCancel() {
-    this.pricingService.cancelSubscription().subscribe();
+    this.pricingService.cancelSubscription()
   }
 
   goHome() {
