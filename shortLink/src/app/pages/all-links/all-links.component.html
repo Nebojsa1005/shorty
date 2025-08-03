@@ -1,16 +1,13 @@
-<div class="content-container">
-  <!-- Header Row -->
-  <div class="header-row mb-md">
-    <h2 class="title">All Links</h2>
-    <button mat-raised-button color="primary" (click)="newLink()">
-      New Link
-    </button>
-  </div>
+<!-- Header Row -->
+<div class="header-row mb-md">
+  <h2 class="title">All Links</h2>
+</div>
 
+<div class="w-full flex justify-between items-center mb-md">
   <!-- Search Input -->
   <mat-form-field
     appearance="outline"
-    class="search-field mb-md"
+    class="search-field mb-md rounded-4xl"
     color="primary"
   >
     <mat-label>Search</mat-label>
@@ -20,6 +17,8 @@
     </button>
   </mat-form-field>
 
-  <!-- Table Component -->
-  <app-table-links [data]="allUrls()" [tableLoading]="tableLoading()" />
+  <button mat-flat-button color="primary" (click)="newLink()">New Link</button>
 </div>
+
+<!-- Table Component -->
+<app-table-links [data]="allUrls()" [tableLoading]="tableLoading()" />
