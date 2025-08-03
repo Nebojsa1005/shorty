@@ -1,21 +1,19 @@
-<div class="p-md">
-  <h2 class="px-0 mb-md mat-headline">
-    {{ isEdit ? "Edit Short Link" : "Add new ShortLink" }}
-  </h2>
+<h2 class="px-0 mb-md mat-headline">
+  {{ isEdit ? "Edit Short Link" : "Add new ShortLink" }}
+</h2>
 
-  <app-link-form
-    (formChanges)="onFormChange($event)"
-    [existingUrlLink]="existingLink"
-  />
+<app-link-form
+  (formChanges)="onFormChange($event)"
+  [existingUrlLink]="existingLink"
+/>
 
-  <div class="actions-row">
-    <button
-      mat-raised-button
-      color="primary"
-      [disabled]="!urlForm()?.valid"
-      (click)="onSubmit()"
-    >
-      Create link
-    </button>
-  </div>
+<div class="actions-row">
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="!urlForm()?.valid"
+    (click)="onSubmit()"
+  >
+    Create link
+  </button>
 </div>

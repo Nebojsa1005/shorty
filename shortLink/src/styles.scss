@@ -1,3 +1,4 @@
+@import "tailwindcss";
 /* You can add global styles to this file, and also import other style files */
 @import "theme/spacing";
 @import "theme/sizes.scss";
@@ -5,8 +6,6 @@
 @import "theme/text.scss";
 @import "theme/toast.scss";
 @import "theme/variables.scss";
-
-@import "tailwindcss";
 
 
 html,
@@ -22,8 +21,9 @@ body {
   margin: 0;
   box-sizing: border-box;
 
-  .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
-    border-right: none
+  .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field
+    .mdc-notched-outline__notch {
+    border-right: none;
   }
 }
 
@@ -41,20 +41,32 @@ body {
 
 .divider-container {
   @extend .d-flex;
-  @extend .flex-col; 
+  @extend .flex-col;
   @extend .justify-center;
   @extend .items-center;
   @extend .w-12;
-  
+
   height: 3rem;
 }
 
 .auth-divider {
-	width: 30%;
+  width: 30%;
 }
 
 .auth-divider-text {
   @extend .p-sm;
   position: absolute;
   background: white;
+}
+
+.search-field {
+  margin-bottom: 0 !important;
+  
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+}
+
+button {
+  border-radius: 4px !important;
 }

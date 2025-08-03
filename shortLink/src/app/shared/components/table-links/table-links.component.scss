@@ -1,3 +1,9 @@
 .short-link {
-	text-decoration: none;
+  text-decoration: none;
+}
+
+.table-container {
+	border: 1px solid var(--ion-text-color-step-450);
+	border-radius: 4px;
+	overflow: hidden;
 }

@@ -1,15 +1,11 @@
-<div class="example-table-container">
-  @if (tableLoading()) {
-  <div class="d-flex justify-center items-center p-md">
-    <mat-spinner diameter="30" color="primary" />
-  </div>
-  } @else {
-  <table
-    mat-table
-    [dataSource]="dataSource"
-    class="example-table"
-    matSort
-  >
+@if (tableLoading()) {
+<div class="d-flex justify-center items-center p-md">
+  <mat-spinner diameter="30" color="primary" />
+</div>
+} @else {
+
+<div class="table-container">
+  <table mat-table [dataSource]="dataSource" class="example-table" matSort>
     <!-- Number Column -->
     <ng-container matColumnDef="urlName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
@@ -76,6 +72,6 @@
       </td>
     </tr>
   </table>
-  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" />
-  }
 </div>
+<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" />
+}

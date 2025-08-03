@@ -2,26 +2,28 @@
   <button mat-button (click)="goHome()">Go Home</button>
 </mat-toolbar>
 
-<div class="p-md d-flex items-center justify-between">
-  @for(product of products(); track product.id) {
-  <div class="d-flex flex-col items-center">
-    <p>
-      {{ product.attributes.name }}
-    </p>
-
-    <p>{{ product.attributes.price_formatted }}</p>
-
-    <button
-      mat-button
-      [disabled]="product.id | isSubscribed"
-      (click)="onBuyNow(product.attributes.buy_now_url)"
-    >
-      {{
-       (product.id | isSubscribed) ? "Current" : "Buy Now"
-      }}
-    </button>
+<div class="flex justify-center w-full mt-md">
+  <div class=" w-4/6 p-md d-flex items-center justify-between">
+    @for(product of products(); track product.id) {
+    <div class="d-flex flex-col items-center">
+      <p>
+        {{ product.attributes.name }}
+      </p>
+  
+      <p>{{ product.attributes.price_formatted }}</p>
+  
+      <button
+        mat-button
+        [disabled]="product.id | isSubscribed"
+        (click)="onBuyNow(product.attributes.buy_now_url)"
+      >
+        {{
+         (product.id | isSubscribed) ? "Current" : "Buy Now"
+        }}
+      </button>
+    </div>
+    }
   </div>
-  }
 </div>
 
 <button mat-button (click)="onCancel()">cancel</button>
