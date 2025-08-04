@@ -40,6 +40,10 @@ export class UrlService {
     idToEdit: null,
     securityOptions: [
       {
+        description: 'None',
+        value: SecurityOptions.NONE
+      },
+      {
         description: 'Password',
         value: SecurityOptions.PASSWORD,
       },

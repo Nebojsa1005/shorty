@@ -11,8 +11,6 @@ export const analyticsShortLinkVisited = async (shortLink: string) => {
       }
     });
 
-    console.log(existingShortLinkData);
-
     await AnalyticsModel.findByIdAndUpdate(existingShortLinkData._id, {
       viewCount: existingShortLinkData.viewCount + 1,
       lastEntered: new Date(),

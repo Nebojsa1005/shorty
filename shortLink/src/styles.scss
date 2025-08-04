@@ -8,6 +8,13 @@
 @import "theme/variables.scss";
 
 
+:root {
+  font-size: 16px;
+  --mat-form-field-container-height: 48px; /* Adjust as needed */
+  --mat-form-field-container-vertical-padding: 12px; /* Adjust as needed */
+}
+
+
 html,
 body {
   height: 100%;
