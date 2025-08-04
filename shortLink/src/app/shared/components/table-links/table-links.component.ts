@@ -16,7 +16,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   catchError,
   map,
@@ -40,25 +40,26 @@ export interface ShortLink {
 }
 
 @Component({
-    selector: 'app-table-links',
-    imports: [
-        MatProgressSpinnerModule,
-        MatTableModule,
-        MatSortModule,
-        MatPaginatorModule,
-        MatIconModule,
-        MatMenuModule,
-        MatMenuTrigger,
-        MatButtonModule,
-        DatePipe,
-        MatTooltipModule,
-        CopyClipboardDirective,
-    ],
-    templateUrl: './table-links.component.html',
-    styleUrls: ['./table-links.component.scss']
+  selector: 'app-table-links',
+  imports: [
+    MatProgressSpinnerModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatIconModule,
+    MatMenuModule,
+    MatMenuTrigger,
+    MatButtonModule,
+    DatePipe,
+    MatTooltipModule,
+    CopyClipboardDirective,
+  ],
+  templateUrl: './table-links.component.html',
+  styleUrls: ['./table-links.component.scss'],
 })
 export class TableLinksComponent {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private urlService = inject(UrlService);
   private destroyRef = inject(DestroyRef);
 
@@ -82,13 +83,14 @@ export class TableLinksComponent {
     this.dataSource = new MatTableDataSource<UrlLink>(this.data() || []);
     effect(() => {
       this.dataSource = new MatTableDataSource<UrlLink>(this.data() || []);
-      this.dataSource.paginator = this.paginator
-      this.dataSource.sort = this.sort
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
   }
 
   onEdit(id: string) {
-    this.router.navigate(['/edit', id]);
+    this.urlService.updateState('isCreateEditLinkDrawerOpened', true)
+    this.urlService.updateState('idToEdit', id)
   }
 
   onDelete(id: string) {

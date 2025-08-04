@@ -5,9 +5,22 @@
     mode="side"
     [opened]="isDrawerOpened()"
     fixedInViewport
+    position="start"
   >
     <mat-toolbar></mat-toolbar>
     <app-side-menu />
+  </mat-sidenav>
+
+  <!-- Right sidenav -->
+  <mat-sidenav
+    #createEditDraw
+    class="!rounded-none !w-4/10"
+    mode="over"
+    (closedStart)="resetCreateEditLinkDrawer()"
+    [opened]="isCreateEditLinkDrawerOpened()"
+    position="end"
+  >
+    <app-create-edit-link (formSubmittedEvent)="resetCreateEditLinkDrawer()" />
   </mat-sidenav>
 
   <mat-sidenav-content>

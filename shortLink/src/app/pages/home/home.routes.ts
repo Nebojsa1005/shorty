@@ -12,22 +12,22 @@ export const homeRoutes: Routes = [
     loadComponent: () =>
       import('./home.component').then((c) => c.HomeComponent),
     children: [
-      {
-        path: 'new-link',
-        canActivate: [AuthGuard],
-        loadComponent: () =>
-          import('../create-edit-link/create-edit-link.component').then(
-            (m) => m.CreateEditLinkComponent
-          ),
-      },
-      {
-        path: 'edit/:id',
-        canActivate: [AuthGuard],
-        loadComponent: () =>
-          import('../create-edit-link/create-edit-link.component').then(
-            (m) => m.CreateEditLinkComponent
-          ),
-      },
+      // {
+      //   path: 'new-link',
+      //   canActivate: [AuthGuard],
+      //   loadComponent: () =>
+      //     import('../create-edit-link/create-edit-link.component').then(
+      //       (m) => m.CreateEditLinkComponent
+      //     ),
+      // },
+      // {
+      //   path: 'edit/:id',
+      //   canActivate: [AuthGuard],
+      //   loadComponent: () =>
+      //     import('../create-edit-link/create-edit-link.component').then(
+      //       (m) => m.CreateEditLinkComponent
+      //     ),
+      // },
       {
         path: 'all-links',
         canActivate: [AuthGuard],

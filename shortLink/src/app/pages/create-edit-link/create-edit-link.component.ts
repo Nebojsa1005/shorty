@@ -1,41 +1,68 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  OnInit,
+  output,
+} from '@angular/core';
 import { LinkFormComponent } from './link-form/link-form.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UrlService } from '../../services/url.service';
 import { MatButton } from '@angular/material/button';
-import { ActivatedRoute } from '@angular/router';
 import { UrlLink } from '../../shared/types/url.interface';
+import { take } from 'rxjs';
 
 @Component({
-    selector: 'app-create-edit-link',
-    imports: [LinkFormComponent, MatButton],
-    templateUrl: './create-edit-link.component.html',
-    styleUrl: './create-edit-link.component.scss'
+  selector: 'app-create-edit-link',
+  imports: [LinkFormComponent, MatButton],
+  templateUrl: './create-edit-link.component.html',
+  styleUrl: './create-edit-link.component.scss',
 })
 export class CreateEditLinkComponent {
   private urlService = inject(UrlService);
   private destroyRef = inject(DestroyRef);
-  private route = inject(ActivatedRoute);
+
+  formSubmittedEvent = output<boolean>()
 
   urlForm = this.urlService.urlForm;
-  id = this.route.snapshot.params['id'];
-  isEdit = !!this.id;
-  existingLink?: UrlLink
+  id?: string;
+  isEdit?: boolean;
+  existingLink?: UrlLink;
+
+  idToEdit = computed(() => this.urlService.idToEdit());
 
   constructor() {
-    if (this.isEdit) {
-      this.urlService
-        .getShortLinkById(this.id)
-        .pipe(takeUntilDestroyed())
-        .subscribe((e) => this.existingLink = e?.data);
-    }
+    effect(() => {
+      const idToEdit = this.idToEdit();
+      this.isEdit = !!idToEdit;
+
+      if (this.isEdit) {
+        this.id = idToEdit as string
+        this.urlService
+          .getShortLinkById(this.id)
+          .pipe(take(1))
+          .subscribe((e) => (this.existingLink = e?.data));
+      }
+    });
   }
 
   onSubmit() {
-    this.urlService
-      .createNewLink()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+    if (this.isEdit) {
+      this.urlService
+        .editLink(this.id as string)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe();
+    } else {
+      this.urlService
+        .createNewLink()
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe();
+    }
+
+    this.formSubmittedEvent.emit(true)
+
   }
 
   onFormChange(urlForm: any) {
