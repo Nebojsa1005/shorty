@@ -16,7 +16,9 @@ import { AuthService } from './auth.service';
 interface UrlState {
   allUrls: UrlLink[];
   allUrlsLoading: boolean;
+  idToEdit: string | null;
   urlForm: UrlForm | null;
+  isCreateEditLinkDrawerOpened: boolean
   securityOptions: UrlSecurityOption[];
 }
 
@@ -34,6 +36,8 @@ export class UrlService {
     allUrls: [],
     allUrlsLoading: false,
     urlForm: null,
+    isCreateEditLinkDrawerOpened: false,
+    idToEdit: null,
     securityOptions: [
       {
         description: 'Password',
@@ -48,9 +52,15 @@ export class UrlService {
   user = computed(() => this.authService.user());
   securityOptions = computed(() => this.state().securityOptions);
   allUrlsLoading = computed(() => this.state().allUrlsLoading);
+  isCreateEditLinkDrawerOpened = computed(() => this.state().isCreateEditLinkDrawerOpened)
+  idToEdit = computed(() => this.state().idToEdit)
 
   // State updaters
   updateState<K extends keyof UrlState>(prop: K, value: UrlState[K]) {
+    console.log({
+      prop, value
+    });
+    
     this.state.update((state) => ({
       ...state,
       [prop]: value,

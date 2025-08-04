@@ -34,6 +34,7 @@ export class AllLinksComponent {
 
   tableLoading = computed(() => this.urlService.allUrlsLoading());
   allUrls = computed(() => this.urlService.allUrls());
+  isCreateEditLinkDrawerOpened = computed(() => this.urlService.isCreateEditLinkDrawerOpened())
 
   searchControl = new FormControl<string>('');
 
@@ -60,6 +61,6 @@ export class AllLinksComponent {
   }
 
   newLink() {
-    this.router.navigate(['new-link']);
+    this.urlService.updateState('isCreateEditLinkDrawerOpened', true)
   }
 }

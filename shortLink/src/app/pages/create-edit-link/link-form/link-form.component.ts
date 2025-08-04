@@ -1,5 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, DestroyRef, effect, ElementRef, inject, input, output, ViewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  output,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
@@ -16,24 +26,24 @@ import { UrlLink } from '../../../shared/types/url.interface';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-    selector: 'app-link-form',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatOptionModule,
-        MatButtonModule,
-        MatIconModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-    ],
-    templateUrl: './link-form.component.html',
-    styleUrl: './link-form.component.scss'
+  selector: 'app-link-form',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+  ],
+  templateUrl: './link-form.component.html',
+  styleUrl: './link-form.component.scss',
 })
 export class LinkFormComponent {
-   private fb = inject(FormBuilder);
+  private fb = inject(FormBuilder);
   private destroyRef = inject(DestroyRef);
   private urlService = inject(UrlService);
 
@@ -42,7 +52,7 @@ export class LinkFormComponent {
   expirationDateInput!: ElementRef;
 
   SecurityOptions = SecurityOptions;
-  currentTime = new Date().toISOString()
+  currentTime = new Date().toISOString();
 
   // Inputs
   existingUrlLink = input<UrlLink | undefined>();
@@ -52,6 +62,9 @@ export class LinkFormComponent {
 
   // Computed
   securityOptions = computed(() => this.urlService.securityOptions());
+  isCreateEditLinkDrawerOpened = computed(() =>
+    this.urlService.isCreateEditLinkDrawerOpened()
+  );
 
   formGroup = this.fb.group({
     destinationUrl: ['', [Validators.required, urlValidator()]],
@@ -101,6 +114,12 @@ export class LinkFormComponent {
           destinationUrl: existingUrlLink.destinationUrl,
           urlName: existingUrlLink.urlName,
         });
+      }
+    });
+
+    effect(() => {
+      if (!this.isCreateEditLinkDrawerOpened()) {
+        this.formGroup.reset();
       }
     });
   }
