@@ -53,6 +53,7 @@ export class LinkFormComponent {
 
   SecurityOptions = SecurityOptions;
   currentTime = new Date().toISOString();
+  showPassword = false;
 
   // Inputs
   existingUrlLink = input<UrlLink | undefined>();
@@ -70,10 +71,29 @@ export class LinkFormComponent {
     destinationUrl: ['', [Validators.required, urlValidator()]],
     urlName: ['', [Validators.required]],
     suffix: ['', [Validators.maxLength(20)]],
-    security: [''],
+    security: [0],
     password: [''],
     expirationDate: [''],
   });
+
+  securityOptionsChanges$ = this.controls.security.valueChanges
+    .pipe(
+      takeUntilDestroyed(this.destroyRef),
+      tap((value) => {
+        const passwordControl = this.controls.password
+
+        if (value === SecurityOptions.PASSWORD) {
+          passwordControl.setValidators(Validators.required)
+          passwordControl.enable();
+        } else {
+          passwordControl.setValue('')
+          passwordControl.disable();
+          passwordControl.removeValidators(Validators.required)
+        }
+        this.formGroup.updateValueAndValidity()
+      })
+    )
+    .subscribe();
 
   formValueChanges$ = this.formGroup.valueChanges
     .pipe(
@@ -95,6 +115,16 @@ export class LinkFormComponent {
     }
   }
 
+  get isSecurityPassword() {
+    const securityPassword =
+      this.controls.security.getRawValue() === SecurityOptions.PASSWORD;
+
+    if (securityPassword) this.controls.password.enable();
+    else this.controls.password.disable();
+
+    return securityPassword;
+  }
+
   get passwordError() {
     return this.controls.password.hasError('passwordRequired')
       ? 'This Field is Required'
@@ -112,6 +142,9 @@ export class LinkFormComponent {
       if (existingUrlLink) {
         this.formGroup.patchValue({
           destinationUrl: existingUrlLink.destinationUrl,
+          expirationDate: existingUrlLink.expirationDate,
+          security: existingUrlLink.security,
+          suffix: existingUrlLink.suffix,
           urlName: existingUrlLink.urlName,
         });
       }
@@ -122,6 +155,10 @@ export class LinkFormComponent {
         this.formGroup.reset();
       }
     });
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 
   ngOnDestroy(): void {

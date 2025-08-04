@@ -11,7 +11,7 @@
     color="primary"
   >
     <mat-label>Search</mat-label>
-    <input matInput [formControl]="searchControl" placeholder="Search" />
+    <input matInput [formControl]="searchControl"/>
     <button mat-icon-button matSuffix disabled>
       <mat-icon>search</mat-icon>
     </button>
@@ -21,4 +21,4 @@
 </div>
 
 <!-- Table Component -->
-<app-table-links [data]="allUrls()" [tableLoading]="tableLoading()" />
+<app-table-links [data]="allUrls() | tableSearch: searchControl.value" [tableLoading]="tableLoading()" />

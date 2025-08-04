@@ -11,6 +11,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { UrlService } from '../../services/url.service';
 import { TableLinksComponent } from '../../shared/components/table-links/table-links.component';
 import { AnalyticsService } from 'src/app/services/analytics.service';
+import { TableSearchPipe } from 'src/app/shared/pipes/table-search.pipe';
 
 @Component({
   selector: 'app-all-links',
@@ -22,6 +23,7 @@ import { AnalyticsService } from 'src/app/services/analytics.service';
     MatButtonModule,
     MatIconModule,
     TableLinksComponent,
+    TableSearchPipe
   ],
   templateUrl: './all-links.component.html',
   styleUrl: './all-links.component.scss',

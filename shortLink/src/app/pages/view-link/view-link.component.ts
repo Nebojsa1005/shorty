@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,19 +16,19 @@ import { ToastService } from '../../services/toast-service.service';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 
 @Component({
-    selector: 'app-view-link',
-    imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        MatButtonModule,
-        MatProgressSpinnerModule,
-        MatError,
-        CommonModule,
-        ReactiveFormsModule
-    ],
-    templateUrl: './view-link.component.html',
-    styleUrl: './view-link.component.scss'
+  selector: 'app-view-link',
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatError,
+    CommonModule,
+    ReactiveFormsModule,
+  ],
+  templateUrl: './view-link.component.html',
+  styleUrl: './view-link.component.scss',
 })
 export class ViewLinkComponent {
   showPassword = false;
@@ -36,7 +36,7 @@ export class ViewLinkComponent {
   private route = inject(ActivatedRoute);
   private urlService = inject(UrlService);
   private toastService = inject(ToastService);
-  private analyticsService = inject(AnalyticsService)
+  private analyticsService = inject(AnalyticsService);
 
   SecurityOptions = SecurityOptions;
 
@@ -45,29 +45,7 @@ export class ViewLinkComponent {
 
   shortLink = signal<UrlLink | null>(null);
 
-  passwordControl = new FormControl('');
-
-  ngOnInit() {
-    this.analyticsService.trackEvent('view link loaded', 'link viewed', 'viewLink')
-    this.urlService
-      .getShortLinkByShortLinkId(this.linkId, this.suffix)
-      .pipe(
-        tap((res) => {
-          this.shortLink.update(() => res?.data);
-
-          if (!this.expirationDateCheck()) return;
-
-          if (this.shortLink()?.security === SecurityOptions.PASSWORD) {
-            this.passwordControl.addValidators(Validators.required);
-          } else {
-            window.location.href = res?.data.destinationUrl;
-          }
-        })
-      )
-      .subscribe();
-  }
-
-  expirationDateCheck() {
+  expirationDateCheck = computed(() => {
     const shortLink = this.shortLink();
 
     if (!shortLink) {
@@ -91,6 +69,32 @@ export class ViewLinkComponent {
       return false;
     }
     return true;
+  });
+
+  passwordControl = new FormControl('');
+
+  ngOnInit() {
+    this.analyticsService.trackEvent(
+      'view link loaded',
+      'link viewed',
+      'viewLink'
+    );
+    this.urlService
+      .getShortLinkByShortLinkId(this.linkId, this.suffix)
+      .pipe(
+        tap((res) => {
+          this.shortLink.update(() => res?.data);
+
+          if (!this.expirationDateCheck()) return;
+
+          if (this.shortLink()?.security === SecurityOptions.PASSWORD) {
+            this.passwordControl.addValidators(Validators.required);
+          } else {
+            // window.location.href = res?.data.destinationUrl;
+          }
+        })
+      )
+      .subscribe();
   }
 
   passwordCheck() {

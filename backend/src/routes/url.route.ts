@@ -11,6 +11,7 @@ import { UserModel } from "../models/user.model";
 import { updateUserShortLinks } from "../services/user.service";
 import { SecurityOptions } from "../types/security-options.enum";
 import { compare, hash } from "bcrypt";
+import { expirationDateCheck } from "../services/url.service";
 
 dotenv.config();
 
@@ -76,7 +77,7 @@ const urlRoutes = (app: Express) => {
       const shortLink = `${link}/${shortLinkId}`;
 
       try {
-        const record = await UrlModel.findOne({
+        let record: any = await UrlModel.findOne({
           shortLinkId,
         }).populate("analytics");
 
@@ -85,6 +86,24 @@ const urlRoutes = (app: Express) => {
         }
 
         await analyticsShortLinkVisited(shortLink);
+
+        if (!expirationDateCheck) {
+          record = {
+            _id: record._id,
+            destinationUrl: "",
+            shortLink: record.shortLink,
+            shortLinkId: record.shortLinkId,
+            urlName: record.urlName,
+            suffix: record.suffix,
+            password: record.password,
+            security: record.security,
+            expirationDate: record.expirationDate,
+            analytics: record.analytics,
+            user: record.user,
+            createdAt: record.createdAt,
+            __v: record.__v,
+          };
+        }
 
         ServerResponse.serverSuccess(res, 200, "Successfully fetched", record);
       } catch (error) {
@@ -160,15 +179,22 @@ const urlRoutes = (app: Express) => {
     const id = req.params["id"];
 
     try {
+      let password = ''
+
+      if (urlForm.security === SecurityOptions.PASSWORD) {
+        password = await hash(urlForm.password, 10);
+      }
+
       const updatedUrlLink = await UrlModel.findByIdAndUpdate(
         id,
         {
           ...urlForm,
+          password
         },
         {
           new: true,
         }
-      );
+      );      
 
       return ServerResponse.serverSuccess(
         res,

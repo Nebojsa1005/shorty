@@ -41,7 +41,22 @@
 
     <mat-form-field appearance="outline" class="w-7">
       <mat-label>Password</mat-label>
-      <input matInput [formControl]="controls.password" type="password" />
+      <input
+        matInput
+        [formControl]="controls.password"
+        [type]="showPassword ? 'text' : 'password'"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="togglePasswordVisibility()"
+        type="button"
+        [attr.aria-label]="'Toggle password visibility'"
+      >
+        <mat-icon>{{
+          showPassword ? "visibility_off" : "visibility"
+        }}</mat-icon>
+      </button>
       <mat-error *ngIf="passwordError">{{ passwordError }}</mat-error>
     </mat-form-field>
   </div>
