@@ -6,12 +6,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { UrlService } from '../../services/url.service';
-import { TableLinksComponent } from '../../shared/components/table-links/table-links.component';
 import { AnalyticsService } from 'src/app/services/analytics.service';
 import { TableSearchPipe } from 'src/app/shared/pipes/table-search.pipe';
+import { UrlService } from '../../services/url.service';
+import { TableLinksComponent } from '../../shared/components/table-links/table-links.component';
 
 @Component({
   selector: 'app-all-links',
@@ -23,7 +22,7 @@ import { TableSearchPipe } from 'src/app/shared/pipes/table-search.pipe';
     MatButtonModule,
     MatIconModule,
     TableLinksComponent,
-    TableSearchPipe
+    TableSearchPipe,
   ],
   templateUrl: './all-links.component.html',
   styleUrl: './all-links.component.scss',
@@ -31,18 +30,19 @@ import { TableSearchPipe } from 'src/app/shared/pipes/table-search.pipe';
 export class AllLinksComponent {
   private destroyRef = inject(DestroyRef);
   private urlService = inject(UrlService);
-  private router = inject(Router);
-  private analyticsService = inject(AnalyticsService)
+  private analyticsService = inject(AnalyticsService);
 
   tableLoading = computed(() => this.urlService.allUrlsLoading());
   allUrls = computed(() => this.urlService.allUrls());
-  isCreateEditLinkDrawerOpened = computed(() => this.urlService.isCreateEditLinkDrawerOpened())
+  isCreateEditLinkDrawerOpened = computed(() =>
+    this.urlService.isCreateEditLinkDrawerOpened()
+  );
 
   searchControl = new FormControl<string>('');
 
   searchControlValueChanges$ = this.searchControl.valueChanges.pipe(
     debounceTime(300),
-    distinctUntilChanged()
+    distinctUntilChanged(),
   );
 
   ngOnInit() {
@@ -63,6 +63,6 @@ export class AllLinksComponent {
   }
 
   newLink() {
-    this.urlService.updateState('isCreateEditLinkDrawerOpened', true)
+    this.urlService.updateState('isCreateEditLinkDrawerOpened', true);
   }
 }

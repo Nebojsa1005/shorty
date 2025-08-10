@@ -21,4 +21,7 @@
 </div>
 
 <!-- Table Component -->
-<app-table-links [data]="allUrls() | tableSearch: searchControl.value" [tableLoading]="tableLoading()" />
+<app-table-links
+  [data]="allUrls() | tableSearch : searchControl.value"
+  [tableLoading]="tableLoading()"
+/>

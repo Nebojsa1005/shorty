@@ -6,32 +6,23 @@ import {
   effect,
   inject,
   input,
-  signal,
-  ViewChild,
+  viewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import {
+  MatPaginator,
+  MatPaginatorModule
+} from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
-import {
-  catchError,
-  map,
-  merge,
-  of as observableOf,
-  of,
-  startWith,
-  switchMap,
-} from 'rxjs';
-import { ToastService } from '../../../services/toast-service.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CopyClipboardDirective } from '../../../directives/copy-clipboard.directive';
 import { UrlService } from '../../../services/url.service';
 import { UrlLink } from '../../types/url.interface';
-import { CopyClipboardDirective } from '../../../directives/copy-clipboard.directive';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 
 export interface ShortLink {
   shortLink: string;
@@ -58,39 +49,39 @@ export interface ShortLink {
   styleUrls: ['./table-links.component.scss'],
 })
 export class TableLinksComponent {
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private urlService = inject(UrlService);
   private destroyRef = inject(DestroyRef);
+  
+  paginator = viewChild(MatPaginator)
+  sort = viewChild(MatSort)
 
-  data = input<UrlLink[]>();
+  data = input.required<UrlLink[]>();
   tableLoading = input<boolean>(false);
+  // table state (signals)
+  total = computed(() => this.data()?.length ?? 0);
 
-  dataSource: MatTableDataSource<UrlLink>;
-
-  data$ = toObservable(this.data);
-
+  dataSource = new MatTableDataSource<UrlLink>([])
   displayedColumns = ['urlName', 'shortLink', 'createdAt', 'actions'];
-
-  resultsLength = 0;
-  isLoadingResults = true;
-  isRateLimitReached = false;
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
+  
   constructor() {
-    this.dataSource = new MatTableDataSource<UrlLink>(this.data() || []);
+    // keep one dataSource; just replace its data when input changes
     effect(() => {
-      this.dataSource = new MatTableDataSource<UrlLink>(this.data() || []);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.dataSource.data = this.data() ?? [];
+    });
+
+    // attach paginator/sort when they exist
+    effect(() => {
+      const p = this.paginator();
+      if (p && this.dataSource.paginator !== p) this.dataSource.paginator = p;
+
+      const s = this.sort();
+      if (s && this.dataSource.sort !== s) this.dataSource.sort = s;
     });
   }
 
   onEdit(id: string) {
-    this.urlService.updateState('isCreateEditLinkDrawerOpened', true)
-    this.urlService.updateState('idToEdit', id)
+    this.urlService.updateState('isCreateEditLinkDrawerOpened', true);
+    this.urlService.updateState('idToEdit', id);
   }
 
   onDelete(id: string) {
