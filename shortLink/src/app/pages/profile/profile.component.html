@@ -1,8 +1,12 @@
 <div class="p-md">
   <h2 class="title !mb-sm">My Profile</h2>
 
-  <div>
-    <span class="!font-bold">Your Subscription: </span>
+  <div class="!mb-4 flex justify-between items-center">
+    <span class="!font-bold"
+      >Your Subscription: {{ subscriptionProductName() ?? 'Free' }}</span
+    >
+
+    <button mat-stroked-button (click)="onEmailChange()">Upgrade</button>
   </div>
 
   <div class="flex justify-between itmes-center !mb-4">
@@ -62,10 +66,10 @@
     <div>
       <span class="!font-bold">Change Password</span>
     </div>
-  
+
     <button mat-stroked-button (click)="onPasswordChange()">Change</button>
   </div>
-  
+
   @if(isPasswordChange()) {
   <form [formGroup]="changePasswordForm" class="flex justify-between">
     <div class="flex items-center">
@@ -88,7 +92,7 @@
           }}</mat-icon>
         </button>
       </mat-form-field>
-  
+
       <mat-form-field appearance="outline" class="w-7">
         <mat-label>New Password</mat-label>
         <input
@@ -109,7 +113,7 @@
         </button>
       </mat-form-field>
     </div>
-  
+
     <div>
       <button
         mat-raised-button

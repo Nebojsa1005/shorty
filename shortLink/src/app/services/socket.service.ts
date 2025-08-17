@@ -30,6 +30,7 @@ export class SocketService {
     });
 
     this.socket.on('subscription-updated', () => {
+      console.log('subscription-updated');
       
     });
   }

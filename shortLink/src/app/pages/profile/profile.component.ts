@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { AuthService } from 'src/app/services/auth.service';
+import { PricingService } from 'src/app/services/pricing.service';
 import {
   EmailUpdatePayload,
   PasswordUpdatePayload,
@@ -28,9 +29,11 @@ export class ProfileComponent {
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
   private destroyRef = inject(DestroyRef);
+  private pricingService = inject(PricingService);
 
   user = computed(() => this.authService.user());
-  userSubscription = computed(() => this.user()?.subscription)
+  userSubscription = computed(() => this.user()?.subscription);
+  subscriptionProductName = computed(() => this.pricingService.subscriptionProductName())
 
   changeEmailForm = this.fb.group({
     newEmail: ['', [Validators.required]],
@@ -53,6 +56,13 @@ export class ProfileComponent {
 
   get changePasswordControls() {
     return this.changePasswordForm.controls;
+  }
+
+  ngOnInit() {
+    this.pricingService
+      .getProductById(this.userSubscription()?.productId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
   togglePasswordVisibility() {

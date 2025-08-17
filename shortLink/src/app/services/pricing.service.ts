@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 
 interface PricingState {
   products: any;
+  subscriptionProduct: any;
 }
 
 @Injectable({
@@ -19,10 +20,12 @@ export class PricingService {
 
   state = signal<PricingState>({
     products: null,
+    subscriptionProduct: null,
   });
 
   products = computed(() => this.state().products);
   user = computed(() => this.authService.user());
+  subscriptionProductName = computed(() => this.state().subscriptionProduct?.attributes?.name)
 
   getAllProducts() {
     return this.http
@@ -48,11 +51,11 @@ export class PricingService {
       );
   }
 
-  cancelSubscription() {    
+  cancelSubscription() {
     this.http.delete(
-      `${environment.lemonSquezzyRootUrl}/subscriptions/${
-        this.user()?.subscription.subscriptionId
-      }`,
+        `${environment.lemonSquezzyRootUrl}/subscriptions/${
+          this.user()?.subscription.subscriptionId
+        }`,
       {
         headers: {
           Accept: 'application/vnd.api+json',
@@ -61,6 +64,30 @@ export class PricingService {
         },
       }
     );
+  }
+
+  getProductById(productId: string | undefined) {
+   return this.http
+      .get(`${environment.lemonSquezzyRootUrl}/products/${productId}`, {
+        headers: {
+          Accept: 'application/vnd.api+json',
+          'Content-Type': 'application/vnd.api+json',
+          Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
+        },
+      })
+      .pipe(
+        tap((data: any) => {
+          this.updateState("subscriptionProduct", data.data);
+        }),
+        catchError((error) => {
+          this.toastService.presentToast({
+            position: 'top',
+            message: error.error.message,
+            color: 'danger',
+          });
+          return of(null);
+        })
+      ) 
   }
 
   // State updaters
