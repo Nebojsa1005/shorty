@@ -12,22 +12,6 @@ export const homeRoutes: Routes = [
     loadComponent: () =>
       import('./home.component').then((c) => c.HomeComponent),
     children: [
-      // {
-      //   path: 'new-link',
-      //   canActivate: [AuthGuard],
-      //   loadComponent: () =>
-      //     import('../create-edit-link/create-edit-link.component').then(
-      //       (m) => m.CreateEditLinkComponent
-      //     ),
-      // },
-      // {
-      //   path: 'edit/:id',
-      //   canActivate: [AuthGuard],
-      //   loadComponent: () =>
-      //     import('../create-edit-link/create-edit-link.component').then(
-      //       (m) => m.CreateEditLinkComponent
-      //     ),
-      // },
       {
         path: 'all-links',
         canActivate: [AuthGuard],
@@ -41,6 +25,13 @@ export const homeRoutes: Routes = [
         loadChildren: () =>
           import('../analytics/analytics.routes').then(
             (r) => r.analyticsRoutes
+          ),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('../profile/profile.component').then(
+            (r) => r.ProfileComponent
           ),
       },
       {

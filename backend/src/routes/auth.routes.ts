@@ -37,7 +37,7 @@ const authRoutes = (app: Express) => {
       });
 
       const createdUser = await newUser.save();
-      const populatedUser = await populateUserSubscription(newUser)
+      const populatedUser = await populateUserSubscription(newUser._id);
 
       ServerResponse.serverSuccess(res, 200, "Successfully Registered", {
         token: createTokenFromEmailAndId(createdUser.email, createdUser._id),
@@ -74,7 +74,7 @@ const authRoutes = (app: Express) => {
     if (!verifiedPassword)
       return ServerResponse.serverError(res, 401, "Invalid Password");
 
-    const populatedUser = await populateUserSubscription(user)
+    const populatedUser = await populateUserSubscription(user._id);
 
     return ServerResponse.serverSuccess(res, 200, "Successfully Signed In", {
       token: createTokenFromEmailAndId(user.email, user._id),
@@ -157,6 +157,69 @@ const authRoutes = (app: Express) => {
       "Login Successful",
       userToSend
     );
+  });
+
+  app.put("/api/auth/update-email/:userId", async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const { newEmail, password } = req.body;
+      const user = await UserModel.findById(userId);
+      const verifiedPassword = await compare(password, user.password as string);
+
+      if (!verifiedPassword)
+        return ServerResponse.serverError(res, 401, "Password Incorrect");
+
+      const updatedUSer = await UserModel.findByIdAndUpdate(
+        userId,
+        { email: newEmail },
+        { new: true }
+      );
+
+      return ServerResponse.serverSuccess(
+        res,
+        200,
+        "Email Updated",
+        updatedUSer
+      );
+    } catch (err) {
+      return ServerResponse.serverError(res, 500, "Error", err);
+    }
+  });
+
+  app.put("/api/auth/update-password/:userId", async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const { currentPassword, newPassword } = req.body;
+      const user = await UserModel.findById(userId);
+
+      const verifiedPassword = await compare(
+        currentPassword,
+        user.password as string
+      );
+      if (!verifiedPassword)
+        return ServerResponse.serverError(
+          res,
+          401,
+          "Current Password Incorrect"
+        );
+
+      const hashedPassword = await hash(newPassword, 10);
+
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        userId,
+        { password: hashedPassword },
+        { new: true }
+      );
+
+      return ServerResponse.serverSuccess(
+        res,
+        200,
+        "Password Updated Successfully",
+        updatedUser
+      );
+    } catch (err) {
+      return ServerResponse.serverError(res, 500, "Something Went Wrong", err);
+    }
   });
 };
 

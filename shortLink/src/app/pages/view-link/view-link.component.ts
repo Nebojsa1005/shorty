@@ -90,7 +90,7 @@ export class ViewLinkComponent {
           if (this.shortLink()?.security === SecurityOptions.PASSWORD) {
             this.passwordControl.addValidators(Validators.required);
           } else {
-            // window.location.href = res?.data.destinationUrl;
+            window.location.href = res?.data.destinationUrl;
           }
         })
       )
