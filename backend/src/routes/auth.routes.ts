@@ -226,9 +226,9 @@ const authRoutes = (app: Express) => {
     try {
       const userId = req.params.userId
 
-      const user = await UserModel.findById(userId)
+      const populatedUser = await populateUserSubscription(userId);
 
-      return ServerResponse.serverSuccess(res, 200, '', user)
+      return ServerResponse.serverSuccess(res, 200, '', populatedUser)
     } catch(err) {
       return ServerResponse.serverError(res, 500, "Something Went Wrong", err);
     }
