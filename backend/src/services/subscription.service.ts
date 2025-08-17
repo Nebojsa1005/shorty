@@ -39,7 +39,7 @@ export const createSubscriptionWebhook = async ({
     eventName === SubscriptionEventTypes.subscription_updated
   ) {
     const user = await UserModel.findById(userId);
-    const populatedUser = await populateUserSubscription(user);
+    const populatedUser = await populateUserSubscription(userId);
 
     await SubscriptionModel.findByIdAndUpdate(populatedUser.subscription._id, {
       subscriptionId,
