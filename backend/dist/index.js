@@ -2,7 +2,7 @@
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import dotenv4 from "dotenv";
+import dotenv5 from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 
@@ -32,9 +32,25 @@ var AnalyticsSchema = new Schema({
   shortLink: {
     type: String,
     required: true
-  }
+  },
+  entries: [
+    {
+      type: {
+        date: Date,
+        viewCount: Number
+      },
+      required: true,
+      default: {
+        date: /* @__PURE__ */ new Date(),
+        viewCount: 0
+      }
+    }
+  ]
 });
-var AnalyticsModel = model("Analytics", AnalyticsSchema);
+var AnalyticsModel = model(
+  "Analytics",
+  AnalyticsSchema
+);
 
 // src/models/url.model.ts
 var UrlSchema = new Schema2({
@@ -94,24 +110,47 @@ var ServerResponse = {
   serverSuccess
 };
 
+// src/utils/date.ts
+function isSameDay(date1, date2) {
+  return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth() && date1.getDate() === date2.getDate();
+}
+
 // src/services/analytics.service.ts
 var analyticsShortLinkVisited = async (shortLink) => {
   const existingShortLinkData = await AnalyticsModel.findOne({ shortLink });
   if (existingShortLinkData) {
+    existingShortLinkData.entries.forEach((entry) => {
+      if (isSameDay(/* @__PURE__ */ new Date(), entry.date)) {
+        entry.viewCount = entry.viewCount + 1;
+      }
+    });
     await AnalyticsModel.findByIdAndUpdate(existingShortLinkData._id, {
       viewCount: existingShortLinkData.viewCount + 1,
-      lastEntered: /* @__PURE__ */ new Date()
+      lastEntered: /* @__PURE__ */ new Date(),
+      entries: [...existingShortLinkData.entries]
     });
   } else {
     await AnalyticsModel.create({
       shortLink,
-      lastEntered: /* @__PURE__ */ new Date()
+      lastEntered: /* @__PURE__ */ new Date(),
+      entries: [
+        {
+          date: /* @__PURE__ */ new Date(),
+          viewCount: 1
+        }
+      ]
     });
   }
 };
 var analyticsShortLinkCreated = async (shortLink) => {
   return await AnalyticsModel.create({
-    shortLink
+    shortLink,
+    entries: [
+      {
+        date: /* @__PURE__ */ new Date(),
+        viewCount: 0
+      }
+    ]
   });
 };
 
@@ -133,7 +172,8 @@ var UserSchema = new Schema3({
     type: Date,
     default: Date.now
   },
-  shortLinks: [{ type: Schema3.Types.ObjectId, ref: "Url", required: true }]
+  shortLinks: [{ type: Schema3.Types.ObjectId, ref: "Url", required: true }],
+  subscription: { type: Schema3.Types.ObjectId, ref: "Subscription" }
 });
 var UserModel = model3("User", UserSchema);
 
@@ -144,16 +184,35 @@ var updateUserShortLinks = async (userId, urlId) => {
     shortLinks: [...user.shortLinks, urlId]
   });
 };
+var populateUserSubscription = async (userId) => {
+  const user = await UserModel.findById(userId);
+  return user.populate("subscription");
+};
 
 // src/routes/url.route.ts
 import { compare, hash } from "bcrypt";
+
+// src/services/url.service.ts
+var expirationDateCheck = (url) => {
+  if (!url.expirationDate) return true;
+  const now = (/* @__PURE__ */ new Date()).getTime();
+  const expirationDate = new Date(url.expirationDate).getTime();
+  if (expirationDate < now) return false;
+};
+
+// src/routes/url.route.ts
 dotenv.config();
-var BASE_URL = process.env.FRONT_END_ORIGIN;
+var BASE_URL = process.env.NODE_ENV === "production" ? process.env.FRONT_END_ORIGIN : process.env.CLIENT_ORIGIN;
 var urlRoutes = (app2) => {
   app2.get("/api/url/get-all-urls/:userId", async (req, res) => {
     try {
       const { userId } = req.params;
-      const allUserUrls = (await UserModel.findById(userId).populate("shortLinks")).shortLinks;
+      const allUserUrls = (await UserModel.findById(userId).populate({
+        path: "shortLinks",
+        populate: {
+          path: "analytics"
+        }
+      })).shortLinks;
       if (!allUserUrls) {
         return ServerResponse.serverError(res, 404, "No minified urls found");
       }
@@ -169,7 +228,12 @@ var urlRoutes = (app2) => {
       if (!record) {
         return ServerResponse.serverError(res, 404, "Minified URL not found");
       }
-      return ServerResponse.serverSuccess(res, 200, "Successfully Fetched", record);
+      return ServerResponse.serverSuccess(
+        res,
+        200,
+        "Successfully Fetched",
+        record
+      );
     } catch (error) {
       return ServerResponse.serverError(res, 500, error.message, error);
     }
@@ -183,13 +247,30 @@ var urlRoutes = (app2) => {
       if (suffix) link = `${link}/${suffix}`;
       const shortLink = `${link}/${shortLinkId}`;
       try {
-        const record = await UrlModel.findOne({
-          shortLink
+        let record = await UrlModel.findOne({
+          shortLinkId
         }).populate("analytics");
         if (!record) {
           return ServerResponse.serverError(res, 404, "Minified URL not found");
         }
         await analyticsShortLinkVisited(shortLink);
+        if (!expirationDateCheck) {
+          record = {
+            _id: record._id,
+            destinationUrl: "",
+            shortLink: record.shortLink,
+            shortLinkId: record.shortLinkId,
+            urlName: record.urlName,
+            suffix: record.suffix,
+            password: record.password,
+            security: record.security,
+            expirationDate: record.expirationDate,
+            analytics: record.analytics,
+            user: record.user,
+            createdAt: record.createdAt,
+            __v: record.__v
+          };
+        }
         ServerResponse.serverSuccess(res, 200, "Successfully fetched", record);
       } catch (error) {
         return ServerResponse.serverError(res, 500, error.message, error);
@@ -250,10 +331,15 @@ var urlRoutes = (app2) => {
     const { urlForm } = req.body;
     const id = req.params["id"];
     try {
+      let password = "";
+      if (urlForm.security === 1 /* PASSWORD */) {
+        password = await hash(urlForm.password, 10);
+      }
       const updatedUrlLink = await UrlModel.findByIdAndUpdate(
         id,
         {
-          ...urlForm
+          ...urlForm,
+          password
         },
         {
           new: true
@@ -293,7 +379,6 @@ var urlRoutes = (app2) => {
           "No Link With This Url Found"
         );
       }
-      console.log(shortLink);
       const verifiedPassword = await compare(
         password,
         shortLink.password
@@ -335,6 +420,19 @@ var createTokenFromEmailAndId = (email, id) => {
 
 // src/routes/auth.routes.ts
 import passport from "passport";
+
+// src/models/subscription.model.ts
+import { Schema as Schema4, model as model4 } from "mongoose";
+var SubscriptionSchema = new Schema4({
+  subscriptionId: { type: String, default: "" },
+  productId: { type: String, default: "" }
+});
+var SubscriptionModel = model4(
+  "Subscription",
+  SubscriptionSchema
+);
+
+// src/routes/auth.routes.ts
 dotenv2.config();
 var authRoutes = (app2) => {
   app2.post("/api/auth/sign-up", async (req, res) => {
@@ -345,14 +443,17 @@ var authRoutes = (app2) => {
         return ServerResponse.serverError(res, 400, "Email Is Already in Use");
       }
       const hashedPassword = await hash2(userData.password, 10);
+      const subscriptionModel = await new SubscriptionModel().save();
       const newUser = new UserModel({
         ...userData,
-        password: hashedPassword
+        password: hashedPassword,
+        subscription: subscriptionModel._id
       });
       const createdUser = await newUser.save();
+      const populatedUser = await populateUserSubscription(newUser._id);
       ServerResponse.serverSuccess(res, 200, "Successfully Registered", {
         token: createTokenFromEmailAndId(createdUser.email, createdUser._id),
-        data: createdUser
+        user: populatedUser
       });
     } catch (error) {
       return ServerResponse.serverError(
@@ -379,9 +480,10 @@ var authRoutes = (app2) => {
     );
     if (!verifiedPassword)
       return ServerResponse.serverError(res, 401, "Invalid Password");
+    const populatedUser = await populateUserSubscription(user._id);
     return ServerResponse.serverSuccess(res, 200, "Successfully Signed In", {
       token: createTokenFromEmailAndId(user.email, user._id),
-      user
+      user: populatedUser
     });
   });
   app2.get(
@@ -402,8 +504,6 @@ var authRoutes = (app2) => {
           if (err2) {
             return next(err2);
           }
-          console.log("\u2705 Logged in user:", req.user);
-          console.log("\u2705 Session after login:", req.session);
           return res.redirect("http://localhost:4200/auth/login");
         });
       }
@@ -441,6 +541,60 @@ var authRoutes = (app2) => {
       userToSend
     );
   });
+  app2.put("/api/auth/update-email/:userId", async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const { newEmail, password } = req.body;
+      const user = await UserModel.findById(userId);
+      const verifiedPassword = await compare2(password, user.password);
+      if (!verifiedPassword)
+        return ServerResponse.serverError(res, 401, "Password Incorrect");
+      const updatedUSer = await UserModel.findByIdAndUpdate(
+        userId,
+        { email: newEmail },
+        { new: true }
+      );
+      return ServerResponse.serverSuccess(
+        res,
+        200,
+        "Email Updated",
+        updatedUSer
+      );
+    } catch (err) {
+      return ServerResponse.serverError(res, 500, "Error", err);
+    }
+  });
+  app2.put("/api/auth/update-password/:userId", async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const { currentPassword, newPassword } = req.body;
+      const user = await UserModel.findById(userId);
+      const verifiedPassword = await compare2(
+        currentPassword,
+        user.password
+      );
+      if (!verifiedPassword)
+        return ServerResponse.serverError(
+          res,
+          401,
+          "Current Password Incorrect"
+        );
+      const hashedPassword = await hash2(newPassword, 10);
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        userId,
+        { password: hashedPassword },
+        { new: true }
+      );
+      return ServerResponse.serverSuccess(
+        res,
+        200,
+        "Password Updated Successfully",
+        updatedUser
+      );
+    } catch (err) {
+      return ServerResponse.serverError(res, 500, "Something Went Wrong", err);
+    }
+  });
 };
 var auth_routes_default = authRoutes;
 
@@ -469,13 +623,99 @@ import path2 from "path";
 import MongoStore from "connect-mongo";
 import passport2 from "passport";
 import session from "express-session";
+
+// src/routes/pricing.ts
+import * as dotenv4 from "dotenv";
+
+// src/services/subscription.service.ts
+var createSubscriptionWebhook = async ({
+  eventName,
+  userId,
+  subscriptionId,
+  productId
+}) => {
+  if (eventName === "subscription_created" /* subscription_created */ || eventName === "subscription_updated" /* subscription_updated */) {
+    const user = await UserModel.findById(userId);
+    const populatedUser = await populateUserSubscription(userId);
+    await SubscriptionModel.findByIdAndUpdate(populatedUser.subscription._id, {
+      subscriptionId,
+      productId,
+      userId
+    });
+    await user.save();
+  }
+};
+
+// src/routes/pricing.ts
+dotenv4.config();
+var pricingRoutes = (app2, io2) => {
+  app2.post("/api/webhook", async (req, res) => {
+    try {
+      const event = req.body;
+      const productId = event.data?.attributes.product_id;
+      const eventName = event.meta?.event_name;
+      const userId = event.meta?.custom_data.userId;
+      const subscriptionId = event.data.id;
+      const isCancelled = event.data?.attributes.cancelled;
+      console.log("stize webhook");
+      createSubscriptionWebhook({
+        eventName,
+        userId,
+        subscriptionId,
+        productId
+      });
+      io2.to(userId).emit("subscription-updated", { userId });
+      console.log("poslato na front");
+    } catch (err) {
+      console.error("[Webhook] Error:", err);
+    }
+  });
+  app2.post("/api/remove-subscription", async (req, res) => {
+    const { userId } = req.body;
+    const user = await UserModel.findById(userId);
+    const populatedUser = await user.populate("subscription");
+    await SubscriptionModel.findByIdAndDelete(populatedUser.subscription._id);
+    await UserModel.findOneAndUpdate(userId, {
+      subscription: null
+    }, { new: true });
+    return ServerResponse.serverSuccess(res, 200, "Successfully Unsubscribed");
+  });
+};
+var pricing_default = pricingRoutes;
+
+// src/index.ts
+import { createServer } from "http";
+import { Server } from "socket.io";
 var app = express();
 var env2 = process.env.NODE_ENV || "development";
+var server = createServer(app);
+var io = new Server(server, {
+  cors: {
+    origin: function(origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by Socket.IO CORS"));
+      }
+    },
+    credentials: true
+  }
+});
+io.on("connection", (socket) => {
+  socket.on("join-room", (roomId) => {
+    socket.join(roomId);
+    socket.emit("subscription-updated", { userId: roomId });
+  });
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
+});
 var envPath2 = path2.resolve(
   process.cwd(),
   `.env${env2 === "development" ? "" : "." + env2}`
 );
-dotenv4.config({ path: envPath2 });
+dotenv5.config({ path: envPath2 });
 mongoose.connection.once("open", () => {
   console.log(
     "\x1B[32m[MongoDB]\x1B[0m\x1B[33m Successfully connected to database \x1B[0m"
@@ -527,7 +767,8 @@ app.get("/", (req, res) => {
 });
 url_route_default(app);
 auth_routes_default(app);
-app.listen(process.env.PORT || "3000", () => {
+pricing_default(app, io);
+server.listen(process.env.PORT || "3000", () => {
   console.log(
     `\x1B[32m[SERVER]\x1B[0m\x1B[33m Server Started On Port \x1B[0m\x1B[32m ${process.env.PORT} \x1B[0m`
   );

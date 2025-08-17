@@ -38,16 +38,26 @@ export const createSubscriptionWebhook = async ({
     eventName === SubscriptionEventTypes.subscription_created ||
     eventName === SubscriptionEventTypes.subscription_updated
   ) {
-    const user = await UserModel.findById(userId);
-    const populatedUser = await populateUserSubscription(user);
+    const populatedUser = await populateUserSubscription(userId);
 
-    await SubscriptionModel.findByIdAndUpdate(populatedUser.subscription._id, {
-      subscriptionId,
-      productId,
-      userId
-    });
+    if (populatedUser.subscription) {
+      await SubscriptionModel.findByIdAndUpdate(populatedUser.subscription._id, {
+        subscriptionId,
+        productId,
+        userId
+      });
+    } else {
+      const subscription = await SubscriptionModel.create({
+        subscriptionId,
+        productId,
+        userId
+      })
 
-    await user.save();
+      populatedUser.subscription = subscription._id
+    }
+
+
+    await populatedUser.save();
   }
 };
 
