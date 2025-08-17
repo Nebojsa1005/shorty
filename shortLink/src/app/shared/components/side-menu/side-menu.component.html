@@ -48,6 +48,22 @@
     </mat-list-item>
   </a>
 
+  
+  <a
+    routerLink="/profile"
+    routerLinkActive
+    #pricing="routerLinkActive"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    <mat-list-item class="!mb-1 !rounded-sm" button [activated]="pricing.isActive">
+      <div class="d-flex items-center">
+        <mat-icon class="mr-sm" color="primary">person_outline</mat-icon>
+        <span class="menu-label">Profile</span>
+      </div>
+    </mat-list-item>
+  </a>
+
+
   <mat-list-item class="!mb-1 !rounded-sm" button (click)="onLogout()">
     <div class="d-flex items-center">
       <mat-icon class="mr-sm" color="primary">logout</mat-icon>

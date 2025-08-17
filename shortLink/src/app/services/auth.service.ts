@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { User } from '../shared/types/user.type';
+import { EmailUpdatePayload, PasswordUpdatePayload, User } from '../shared/types/user.type';
 import { LocalStorageKeys } from '../shared/enums/local-storage.enum';
 import { environment } from '../../environments/environment';
 import { Response } from '../shared/types/response.type';
@@ -10,8 +10,8 @@ import { ToastService } from './toast-service.service';
 
 interface AuthState {
   user: User | null;
-  isSignInButtonLoading: boolean
-  isSignUpButtonLoading: boolean
+  isSignInButtonLoading: boolean;
+  isSignUpButtonLoading: boolean;
 }
 
 export interface UserCredentials {
@@ -30,12 +30,12 @@ export class AuthService {
   state = signal<AuthState>({
     user: null,
     isSignInButtonLoading: false,
-    isSignUpButtonLoading: false
+    isSignUpButtonLoading: false,
   });
 
   user = computed(() => this.state().user);
-  isSignInButtonLoading = computed(() => this.state().isSignInButtonLoading)
-  isSignUpButtonLoading = computed(() => this.state().isSignUpButtonLoading)
+  isSignInButtonLoading = computed(() => this.state().isSignInButtonLoading);
+  isSignUpButtonLoading = computed(() => this.state().isSignUpButtonLoading);
 
   constructor() {
     const user = this.getUserFromLocalStorage();
@@ -44,10 +44,10 @@ export class AuthService {
   }
 
   updateState<K extends keyof AuthState>(prop: K, value: AuthState[K]) {
-    this.state.update(state => ({
+    this.state.update((state) => ({
       ...state,
-      [prop]: value
-    }))
+      [prop]: value,
+    }));
   }
 
   updateUser(newUser: User | null) {
@@ -158,9 +158,8 @@ export class AuthService {
     localStorage.setItem(LocalStorageKeys.USER, userStringified);
     console.log('upisan', {
       userStringified,
-      local: this.getUserFromLocalStorage()
+      local: this.getUserFromLocalStorage(),
     });
-    
   }
 
   getUserFromLocalStorage() {
@@ -172,5 +171,16 @@ export class AuthService {
     localStorage.setItem(LocalStorageKeys.USER, '');
     this.updateUser(null);
     this.router.navigate(['auth/sign-in']);
+  }
+
+  updateUserEmail(payload: EmailUpdatePayload) {
+    return this.http.put(
+      `${environment.apiUrl}/api/auth/update-email/${this.user()?._id}`,
+      payload
+    );
+  }
+
+  updateUserPassword(payload: PasswordUpdatePayload) {
+    return this.http.put(`${environment.apiUrl}/api/auth/update-password/${this.user()?._id}`, payload)
   }
 }

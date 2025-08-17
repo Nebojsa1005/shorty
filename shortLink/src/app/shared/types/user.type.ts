@@ -7,3 +7,13 @@ export type User = {
   createdAt: Date;
   subscription: Subscription
 };
+
+export type EmailUpdatePayload = {
+  newEmail: string,
+  password: string
+}
+
+export type PasswordUpdatePayload = {
+  currentPassword: string,
+  newPassword: string
+}

@@ -8,6 +8,8 @@ export const updateUserShortLinks = async (userId: string, urlId: string) => {
   });
 };
 
-export const populateUserSubscription = async (user: UserDocument) => {
+export const populateUserSubscription = async (userId: string) => {
+  const user = await UserModel.findById(userId)
+  
   return user.populate("subscription");
 };
