@@ -221,6 +221,18 @@ const authRoutes = (app: Express) => {
       return ServerResponse.serverError(res, 500, "Something Went Wrong", err);
     }
   });
+  
+  app.get("/api/auth/refresh-user/:userId", async (req, res) => {
+    try {
+      const userId = req.params.userId
+
+      const user = await UserModel.findById(userId)
+
+      return ServerResponse.serverSuccess(res, 200, '', user)
+    } catch(err) {
+      return ServerResponse.serverError(res, 500, "Something Went Wrong", err);
+    }
+  })
 };
 
 export default authRoutes;
