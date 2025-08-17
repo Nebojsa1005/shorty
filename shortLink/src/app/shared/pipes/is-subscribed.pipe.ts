@@ -9,7 +9,8 @@ export class IsSubscribedPipe implements PipeTransform {
 
   user = computed(() => this.authService.user());
 
-  transform(value: string): unknown {
-    return value === this.user()?.subscription?.productId;
+  transform(value: string, userProduct: string | undefined): unknown {
+    if (!userProduct) return false
+    return value === userProduct
   }
 }

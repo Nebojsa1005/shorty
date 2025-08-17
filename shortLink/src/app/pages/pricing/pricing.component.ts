@@ -20,7 +20,7 @@ export class PricingComponent {
 
   products = computed(() => this.pricingService.products());
   user = computed(() => this.authService.user());
-  
+  userProduct = computed(() => this.user()?.subscription?.productId)
 
   constructor() {
     this.pricingService.getAllProducts().pipe(takeUntilDestroyed()).subscribe();

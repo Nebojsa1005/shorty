@@ -14,11 +14,11 @@
   
       <button
         mat-button
-        [disabled]="product.id | isSubscribed"
+        [disabled]="product.id | isSubscribed : userProduct()"
         (click)="onBuyNow(product.attributes.buy_now_url)"
       >
         {{
-         (product.id | isSubscribed) ? "Current" : "Buy Now"
+         (product.id | isSubscribed : userProduct()) ? "Current" : "Buy Now"
         }}
       </button>
     </div>
