@@ -2,6 +2,7 @@ import { computed, inject, Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
+import { take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -30,8 +31,9 @@ export class SocketService {
     });
 
     this.socket.on('subscription-updated', () => {
-      console.log('subscription-updated');
-      
+      this.authService.refreshUser().pipe(
+        take(1)
+      ).subscribe()
     });
   }
 

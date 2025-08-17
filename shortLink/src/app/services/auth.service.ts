@@ -2,7 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { EmailUpdatePayload, PasswordUpdatePayload, User } from '../shared/types/user.type';
+import {
+  EmailUpdatePayload,
+  PasswordUpdatePayload,
+  User,
+} from '../shared/types/user.type';
 import { LocalStorageKeys } from '../shared/enums/local-storage.enum';
 import { environment } from '../../environments/environment';
 import { Response } from '../shared/types/response.type';
@@ -156,10 +160,6 @@ export class AuthService {
   saveUserToLocalStorage(user: User) {
     const userStringified = JSON.stringify(user);
     localStorage.setItem(LocalStorageKeys.USER, userStringified);
-    console.log('upisan', {
-      userStringified,
-      local: this.getUserFromLocalStorage(),
-    });
   }
 
   getUserFromLocalStorage() {
@@ -181,6 +181,30 @@ export class AuthService {
   }
 
   updateUserPassword(payload: PasswordUpdatePayload) {
-    return this.http.put(`${environment.apiUrl}/api/auth/update-password/${this.user()?._id}`, payload)
+    return this.http.put(
+      `${environment.apiUrl}/api/auth/update-password/${this.user()?._id}`,
+      payload
+    );
+  }
+
+  refreshUser() {
+    return this.http
+      .get<Response>(
+        `${environment.apiUrl}/api/auth/refresh-user/${this.user()?._id}`
+      )
+      .pipe(
+        tap((res) => {
+          this.updateUser(res.data);
+          this.saveUserToLocalStorage(res.data);
+        }),
+        catchError((error) => {
+          this.toastService.presentToast({
+            position: 'top',
+            message: error.error.message,
+            color: 'danger',
+          });
+          return of(null);
+        })
+      );
   }
 }

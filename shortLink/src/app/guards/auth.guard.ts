@@ -13,11 +13,6 @@ export class AuthGuard {
   user = computed(() => this.authService.user());
 
   async canActivate() {
-    console.log({
-      a: this.localUser,
-      b: this.user,
-    });
-
     if (!this.localUser || !this.user()) {
       this.router.navigate(['auth/sign-up']);
       return false;

@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SocketService } from './services/socket.service';
+import { AuthService } from './services/auth.service';
+import { PricingService } from './services/pricing.service';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +13,20 @@ import { SocketService } from './services/socket.service';
 })
 export class AppComponent {
   private socketService = inject(SocketService);
+  private authService = inject(AuthService);
+  private pricingService = inject(PricingService);
+
+  user = computed(() => this.authService.user());
 
   constructor() {
     this.socketService.joinRoom();
+
+    effect(() => {
+      const user = this.user();
+
+      if (user?.subscription) {
+        this.pricingService.getProductById(user.subscription.productId);
+      }
+    });
   }
 }
