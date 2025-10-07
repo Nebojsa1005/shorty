@@ -15,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { take } from 'rxjs';
 import { AuthService, UserCredentials } from '../../../services/auth.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 interface SignUpForm {
   email: FormControl;
@@ -32,6 +33,7 @@ interface SignUpForm {
         MatButtonModule,
         MatIconModule,
         MatDividerModule,
+        MatProgressSpinnerModule
     ],
     templateUrl: './sign-up.component.html',
     styleUrl: './sign-up.component.scss'

@@ -5,3 +5,11 @@ main {
 .sidenav {
   border-right: 1px solid var(--ion-text-color-step-400);
 }
+.mat-drawer-inner-container {
+	overflow: hidden;
+}
+
+
+.sidenav.collapsed {
+  width: 60px; /* just enough for icons */
+}

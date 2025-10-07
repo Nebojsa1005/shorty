@@ -1,0 +1,16 @@
+.side-menu-container {
+	height: calc(100% - 64px);
+}
+
+.add-new-link-container {
+	border-top: 1px solid #EAEAEA;
+	border-bottom: 1px solid #EAEAEA;
+}
+
+.active-link .mdc-list-item--activated {
+	background: #9A4EAE14 !important;
+}
+
+mat-icon {
+	color: #9A4EAE;
+}

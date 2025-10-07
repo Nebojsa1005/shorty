@@ -129,7 +129,7 @@ export class AuthService {
 
   googleLogin() {
     return this.http
-      .get<Response>('http://localhost:3000/api/auth/google-login', {
+      .get<Response>('http://localhost:3000/api/auth/google', {
         withCredentials: true,
       })
       .pipe(

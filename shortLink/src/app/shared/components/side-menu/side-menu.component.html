@@ -1,73 +1,107 @@
-<mat-nav-list class="!p-2">
-  <mat-list-item class="!mb-1 !rounded-sm" button (click)="newLink()">
-    <div class="d-flex items-center">
-      <mat-icon class="mr-sm" color="primary">add_circle_outline</mat-icon>
-      <span class="menu-label">Add New Minified List</span>
+<div class="!flex !flex-col justify-between side-menu-container">
+  <mat-nav-list class="!p-2">
+    <div class="add-new-link-container !py-5 !my-5">
+      <mat-list-item
+        color="primary"
+        class="!mb-1 !rounded-sm"
+        button
+        (click)="newLink()"
+      >
+        <div
+          class="d-flex items-center text-white add-new-minified-link-container"
+        >
+          <mat-icon class="mr-sm !text-white material-symbols-outlined">add</mat-icon>
+          <span class="menu-label">Add New Minified Link</span>
+        </div>
+      </mat-list-item>
     </div>
-  </mat-list-item>
-
-  <a
-    routerLink="/all-links"
-    routerLinkActive
-    #allLinks="routerLinkActive"
-    [routerLinkActiveOptions]="{ exact: true }"
-  >
-    <mat-list-item class="!mb-1 !rounded-sm" button [activated]="allLinks.isActive">
-      <div class="d-flex items-center">
-        <mat-icon class="mr-sm" color="primary">list</mat-icon>
-        <span class="menu-label">View All Minified Links</span>
-      </div>
-    </mat-list-item>
-  </a>
-
-  <a
-    routerLink="/analytics"
-    routerLinkActive
-    #analytics="routerLinkActive"
-    [routerLinkActiveOptions]="{ exact: true }"
-  >
-    <mat-list-item class="!mb-1 !rounded-sm" button [activated]="analytics.isActive">
-      <div class="d-flex items-center">
-        <mat-icon class="mr-sm" color="primary">bar_chart</mat-icon>
-        <span class="menu-label">Analytics</span>
-      </div>
-    </mat-list-item>
-  </a>
-
-  <a
-    routerLink="/pricing"
-    routerLinkActive
-    #pricing="routerLinkActive"
-    [routerLinkActiveOptions]="{ exact: true }"
-  >
-    <mat-list-item class="!mb-1 !rounded-sm" button [activated]="pricing.isActive">
-      <div class="d-flex items-center">
-        <mat-icon class="mr-sm" color="primary">store</mat-icon>
-        <span class="menu-label">Pricing</span>
-      </div>
-    </mat-list-item>
-  </a>
-
   
-  <a
-    routerLink="/profile"
-    routerLinkActive
-    #pricing="routerLinkActive"
-    [routerLinkActiveOptions]="{ exact: true }"
+    <a
+      routerLink="/all-links"
+      routerLinkActive="active-link"
+      #allLinks="routerLinkActive"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <mat-list-item
+        class="!mb-1 !rounded-sm"
+        button
+        [activated]="allLinks.isActive"
+      >
+        <div class="d-flex items-center">
+          <mat-icon class="material-symbols-outlined mr-sm">
+            format_list_bulleted
+          </mat-icon>
+          <span class="menu-label">View All Minified Links</span>
+        </div>
+      </mat-list-item>
+    </a>
+  
+    <a
+      routerLink="/analytics"
+      routerLinkActive="active-link"
+      #analytics="routerLinkActive"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <mat-list-item
+        class="!mb-1 !rounded-sm"
+        button
+        [activated]="analytics.isActive"
+      >
+        <div class="d-flex items-center">
+          <mat-icon class="mr-sm material-symbols-outlined" color="primary">bar_chart</mat-icon>
+          <span class="menu-label">Analytics</span>
+        </div>
+      </mat-list-item>
+    </a>
+  
+    <a
+      routerLink="/pricing"
+      routerLinkActive="active-link"
+      #pricing="routerLinkActive"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <mat-list-item
+        class="!mb-1 !rounded-sm"
+        button
+        [activated]="pricing.isActive"
+      >
+        <div class="d-flex items-center">
+          <mat-icon class="material-symbols-outlined mr-sm" color="primary"
+            >sell</mat-icon
+          >
+          <span class="menu-label">Pricing</span>
+        </div>
+      </mat-list-item>
+    </a>
+  
+    <a
+      routerLink="/profile"
+      routerLinkActive="active-link"
+      #pricing="routerLinkActive"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <mat-list-item
+        class="!mb-1 !rounded-sm"
+        button
+        [activated]="pricing.isActive"
+      >
+        <div class="d-flex items-center">
+          <mat-icon class="mr-sm material-symbols-outlined" color="primary">person_outline</mat-icon>
+          <span class="menu-label">Profile</span>
+        </div>
+      </mat-list-item>
+    </a>
+  </mat-nav-list>
+  
+  <mat-list-item
+    class="logout-button !cursor-pointer !mb-1 !rounded-sm"
+    button
+    (click)="onLogout()"
   >
-    <mat-list-item class="!mb-1 !rounded-sm" button [activated]="pricing.isActive">
-      <div class="d-flex items-center">
-        <mat-icon class="mr-sm" color="primary">person_outline</mat-icon>
-        <span class="menu-label">Profile</span>
-      </div>
-    </mat-list-item>
-  </a>
-
-
-  <mat-list-item class="!mb-1 !rounded-sm" button (click)="onLogout()">
     <div class="d-flex items-center">
-      <mat-icon class="mr-sm" color="primary">logout</mat-icon>
+      <mat-icon class="mr-sm material-symbols-outlined" color="primary">logout</mat-icon>
       <span class="menu-label">Logout</span>
     </div>
   </mat-list-item>
-</mat-nav-list>
+</div>
+

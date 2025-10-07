@@ -14,7 +14,7 @@
   <!-- Right sidenav -->
   <mat-sidenav
     #createEditDraw
-    class="!rounded-none !w-4/10"
+    class="!rounded-none !w-4/10 main-height overflow-hidden"
     mode="over"
     (closedStart)="resetCreateEditLinkDrawer()"
     [opened]="isCreateEditLinkDrawerOpened()"
@@ -35,7 +35,7 @@
       </button>
     </mat-toolbar>
 
-    <main class="p-md">
+    <main class="p-md main-height">
       <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>
