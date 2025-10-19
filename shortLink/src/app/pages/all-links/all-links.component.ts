@@ -42,7 +42,7 @@ export class AllLinksComponent {
 
   searchControlValueChanges$ = this.searchControl.valueChanges.pipe(
     debounceTime(300),
-    distinctUntilChanged(),
+    distinctUntilChanged()
   );
 
   ngOnInit() {

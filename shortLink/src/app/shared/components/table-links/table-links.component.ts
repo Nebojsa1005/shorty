@@ -20,6 +20,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTooltip } from '@angular/material/tooltip';
 import { CopyClipboardDirective } from '../../../directives/copy-clipboard.directive';
 import { UrlService } from '../../../services/url.service';
 import { UrlLink } from '../../types/url.interface';
@@ -77,6 +78,32 @@ export class TableLinksComponent {
       const s = this.sort();
       if (s && this.dataSource.sort !== s) this.dataSource.sort = s;
     });
+  }
+
+  private tooltipTimers = new WeakMap<MatTooltip, any>();
+
+  onCopy(tooltip: MatTooltip) {
+    try {
+      // show temporary 'Copied!' message
+      tooltip.message = 'Copied!';
+      tooltip.show();
+
+      // clear any existing timer for this tooltip
+      const existing = this.tooltipTimers.get(tooltip);
+      if (existing) clearTimeout(existing);
+
+      const t = setTimeout(() => {
+        try {
+          tooltip.hide();
+          tooltip.message = 'Copy';
+        } catch (e) {}
+        this.tooltipTimers.delete(tooltip);
+      }, 1200);
+
+      this.tooltipTimers.set(tooltip, t);
+    } catch (e) {
+      // ignore errors silently
+    }
   }
 
   onEdit(id: string) {

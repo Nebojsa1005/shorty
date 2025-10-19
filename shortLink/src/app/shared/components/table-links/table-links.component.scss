@@ -14,7 +14,11 @@ table th {
 }
 
 table tr {
-	border-bottom: 1px solid #eaeaea !important;
+	border-bottom: 1px solid rgba(234, 234, 234, 1) !important;
+}
+
+table td {
+  border: none !important
 }
 
 .copy-icon {

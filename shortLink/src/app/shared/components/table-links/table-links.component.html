@@ -25,6 +25,10 @@
             class="copy-icon"
             [appCopyClipboard]="row.shortLink"
             src="assets/copy-icon.png"
+            #copyTooltip="matTooltip"
+            matTooltip="Copy"
+            matTooltipPosition="above"
+            (click)="onCopy(copyTooltip)"
           />
         </div>
       </td>
@@ -49,7 +53,7 @@
         >
           <mat-icon color="primary">more_vert</mat-icon>
         </button>
-        <mat-menu #menu="matMenu">
+        <mat-menu #menu="matMenu" disableRipple>
           <button mat-menu-item (click)="onEdit(row._id)">
             <mat-icon color="primary">edit_outline</mat-icon>
             <span>Edit</span>
@@ -72,5 +76,5 @@
     </tr>
   </table>
 </div>
-<mat-paginator [pageSizeOptions]="[5, 10, 25, 50]" />
+<mat-paginator [pageSizeOptions]="[1, 10, 25, 50]" />
 }
