@@ -46,11 +46,6 @@ export class AllLinksComponent {
   );
 
   ngOnInit() {
-    this.analyticsService.trackEvent(
-      'view all links loaded',
-      'all links viewed',
-      'allLinks'
-    );
     this.urlService.updateState('allUrlsLoading', true);
     this.urlService
       .fetchAllUrls()

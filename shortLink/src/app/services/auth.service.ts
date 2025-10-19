@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, of, tap } from 'rxjs';
+import { catchError, Observable, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   EmailUpdatePayload,
@@ -108,36 +108,6 @@ export class AuthService {
           this.saveUserToLocalStorage(res.data.user);
 
           this.router.navigate(['/']);
-
-          this.toastService.presentToast({
-            position: 'top',
-            message: res.message,
-            duration: 3000,
-            color: 'primary',
-          });
-        }),
-        catchError((error) => {
-          this.toastService.presentToast({
-            position: 'top',
-            message: error.error.message,
-            color: 'danger',
-          });
-          return of(null);
-        })
-      );
-  }
-
-  googleLogin() {
-    return this.http
-      .get<Response>('http://localhost:3000/api/auth/google', {
-        withCredentials: true,
-      })
-      .pipe(
-        tap((res) => {
-          this.updateUser(res.data);
-          this.saveUserToLocalStorage(res.data);
-
-          this.router.navigate(['']);
 
           this.toastService.presentToast({
             position: 'top',

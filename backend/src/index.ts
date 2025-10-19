@@ -67,6 +67,7 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: false }));
 const allowedOrigins = [
   "http://localhost:4200", // local dev
   "https://minylinks.netlify.app", // your frontend prod domain
+  "https://accounts.google.com"
 ];
 
 app.use(
@@ -108,7 +109,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get("/", (req, res) => {
-  res.send("cao");
+  res.send("caooooo");
 });
 
 urlRoutes(app);

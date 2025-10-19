@@ -12,10 +12,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { RouterLink } from '@angular/router';
-import { take } from 'rxjs';
-import { AuthService, UserCredentials } from '../../../services/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RouterLink, RouterModule } from '@angular/router';
+import { take } from 'rxjs';
+import { GoogleAuthService } from 'src/app/services/google-auth.service';
+import { AuthService, UserCredentials } from '../../../services/auth.service';
+
 
 interface LoginForm {
   email: FormControl;
@@ -23,24 +25,26 @@ interface LoginForm {
 }
 
 @Component({
-    selector: 'app-sign-in',
-    imports: [
-        CommonModule,
-        RouterLink,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatDividerModule,
-        MatProgressSpinnerModule,
-    ],
-    templateUrl: './sign-in.component.html',
-    styleUrl: './sign-in.component.scss'
+  selector: 'app-sign-in',
+  imports: [
+    CommonModule,
+    RouterLink,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDividerModule,
+    MatProgressSpinnerModule,
+    RouterModule,
+  ],
+  templateUrl: './sign-in.component.html',
+  styleUrl: './sign-in.component.scss',
 })
 export class SignInComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private googleAuthService = inject(GoogleAuthService)
 
   isSignInButtonLoading = computed(() =>
     this.authService.isSignInButtonLoading()
@@ -75,6 +79,9 @@ export class SignInComponent {
       password: ['', [Validators.required, Validators.minLength(4)]],
     });
   }
+  async ngAfterViewInit() {
+    await this.googleAuthService.initializeGoogleSignIn();
+  }
 
   signIn() {
     this.authService.updateState('isSignInButtonLoading', true);
@@ -84,10 +91,6 @@ export class SignInComponent {
       .subscribe(() =>
         this.authService.updateState('isSignInButtonLoading', false)
       );
-  }
-
-  onGoogleLogin() {
-    this.authService.googleLogin().pipe(take(1)).subscribe();
   }
 
   togglePasswordVisibility() {

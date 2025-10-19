@@ -82,83 +82,6 @@ const authRoutes = (app: Express) => {
     });
   });
 
-  app.get(
-    "/api/auth/google",
-    passport.authenticate("google", {
-      scope: ["email", "profile"],
-    })
-  );
-
-  // app.get(
-  //   "/api/auth/google/callback",
-  //   passport.authenticate("google", {
-  //     failureRedirect: "/api/auth/google/failure",
-  //     successRedirect: "http://localhost:4200/auth/login",
-  //     session: true
-  //   }),
-  // );
-
-  app.get("/api/auth/google/callback", (req: any, res, next) => {
-    passport.authenticate(
-      "google",
-      { failureRedirect: "/api/auth/google/failure", session: true },
-      (err, user, info) => {
-        if (err || !user) {
-          return res.redirect("/api/auth/google/failure");
-        }
-
-        // Manually establish session
-        req.logIn(user, (err) => {
-          if (err) {
-            return next(err);
-          }
-
-          return res.redirect("http://localhost:4200/auth/login");
-        });
-      }
-    )(req, res, next);
-  });
-
-  app.get("/api/auth/google/failure", (_req, res) => {
-    return ServerResponse.serverError(res, 401, "Failed to Authenticate");
-  });
-
-  app.get("/api/auth/logout", (req: any, res, next) => {
-    req.logout((err) => {
-      if (err) return next(err);
-      res.redirect("http://localhost:4200/");
-    });
-  });
-
-  app.get("/api/auth/google-login", async (req: any, res: any) => {
-    if (!req.isAuthenticated() || !req.user) {
-      return ServerResponse.serverError(res, 401, "Not Authenticated");
-    }
-
-    const existingUser = await UserModel.findOne({
-      email: req.user.email,
-    });
-
-    let userToSend = null;
-
-    if (existingUser) {
-      userToSend = existingUser;
-    } else {
-      const newUser = await UserModel.create({
-        ...req.user,
-      });
-
-      userToSend = newUser;
-    }
-
-    return ServerResponse.serverSuccess(
-      res,
-      200,
-      "Login Successful",
-      userToSend
-    );
-  });
-
   app.put("/api/auth/update-email/:userId", async (req, res) => {
     try {
       const userId = req.params.userId;
@@ -221,18 +144,43 @@ const authRoutes = (app: Express) => {
       return ServerResponse.serverError(res, 500, "Something Went Wrong", err);
     }
   });
-  
+
   app.get("/api/auth/refresh-user/:userId", async (req, res) => {
     try {
-      const userId = req.params.userId
+      const userId = req.params.userId;
 
       const populatedUser = await populateUserSubscription(userId);
 
-      return ServerResponse.serverSuccess(res, 200, '', populatedUser)
-    } catch(err) {
+      return ServerResponse.serverSuccess(res, 200, "", populatedUser);
+    } catch (err) {
       return ServerResponse.serverError(res, 500, "Something Went Wrong", err);
     }
-  })
+  });
+
+  app.post("/api/auth/google-login", async (req, res) => {
+  const { userEmail } = req.body;
+    let user = await getUserByEmail(userEmail);
+
+    if (!user) {
+     // Crating subscription model
+      const subscriptionModel = await new SubscriptionModel().save();
+
+      // Creating instance of Candidate
+      const newUser = new UserModel({
+        email: userEmail,
+        subscription: subscriptionModel._id,
+      });
+
+      user = await newUser.save();
+      
+    }
+    const populatedUser = await populateUserSubscription(user._id);
+
+    return ServerResponse.serverSuccess(res, 200, "Successfully Signed In", {
+      token: createTokenFromEmailAndId(user.email, user._id),
+      user: populatedUser,
+    });
+  });
 };
 
 export default authRoutes;

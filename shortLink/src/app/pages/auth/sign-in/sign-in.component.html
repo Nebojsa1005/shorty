@@ -12,25 +12,22 @@
         </h2>
       </div>
 
-      <!-- Google Login Button -->
-       <div class="w-full flex justify-center mb-lg">
-         <button
-           mat-stroked-button
-           class="w-2/3 py-md"
-           (click)="onGoogleLogin()"
-         >
-           <img class="logo" src="assets/google-logo.png">
-         </button>
-       </div>
+      <div id="google-signin-button"></div>
 
-       <div class="w-full text-center mb-lg">
-        <span class="font-light text-sm text-light mb-xxl">Or sign in with</span>
-       </div>
+      <div class="w-full text-center mb-lg">
+        <span class="font-light text-sm text-light mb-xxl"
+          >Or sign in with</span
+        >
+      </div>
 
       <!-- Email Input -->
       <mat-form-field appearance="outline" class="w-12 mb-sm">
         <mat-label>Email Address</mat-label>
-        <input matInput [formControl]="controls.email" placeholder="example@domain.com" />
+        <input
+          matInput
+          [formControl]="controls.email"
+          placeholder="example@domain.com"
+        />
         <mat-error *ngIf="emailErrorMessage">{{ emailErrorMessage }}</mat-error>
       </mat-form-field>
 
@@ -74,14 +71,13 @@
         </button>
       </div>
 
-       <!-- Redirect to sign-up -->
+      <!-- Redirect to sign-up -->
       <div class="text-center mt-md">
         <span class="text-sm">
           Don’t Have an Account?
           <a class="text-primary" routerLink="/auth/sign-up">Sign Up</a>
         </span>
       </div>
-
     </form>
   </div>
 </div>

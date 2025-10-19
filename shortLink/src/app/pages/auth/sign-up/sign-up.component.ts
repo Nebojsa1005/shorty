@@ -16,6 +16,7 @@ import { RouterLink } from '@angular/router';
 import { take } from 'rxjs';
 import { AuthService, UserCredentials } from '../../../services/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { GoogleAuthService } from 'src/app/services/google-auth.service';
 
 interface SignUpForm {
   email: FormControl;
@@ -41,6 +42,7 @@ interface SignUpForm {
 export class SignUpComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private googleAuthService = inject(GoogleAuthService)
 
   isSignUpButtonLoading = computed(() =>
     this.authService.isSignUpButtonLoading()
@@ -74,5 +76,7 @@ export class SignUpComponent {
       );
   }
 
-  onGoogleLogin() {}
+   async ngAfterViewInit() {
+    await this.googleAuthService.initializeGoogleSignIn();
+  }
 }
