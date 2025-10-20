@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -5,11 +6,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { PricingService } from 'src/app/services/pricing.service';
+import { PricingPlan } from 'src/app/shared/enums/pricing.enum';
 import { IsSubscribedPipe } from 'src/app/shared/pipes/is-subscribed.pipe';
 
 @Component({
   selector: 'app-pricing',
-  imports: [MatToolbarModule, MatButtonModule, IsSubscribedPipe],
+  imports: [MatToolbarModule, MatButtonModule, IsSubscribedPipe, CommonModule],
   templateUrl: './pricing.component.html',
   styleUrl: './pricing.component.scss',
 })
@@ -17,6 +19,8 @@ export class PricingComponent {
   private pricingService = inject(PricingService);
   private authService = inject(AuthService);
   private router = inject(Router)
+
+  PricingPlan = PricingPlan
 
   products = computed(() => this.pricingService.products());
   user = computed(() => this.authService.user());

@@ -8,13 +8,6 @@ export const routes: Routes = [
       import('./pages/auth/auth.routes').then((r) => r.authRoutes),
   },
   {
-    path: 'pricing',
-    loadComponent: () =>
-      import('./pages/pricing/pricing.component').then(
-        (c) => c.PricingComponent
-      ),
-  },
-  {
     path: '',
     canActivate: [AuthGuard],
     loadChildren: () =>

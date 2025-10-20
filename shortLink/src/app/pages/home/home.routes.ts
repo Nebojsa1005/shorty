@@ -35,6 +35,13 @@ export const homeRoutes: Routes = [
           ),
       },
       {
+        path: 'pricing',
+        loadComponent: () =>
+          import('../pricing/pricing.component').then(
+            (c) => c.PricingComponent
+          ),
+      },
+      {
         path: ':id',
         loadComponent: () =>
           import('../view-link/view-link.component').then(
