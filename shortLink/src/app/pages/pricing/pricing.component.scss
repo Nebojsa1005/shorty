@@ -3,6 +3,14 @@
   border-radius: 8px;
 }
 
+.product-pro {
+  border-color: rgba(154, 78, 174, 1) !important;
+}
+
+.product-ultimate {
+  border-color: rgba(57, 42, 72, 1) !important;
+}
+
 .price-badge-pro + .product,
 .price-badge-ultimate + .product {
   border-radius: 0 0 8px 8px;
@@ -23,4 +31,46 @@
 
 .price-badge-ultimate {
 	background-color: rgba(57, 42, 72, 1);
+}
+
+/* Responsive grid for pricing cards */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.pricing-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.product {
+  border: 1px solid rgba(234, 234, 234, 1);
+  border-radius: 8px;
+  padding: 1rem;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Medium screens: 2 columns */
+@media (min-width: 640px) {
+  .pricing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Large screens: 3 columns */
+@media (min-width: 1024px) {
+  .pricing-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Make buttons full width on small screens */
+.product button {
+  width: 100%;
 }

@@ -1,65 +1,74 @@
-  @if (!products()?.length) {
-  <div class="flex justify-center w-full">
-    <mat-progress-spinner diameter="40" color="primary" mode="indeterminate" />
-  </div>
-  }
+@if (!products()?.length) {
+<div class="flex justify-center w-full">
+  <mat-progress-spinner diameter="40" color="primary" mode="indeterminate" />
+</div>
+}
 
 <div class="flex-col justify-center items-center w-full mt-md">
-  <div class="p-md d-flex items-center w-full justify-between">
-    @for(product of products(); track product.id; let first = $first; let last = $last) {
+  <div class="p-md w-full">
+    <div class="pricing-grid">
+      @for(product of products(); track product.id; let first = $first; let last
+      = $last) {
 
-    <div  [ngClass]="{ 'mr-0': last, 'mr-md': !last }">
-      <div
-        class="price-badge p-sm text-sm w-full d-flex items-center justify-center"
-        [ngClass]="{
-          'rounded-lg': first,
-          'price-badge-pro': product.attributes.name === PricingPlan.PRO,
-          'price-badge-ultimate':
-            product.attributes.name === PricingPlan.ULTIMATE
-        }"
-      >
-        @if (product.attributes.name !== PricingPlan.ESSENTIAL) {
-        <span>
-          {{
-            product.attributes.name === PricingPlan.PRO
-              ? "Most Popular"
-              : "Best Offer"
-          }}
-        </span>
-        }
-      </div>
-      <div class="product p-md h-full">
-        <div>
-          <p>
-            {{ product.attributes.name }}
-          </p>
-
-          <div
-            class="text-sm/5 font-light mb-md"
-            [innerHTML]="product.attributes.description"
-          ></div>
-
-          <p class="text-xl font-light mb-md">
-            {{ product.attributes.price_formatted }}
-          </p>
-
-          <button
-            class="w-full"
-            mat-flat-button
-            color="primary"
-            [disabled]="product.id | isSubscribed : userProduct()"
-            (click)="onBuyNow(product.attributes.buy_now_url)"
-          >
+      <div class="pricing-card" [ngClass]="{ 'mr-0': last, 'mr-md': !last }">
+        <div
+          class="price-badge p-sm text-sm w-full d-flex items-center justify-center"
+          [ngClass]="{
+            'rounded-lg': first,
+            'price-badge-pro': product.attributes.name === PricingPlan.PRO,
+            'price-badge-ultimate':
+              product.attributes.name === PricingPlan.ULTIMATE
+          }"
+        >
+          @if (product.attributes.name !== PricingPlan.ESSENTIAL) {
+          <span>
             {{
-              (product.id === user()?.subscription?.productId)
-                ? "Current"
-                : "Buy Now"
+              product.attributes.name === PricingPlan.PRO
+                ? "Most Popular"
+                : "Best Offer"
             }}
-          </button>
+          </span>
+          }
+        </div>
+        <div
+          class="product p-md h-full"
+          [ngClass]="{
+            'product-pro': product.attributes.name === PricingPlan.PRO,
+            'product-ultimate': product.attributes.name === PricingPlan.ULTIMATE
+          }"
+        >
+          <div>
+            <p>
+              {{ product.attributes.name }}
+            </p>
+
+            <div
+              class="text-sm/5 font-light mb-md"
+              [innerHTML]="product.attributes.description"
+            ></div>
+
+            <p class="text-xl font-light mb-md">
+              {{ product.attributes.price_formatted }}
+            </p>
+
+            <button
+              class="w-full"
+              mat-flat-button
+              color="primary"
+              [disabled]="product.id | isSubscribed : userProduct()"
+              (click)="onBuyNow(product.attributes.buy_now_url)"
+            >
+              {{
+                product.id === user()?.subscription?.productId
+                  ? "Current"
+                  : "Buy Now"
+              }}
+            </button>
+          </div>
         </div>
       </div>
+      }
     </div>
-    }
   </div>
 </div>
 

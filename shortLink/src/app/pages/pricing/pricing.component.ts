@@ -53,7 +53,7 @@ export class PricingComponent {
       `${buyNowUrl}?checkout[custom][userId]=${this.user()?._id}`,
       '_blank'
     );
-    
+
     this.openConfirmationDialog();
   }
 
