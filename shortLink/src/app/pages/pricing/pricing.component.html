@@ -51,7 +51,7 @@
             (click)="onBuyNow(product.attributes.buy_now_url)"
           >
             {{
-              (product.id | isSubscribed : userProduct())
+              (product.id === user()?.subscription?.productId)
                 ? "Current"
                 : "Buy Now"
             }}
