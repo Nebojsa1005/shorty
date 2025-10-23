@@ -31,6 +31,8 @@ export class SocketService {
     });
 
     this.socket.on('subscription-updated', () => {
+      console.log('subscription updated');
+      
       this.authService.refreshUser().pipe(
         take(1)
       ).subscribe()

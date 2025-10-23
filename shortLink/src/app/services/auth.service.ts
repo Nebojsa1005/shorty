@@ -158,6 +158,8 @@ export class AuthService {
   }
 
   refreshUser() {
+    if (!this.user()?._id) return of(null);
+    
     return this.http
       .get<Response>(
         `${environment.apiUrl}/api/auth/refresh-user/${this.user()?._id}`
