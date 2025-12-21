@@ -19,10 +19,14 @@ export class AppComponent {
   user = computed(() => this.authService.user());
 
   constructor() {
-    this.socketService.joinRoom();
+    
 
     effect(() => {
       const user = this.user();
+
+      if (user?._id) {
+        this.socketService.joinRoom();
+      }
 
       if (user?.subscription) {
         this.pricingService.getProductById(user.subscription.productId);

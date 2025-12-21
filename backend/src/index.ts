@@ -18,6 +18,12 @@ import { Server } from "socket.io";
 const app = express();
 const env = process.env.NODE_ENV || "development";
 
+const allowedOrigins = [
+  "http://localhost:4200",
+  "https://minylinks.netlify.app",
+  "https://accounts.google.com"
+];
+
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
@@ -37,7 +43,8 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
   socket.on('join-room', (roomId) => {
     socket.join(roomId);
-    socket.emit('subscription-updated', { userId: roomId });
+    
+    socket.emit('room-joined', { roomId, socketId: socket.id });
 
   });
 
@@ -64,11 +71,6 @@ mongoose.connection.once("open", () => {
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: false }));
 
-const allowedOrigins = [
-  "http://localhost:4200", // local dev
-  "https://minylinks.netlify.app", // your frontend prod domain
-  "https://accounts.google.com"
-];
 
 app.use(
   cors({

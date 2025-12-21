@@ -1,60 +1,89 @@
- <div class="w-full card p-md">
-    <div class="flex justify-between items-center">
-      <h3 class="!text-2xl mb-0 !font-light">Account Information</h3>
+<!-- Personal Information Card -->
+<div class="card p-md mb-md">
+  <div class="card-header">
+    <h3 class="card-title">Personal Information</h3>
+    <button mat-stroked-button (click)="updateUserInfo()" class="edit-btn">
+      <mat-icon>
+        <img src="assets/clipboard-edit-icon.png" alt="" />
+      </mat-icon>
+      Edit
+    </button>
+  </div>
 
-  
-      <button mat-stroked-button (click)="updateUserInfo()" class="!text-black">
-        <mat-icon>
-          <img src="assets/clipboard-edit-icon.png" alt="" />
-        </mat-icon>
-        Edit
-      </button>
+  <form [formGroup]="personalInfoForm" class="form-grid">
+    <div class="form-field">
+      <label class="field-label">Name</label>
+      <input
+        class="field-input"
+        [formControl]="personalInfoFormControls.name"
+        placeholder="Enter your name"
+      />
     </div>
 
-    <form [formGroup]="userInfoForm" class="w-12 mt-md">
-      <mat-form-field appearance="outline" class="w-12">
-        <mat-label>Email</mat-label>
-        <input matInput [formControl]="userInfoFormControls.email" />
-      </mat-form-field>
+    <div class="form-field">
+      <label class="field-label">Email</label>
+      <input
+        class="field-input"
+        [formControl]="personalInfoFormControls.email"
+        placeholder="example@email.com"
+      />
+    </div>
+  </form>
+</div>
 
-      <mat-form-field appearance="outline" class="w-12">
-        <mat-label>Password</mat-label>
-        <input
-          matInput
-          [formControl]="userInfoFormControls.password"
-          [type]="showPassword() ? 'text' : 'password'"
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="togglePasswordVisibility()"
-          type="button"
-          [attr.aria-label]="'Toggle password visibility'"
-        >
-          <mat-icon>{{
-            showPassword() ? "visibility_off" : "visibility"
-          }}</mat-icon>
-        </button>
-      </mat-form-field>
-
-       <mat-form-field appearance="outline" class="w-12">
-        <mat-label>New Password</mat-label>
-        <input
-          matInput
-          [formControl]="userInfoFormControls.newPassword"
-          [type]="showPassword() ? 'text' : 'password'"
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="togglePasswordVisibility()"
-          type="button"
-          [attr.aria-label]="'Toggle password visibility'"
-        >
-          <mat-icon>{{
-            showPassword() ? "visibility_off" : "visibility"
-          }}</mat-icon>
-        </button>
-      </mat-form-field>
-    </form>
+<!-- Password Card -->
+<div class="card p-md">
+  <div class="card-header">
+    <h3 class="card-title">Password</h3>
+    <button mat-stroked-button (click)="updatePassword()" class="edit-btn">
+      <mat-icon>
+        <img src="assets/clipboard-edit-icon.png" alt="" />
+      </mat-icon>
+      Edit
+    </button>
   </div>
+
+  <form [formGroup]="passwordForm">
+    <div class="form-field full-width">
+      <label class="field-label">Current Password</label>
+      <div class="password-input-wrapper">
+        <input
+          class="field-input"
+          [formControl]="passwordFormControls.currentPassword"
+          [type]="showCurrentPassword() ? 'text' : 'password'"
+          placeholder="********"
+        />
+        <button
+          mat-icon-button
+          type="button"
+          class="visibility-btn"
+          (click)="toggleCurrentPasswordVisibility()"
+        >
+          <mat-icon>{{ showCurrentPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-grid mt-md">
+      <div class="form-field">
+        <label class="field-label">New Password</label>
+        <input
+          class="field-input"
+          [formControl]="passwordFormControls.newPassword"
+          [type]="showNewPassword() ? 'text' : 'password'"
+          placeholder="Enter New Password"
+        />
+      </div>
+
+      <div class="form-field">
+        <label class="field-label">Confirm New Password</label>
+        <input
+          class="field-input"
+          [formControl]="passwordFormControls.confirmNewPassword"
+          [type]="showNewPassword() ? 'text' : 'password'"
+          placeholder="Enter New Password"
+        />
+      </div>
+    </div>
+  </form>
+</div>

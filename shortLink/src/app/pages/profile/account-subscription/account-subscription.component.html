@@ -1,37 +1,71 @@
-<div class="w-full card p-md">
-    <h3 class="!text-2xl mb-0 !font-light">Subscription</h3>
+<div class="card p-md">
+  <h3 class="card-title">Subscription</h3>
 
-	<div class="card p-md flex justify-between items-center mt-md">
-		<div class="flex items-center">
-			<h4 class="!text-sm m-0 !mr-4 !font-semibold">{{ subscriptionProduct().attributes.name }}</h4>
-			<mat-chip class="!text-sm">Current Plan</mat-chip>
-		</div>
+  <!-- Current Plan Card -->
+  @if (subscriptionProduct()) {
+    <div class="plan-card">
+      <div class="plan-info">
+        <h4 class="plan-name">{{ subscriptionProduct().attributes.name }}</h4>
+        <mat-chip class="current-plan-chip">Current plan</mat-chip>
+      </div>
+      <span class="plan-price">{{ subscriptionProduct().attributes.price_formatted }}</span>
+    </div>
+  }
 
-		<span class="!text-sm font-semibold">
-			{{ subscriptionProduct().attributes.price_formatted }}
-		</span>
-	</div>
+  <!-- Special Offer Section - Only show if there's a higher tier available -->
+  @if (nextTierProduct()) {
+    <div class="special-offer">
+      <h4 class="special-offer-title">Special Offer</h4>
+      <p class="special-offer-description">
+        Upgrade now to unlock custom domains, detailed analytics, and higher limits with our {{ nextTierProduct().attributes.name }} plan — take your links to the next level.
+      </p>
+      <p class="special-offer-price">
+        Upgrade for just <strong>{{ nextTierProduct().attributes.price_formatted }}</strong> — unlock more for less.
+      </p>
+      <button mat-flat-button class="upgrade-btn" (click)="onUpgrade()">
+        Upgrade to {{ nextTierProduct().attributes.name }}
+      </button>
+    </div>
+  }
 
-	<div class="mt-md flex items-center justify-between gap-4">
-		<button class="w-full" mat-stroked-button>Change Plan</button>
-		<button class="w-full" mat-stroked-button (click)="getHistory()">Billing History</button>
-	</div>
+  <!-- Show message if on highest tier -->
+  @if (isHighestTier()) {
+    <div class="highest-tier-message">
+      <h4 class="special-offer-title">You're on our best plan!</h4>
+      <p class="special-offer-description">
+        You're already enjoying all the premium features with our Ultimate plan.
+      </p>
+    </div>
+  }
 
-	@if (userBillingHistory.length) {
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button mat-stroked-button class="action-btn">
+      <mat-icon>swap_horiz</mat-icon>
+      Change Plan
+    </button>
+    <button mat-stroked-button class="action-btn" (click)="getHistory()">
+      <mat-icon>history</mat-icon>
+      Billing History
+    </button>
+  </div>
 
-		@for (invoice of userBillingHistory; track  invoice.id) {
-
-			<div class="mt-md p-md border rounded-lg flex justify-between items-center">
-				<div>
-					<p class="!m-0 !font-semibold">{{invoice.attributes.user_name}} <mat-chip>
-						{{ invoice.attributes.status_formatted }}
-					</mat-chip> </p>
-					<p class="!m-0 !text-sm text-gray-500">Date: {{ invoice.attributes.created_at | date:'mediumDate' }}</p>
-					<a [href]="invoice.attributes.urls.invoice_url" target="_blank">View Details</a>
-				</div>
-
-				<span class="!font-semibold">{{ invoice.attributes.total_formatted }}</span>
-			</div>
-		}
-	}
+  <!-- Billing History -->
+  @if (userBillingHistory.length) {
+    <div class="billing-history">
+      @for (invoice of userBillingHistory; track invoice.id) {
+        <div class="invoice-card">
+          <div class="invoice-info">
+            <p class="invoice-name">
+              {{ invoice.attributes.user_name }}
+              <mat-chip class="status-chip">{{ invoice.attributes.status_formatted }}</mat-chip>
+            </p>
+            <p class="invoice-date">Date: {{ invoice.attributes.created_at | date:'mediumDate' }}</p>
+            <a [href]="invoice.attributes.urls.invoice_url" target="_blank" class="invoice-link">View Details</a>
+          </div>
+          <span class="invoice-total">{{ invoice.attributes.total_formatted }}</span>
+        </div>
+      }
+    </div>
+  }
 </div>

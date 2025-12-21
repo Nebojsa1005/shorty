@@ -1,4 +1,186 @@
 .card {
-	border: 1px solid rgba(234, 234, 234, 1);
-	border-radius: 8px;
+  border: 1px solid rgba(234, 234, 234, 1);
+  border-radius: 8px;
+  background: white;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0 0 1rem 0;
+  color: #151419;
+}
+
+// Current Plan Card
+.plan-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid rgba(234, 234, 234, 1);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.plan-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.plan-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
+  color: #151419;
+}
+
+.current-plan-chip {
+  font-size: 0.75rem !important;
+  background-color: #F3F4F6 !important;
+  color: #6B7280 !important;
+}
+
+.plan-price {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #151419;
+}
+
+// Special Offer Section
+.special-offer {
+  padding: 1rem;
+  border: 1px solid #9A4EAE;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.special-offer-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #9A4EAE;
+  margin: 0 0 0.75rem 0;
+}
+
+.special-offer-description {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.5;
+}
+
+.special-offer-price {
+  font-size: 0.875rem;
+  color: #151419;
+  margin: 0 0 1rem 0;
+
+  strong {
+    font-weight: 600;
+  }
+}
+
+.upgrade-btn {
+  width: 100%;
+  background: linear-gradient(96.09deg, #9A4EAE -0.15%, #392A48 99.85%) !important;
+  color: white !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 500 !important;
+}
+
+// Highest Tier Message (when user is on Ultimate plan)
+.highest-tier-message {
+  padding: 1rem;
+  border: 1px solid rgba(234, 234, 234, 1);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  background-color: #F9FAFB;
+
+  .special-offer-title {
+    color: #151419;
+  }
+}
+
+// Action Buttons
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem !important;
+  border-color: rgba(234, 234, 234, 1) !important;
+  color: #151419 !important;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// Billing History
+.billing-history {
+  margin-top: 1rem;
+}
+
+.invoice-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid rgba(234, 234, 234, 1);
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.invoice-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.invoice-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  margin: 0;
+  color: #151419;
+}
+
+.status-chip {
+  font-size: 0.75rem !important;
+}
+
+.invoice-date {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+.invoice-link {
+  font-size: 0.875rem;
+  color: #9A4EAE;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.invoice-total {
+  font-weight: 600;
+  color: #151419;
+}
+
+// Responsive
+@media (max-width: 640px) {
+  .action-buttons {
+    flex-direction: column;
+  }
 }

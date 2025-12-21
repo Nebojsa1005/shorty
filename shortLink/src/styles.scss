@@ -121,3 +121,53 @@ button {
   border-radius: 8px !important;
   overflow: hidden; /* avoid content overflowing the rounded corners */
 }
+
+/* Global Material Input Styling */
+.mat-mdc-form-field {
+  .mdc-text-field--outlined {
+    background-color: #F9FAFB !important;
+    border-radius: 8px !important;
+
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: #E5E7EB !important;
+    }
+
+    .mdc-notched-outline__leading {
+      border-radius: 8px 0 0 8px !important;
+    }
+
+    .mdc-notched-outline__trailing {
+      border-radius: 0 8px 8px 0 !important;
+    }
+  }
+
+  /* Focus state */
+  &.mat-focused .mdc-text-field--outlined {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: #9A4EAE !important;
+    }
+  }
+
+  /* Input text styling */
+  .mat-mdc-input-element {
+    color: #151419 !important;
+
+    &::placeholder {
+      color: #9CA3AF !important;
+    }
+  }
+
+  /* Label styling */
+  .mdc-floating-label {
+    color: #6B7280 !important;
+  }
+
+  /* Focused label */
+  &.mat-focused .mdc-floating-label {
+    color: #9A4EAE !important;
+  }
+}

@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
@@ -12,38 +12,69 @@ export class SocketService {
 
   private socket: Socket;
   private userId = computed(() => this.authService.user()?._id);
+  private isConnected = signal(false);
+  private hasJoinedRoom = signal(false);
 
   constructor() {
-    this.socket = io(environment.apiUrl);
+    this.socket = io(environment.apiUrl, {
+      autoConnect: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
 
     this.socket.on('connect', () => {
       console.log('✅ Connected to backend socket:', this.socket.id);
+      this.isConnected.set(true);
+      
+      // Re-join room on reconnect if we have a userId
+      if (this.userId() && !this.hasJoinedRoom()) {
+        this.joinRoom();
+      }
     });
-
-    this.socket.on('join-room', () => console.log('room has been joined'));
 
     this.socket.on('disconnect', () => {
-      console.warn('Socket disconnected');
+      console.warn('⚠️ Socket disconnected');
+      this.isConnected.set(false);
+      this.hasJoinedRoom.set(false);
     });
 
-    this.socket.on('message', (msg) => {
-      console.log('📩 Received message:', msg);
+    this.socket.on('room-joined', (data) => {
+      console.log('✅ Successfully joined room:', data.roomId);
+      this.hasJoinedRoom.set(true);
     });
 
-    this.socket.on('subscription-updated', () => {
-      console.log('subscription updated');
-      
-      this.authService.refreshUser().pipe(
-        take(1)
-      ).subscribe()
+    this.socket.on('subscription-updated', (data) => {
+      console.log('📩 Subscription updated:', data);
+      this.authService.refreshUser().pipe(take(1)).subscribe();
     });
-  }
-
-  sendMessage(msg: string) {
-    this.socket.emit('message', msg);
   }
 
   joinRoom() {
-    this.socket.emit('join-room', this.userId());
+    const userId = this.userId();
+    
+    if (!userId) {
+      console.warn('⚠️ Cannot join room: userId is not available');
+      return;
+    }
+
+    if (this.hasJoinedRoom()) {
+      return;
+    }
+
+    if (!this.isConnected()) {
+      console.warn('⚠️ Cannot join room: socket not connected, will join on connect');
+      return;
+    }
+
+    console.log('🚀 Joining room:', userId);
+    this.socket.emit('join-room', userId);
+  }
+
+  // Call this when user logs in or is loaded
+  initializeUserRoom() {
+    if (this.isConnected() && this.userId() && !this.hasJoinedRoom()) {
+      this.joinRoom();
+    }
   }
 }

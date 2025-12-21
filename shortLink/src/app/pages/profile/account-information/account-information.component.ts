@@ -1,20 +1,16 @@
-import { Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
+import { Component, DestroyRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
 import { AuthService } from 'src/app/services/auth.service';
-import { User, UserInfoUpdatePayload } from 'src/app/shared/types/user.type';
+import { User } from 'src/app/shared/types/user.type';
 
 @Component({
   selector: 'app-account-information',
   imports: [
     MatButton,
-    MatInput,
     ReactiveFormsModule,
-    MatFormFieldModule,
     MatIconModule,
     MatIconButton,
   ],
@@ -27,50 +23,80 @@ export class AccountInformationComponent {
   private fb = inject(FormBuilder);
   private destroyRef = inject(DestroyRef);
 
-  userInfoForm = this.fb.group({
-    email: ['', [Validators.required]],
-    password: ['', [Validators.required]],
+  // Personal Information Form
+  personalInfoForm = this.fb.group({
+    name: [''],
+    email: ['', [Validators.required, Validators.email]],
+  });
+
+  // Password Form
+  passwordForm = this.fb.group({
+    currentPassword: ['', [Validators.required]],
     newPassword: [''],
+    confirmNewPassword: [''],
   });
 
   user = input.required<User | null>();
 
-  isChangeEmail = signal(false);
-  isPasswordChange = signal(false);
-  showPassword = signal(false);
+  showCurrentPassword = signal(false);
+  showNewPassword = signal(false);
 
-  // Getters
-  get userInfoFormControls() {
-    return this.userInfoForm.controls;
+  get personalInfoFormControls() {
+    return this.personalInfoForm.controls;
+  }
+
+  get passwordFormControls() {
+    return this.passwordForm.controls;
   }
 
   ngOnInit() {
-    this.presetUserInfoForm();
+    this.presetForms();
   }
 
-  togglePasswordVisibility() {
-    this.showPassword.update((state) => !state);
+  toggleCurrentPasswordVisibility() {
+    this.showCurrentPassword.update((state) => !state);
   }
 
-  onEmailChange() {
-    this.isChangeEmail.update((state) => !state);
+  toggleNewPasswordVisibility() {
+    this.showNewPassword.update((state) => !state);
   }
 
-  onPasswordChange() {
-    this.isPasswordChange.update((state) => !state);
-  }
-
-  presetUserInfoForm() {
-    this.userInfoForm.patchValue({
-      email: this.user()?.email,
+  presetForms() {
+    this.personalInfoForm.patchValue({
+      name: this.user()?.name || '',
+      email: this.user()?.email || '',
     });
-    this.userInfoForm.updateValueAndValidity();
   }
 
   updateUserInfo() {
-    this.authService
-      .updateUserInfo(this.userInfoForm.getRawValue() as UserInfoUpdatePayload)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+    if (this.personalInfoForm.valid) {
+      this.authService
+        .updateUserInfo({
+          email: this.personalInfoForm.value.email || '',
+          password: '',
+          newPassword: '',
+        })
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe();
+    }
+  }
+
+  updatePassword() {
+    if (this.passwordForm.valid) {
+      const { currentPassword, newPassword, confirmNewPassword } = this.passwordForm.value;
+
+      if (newPassword !== confirmNewPassword) {
+        return;
+      }
+
+      this.authService
+        .updateUserInfo({
+          email: this.user()?.email || '',
+          password: currentPassword || '',
+          newPassword: newPassword || '',
+        })
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe();
+    }
   }
 }
