@@ -3,13 +3,23 @@
 
   <!-- Current Plan Card -->
   @if (subscriptionProduct()) {
-    <div class="plan-card">
+    <div class="plan-card mb-0">
       <div class="plan-info">
         <h4 class="plan-name">{{ subscriptionProduct().attributes.name }}</h4>
         <mat-chip class="current-plan-chip">Current plan</mat-chip>
       </div>
       <span class="plan-price">{{ subscriptionProduct().attributes.price_formatted }}</span>
     </div>
+
+     <!-- Cancel Subscription -->
+  @if (userSubscription()) {
+    <div class="cancel-section !my-3">
+      <button mat-button class="cancel-btn" (click)="onCancelSubscription()">
+        <mat-icon>cancel</mat-icon>
+        Cancel Subscription
+      </button>
+    </div>
+  }
   }
 
   <!-- Special Offer Section - Only show if there's a higher tier available -->

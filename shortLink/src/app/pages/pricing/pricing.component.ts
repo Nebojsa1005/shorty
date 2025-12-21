@@ -62,9 +62,6 @@ export class PricingComponent {
       width: '400px',
     });
   }
-  onCancel() {
-    this.pricingService.cancelSubscription();
-  }
 
   goHome() {
     this.router.navigate(['']);

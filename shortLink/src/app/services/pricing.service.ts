@@ -53,7 +53,7 @@ export class PricingService {
   }
 
   cancelSubscription() {
-    this.http.delete(
+    return this.http.delete(
         `${environment.lemonSquezzyRootUrl}/subscriptions/${
           this.user()?.subscription.subscriptionId
         }`,

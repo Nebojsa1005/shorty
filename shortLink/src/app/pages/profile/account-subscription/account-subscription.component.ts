@@ -85,6 +85,12 @@ export class AccountSubscriptionComponent {
       });
   }
 
+  onCancelSubscription() {
+    this.pricingService.cancelSubscription()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
+  }
+
   onUpgrade() {
     const nextProduct = this.nextTierProduct();
     if (nextProduct?.attributes?.buy_now_url) {
