@@ -2,11 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import {
-  EmailUpdatePayload,
-  PasswordUpdatePayload,
-  User,
-} from '../shared/types/user.type';
+import { UserInfoUpdatePayload, User } from '../shared/types/user.type';
 import { LocalStorageKeys } from '../shared/enums/local-storage.enum';
 import { environment } from '../../environments/environment';
 import { Response } from '../shared/types/response.type';
@@ -143,23 +139,45 @@ export class AuthService {
     this.router.navigate(['auth/sign-in']);
   }
 
-  updateUserEmail(payload: EmailUpdatePayload) {
+  updateUserEmail(payload: UserInfoUpdatePayload) {
     return this.http.put(
       `${environment.apiUrl}/api/auth/update-email/${this.user()?._id}`,
       payload
     );
   }
 
-  updateUserPassword(payload: PasswordUpdatePayload) {
-    return this.http.put(
-      `${environment.apiUrl}/api/auth/update-password/${this.user()?._id}`,
-      payload
-    );
+  updateUserInfo(payload: UserInfoUpdatePayload) {
+    return this.http
+      .put<Response>(
+        `${environment.apiUrl}/api/auth/update-user-info/${this.user()?._id}`,
+        payload
+      )
+      .pipe(
+        tap((res) => {
+          this.updateUser(res.data.user);
+          this.saveUserToLocalStorage(res.data.user);
+
+          this.toastService.presentToast({
+            position: 'top',
+            message: res.message,
+            duration: 3000,
+            color: 'primary',
+          });
+        }),
+        catchError((error) => {
+          this.toastService.presentToast({
+            position: 'top',
+            message: error.error.message,
+            color: 'danger',
+          });
+          return of(null);
+        })
+      );
   }
 
   refreshUser() {
     if (!this.user()?._id) return of(null);
-    
+
     return this.http
       .get<Response>(
         `${environment.apiUrl}/api/auth/refresh-user/${this.user()?._id}`

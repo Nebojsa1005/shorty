@@ -1,128 +1,15 @@
 <div class="p-md">
-  <h2 class="title !mb-sm">My Profile</h2>
+  <h2 class="title !mb-sm">Profile</h2>
 
-  <div class="!mb-4 flex justify-between items-center">
-    <span class="!font-bold"
-      >Your Subscription: {{ subscriptionProductName() ?? 'Free' }}</span
-    >
+  <div class="!flex !gap-4">
+    <div class="w-3/5">
+      <app-account-information
+        [user]="user()"
+      />
+    </div>
 
-    <button mat-stroked-button (click)="onEmailChange()">Upgrade</button>
+    <div class="w-2/5">
+      <app-account-subscription [user]="user()" />
+    </div>
   </div>
-
-  <div class="flex justify-between itmes-center !mb-4">
-    <div>
-      <span class="!font-bold">Your Email:</span>
-      <span class="!ml-1">
-        {{ user()?.email }}
-      </span>
-    </div>
-
-    <button mat-stroked-button (click)="onEmailChange()">Change</button>
-  </div>
-
-  @if(isChangeEmail()) {
-  <form [formGroup]="changeEmailForm" class="flex justify-between">
-    <div class="flex items-center">
-      <mat-form-field appearance="outline" class="!mr-2">
-        <input matInput [formControl]="changeEmailControls.newEmail" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-7">
-        <mat-label>Password</mat-label>
-        <input
-          matInput
-          [formControl]="changeEmailControls.password"
-          [type]="showPassword() ? 'text' : 'password'"
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="togglePasswordVisibility()"
-          type="button"
-          [attr.aria-label]="'Toggle password visibility'"
-        >
-          <mat-icon>{{
-            showPassword() ? "visibility_off" : "visibility"
-          }}</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
-
-    <div>
-      <button
-        mat-raised-button
-        (click)="onUpdateEmail()"
-        [disabled]="!changeEmailForm.valid"
-      >
-        Update
-      </button>
-    </div>
-  </form>
-  }
-</div>
-
-<div class="p-md">
-  <div class="flex justify-between itmes-center !mb-4">
-    <div>
-      <span class="!font-bold">Change Password</span>
-    </div>
-
-    <button mat-stroked-button (click)="onPasswordChange()">Change</button>
-  </div>
-
-  @if(isPasswordChange()) {
-  <form [formGroup]="changePasswordForm" class="flex justify-between">
-    <div class="flex items-center">
-      <mat-form-field appearance="outline" class="w-7">
-        <mat-label>Current Password</mat-label>
-        <input
-          matInput
-          [formControl]="changePasswordControls.currentPassword"
-          [type]="showPassword() ? 'text' : 'password'"
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="togglePasswordVisibility()"
-          type="button"
-          [attr.aria-label]="'Toggle password visibility'"
-        >
-          <mat-icon>{{
-            showPassword() ? "visibility_off" : "visibility"
-          }}</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-7">
-        <mat-label>New Password</mat-label>
-        <input
-          matInput
-          [formControl]="changePasswordControls.newPassword"
-          [type]="showPassword() ? 'text' : 'password'"
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="togglePasswordVisibility()"
-          type="button"
-          [attr.aria-label]="'Toggle password visibility'"
-        >
-          <mat-icon>{{
-            showPassword() ? "visibility_off" : "visibility"
-          }}</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
-
-    <div>
-      <button
-        mat-raised-button
-        (click)="changePassword()"
-        [disabled]="!changePasswordForm.valid"
-      >
-        Update
-      </button>
-    </div>
-  </form>
-  }
 </div>

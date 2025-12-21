@@ -109,14 +109,15 @@ const authRoutes = (app: Express) => {
     }
   });
 
-  app.put("/api/auth/update-password/:userId", async (req, res) => {
+  app.put("/api/auth/update-user-info/:userId", async (req, res) => {
     try {
       const userId = req.params.userId;
-      const { currentPassword, newPassword } = req.body;
+      const { password, newPassword, email } = req.body;
       const user = await UserModel.findById(userId);
-
+      
+      console.log(user);
       const verifiedPassword = await compare(
-        currentPassword,
+        password,
         user.password as string
       );
       if (!verifiedPassword)
@@ -127,10 +128,10 @@ const authRoutes = (app: Express) => {
         );
 
       const hashedPassword = await hash(newPassword, 10);
-
+        
       const updatedUser = await UserModel.findByIdAndUpdate(
         userId,
-        { password: hashedPassword },
+        { password: hashedPassword, email },
         { new: true }
       );
 

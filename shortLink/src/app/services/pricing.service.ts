@@ -26,6 +26,7 @@ export class PricingService {
   products = computed(() => this.state().products);
   user = computed(() => this.authService.user());
   subscriptionProductName = computed(() => this.state().subscriptionProduct?.attributes?.name)
+  subscriptionProduct = computed(() => this.state().subscriptionProduct)
 
   getAllProducts() {
     return this.http
@@ -89,6 +90,18 @@ export class PricingService {
         })
       ) 
   }
+
+  getBillingHistory(subscriptionId: string) {
+    return this.http.get<Response>(`${environment.lemonSquezzyRootUrl}/subscription-invoices?filter[subscription_id]=${subscriptionId}`, {
+        headers: {
+          Accept: 'application/vnd.api+json',
+          'Content-Type': 'application/vnd.api+json',
+          Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
+        },
+      })
+  }
+
+
 
   // State updaters
   updateState<K extends keyof PricingState>(prop: K, value: PricingState[K]) {
