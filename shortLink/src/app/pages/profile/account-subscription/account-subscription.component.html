@@ -5,10 +5,10 @@
   @if (userSubscription()) {
     <div class="plan-card mb-0">
       <div class="plan-info">
-        <h4 class="plan-name">{{ subscriptionProduct().attributes.name }}</h4>
+        <h4 class="plan-name">{{ subscriptionProduct()?.attributes?.name }}</h4>
         <mat-chip class="current-plan-chip">Current plan</mat-chip>
       </div>
-      <span class="plan-price">{{ subscriptionProduct().attributes.price_formatted }}</span>
+      <span class="plan-price">{{ subscriptionProduct()?.attributes?.price_formatted }}</span>
     </div>
 
      <!-- Cancel Subscription -->

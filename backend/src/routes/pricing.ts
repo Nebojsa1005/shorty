@@ -36,7 +36,7 @@ const pricingRoutes = (app: Express, io: Server) => {
 
       if (eventName === SubscriptionEventTypes.subscription_cancelled) {
         deleteSubscriptionWebhook({
-          userId
+          userId,
         });
       }
       io.to(userId).emit("subscription-updated", { userId });
@@ -48,19 +48,32 @@ const pricingRoutes = (app: Express, io: Server) => {
 
   app.post("/api/remove-subscription", async (req, res) => {
     const { userId } = req.body;
+    try {
+      const user = await UserModel.findById(userId);
+      const populatedUser = await user.populate("subscription");
+      await SubscriptionModel.findByIdAndDelete(
+        populatedUser.subscription?._id
+      );
 
-    const user = await UserModel.findById(userId);
-    const populatedUser = await user.populate("subscription");
-    await SubscriptionModel.findByIdAndDelete(populatedUser.subscription._id);
-
-    await UserModel.findOneAndUpdate(
-      userId,
-      {
-        subscription: null,
-      },
-      { new: true }
-    );
-    return ServerResponse.serverSuccess(res, 200, "Successfully Unsubscribed");
+      await UserModel.findOneAndUpdate(
+        userId,
+        {
+          subscription: null,
+        },
+        { new: true }
+      );
+      return ServerResponse.serverSuccess(
+        res,
+        200,
+        "Successfully Unsubscribed"
+      );
+    } catch (error) {
+      return ServerResponse.serverError(
+        res,
+        500,
+        "Error removing subscription: " + error.message
+      );
+    }
   });
 };
 
