@@ -2,7 +2,7 @@
   <h3 class="card-title">Subscription</h3>
 
   <!-- Current Plan Card -->
-  @if (subscriptionProduct()) {
+  @if (userSubscription()) {
     <div class="plan-card mb-0">
       <div class="plan-info">
         <h4 class="plan-name">{{ subscriptionProduct().attributes.name }}</h4>
