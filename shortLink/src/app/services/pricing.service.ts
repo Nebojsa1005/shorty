@@ -25,8 +25,10 @@ export class PricingService {
 
   products = computed(() => this.state().products);
   user = computed(() => this.authService.user());
-  subscriptionProductName = computed(() => this.state().subscriptionProduct?.attributes?.name)
-  subscriptionProduct = computed(() => this.state().subscriptionProduct)
+  subscriptionProductName = computed(
+    () => this.state().subscriptionProduct?.attributes?.name
+  );
+  subscriptionProduct = computed(() => this.state().subscriptionProduct);
 
   getAllProducts() {
     return this.http
@@ -53,32 +55,26 @@ export class PricingService {
   }
 
   cancelSubscription() {
-    return this.http.delete(
+    return this.http
+      .delete(
         `${environment.lemonSquezzyRootUrl}/subscriptions/${
           this.user()?.subscription.subscriptionId
         }`,
-      {
-        headers: {
-          Accept: 'application/vnd.api+json',
-          'Content-Type': 'application/vnd.api+json',
-          Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
-        },
-      }
-    );
-  }
-
-  getProductById(productId: string | undefined) {
-   return this.http
-      .get(`${environment.lemonSquezzyRootUrl}/products/${productId}`, {
-        headers: {
-          Accept: 'application/vnd.api+json',
-          'Content-Type': 'application/vnd.api+json',
-          Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
-        },
-      })
+        {
+          headers: {
+            Accept: 'application/vnd.api+json',
+            'Content-Type': 'application/vnd.api+json',
+            Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
+          },
+        }
+      )
       .pipe(
-        tap((data: any) => {
-          this.updateState("subscriptionProduct", data.data);
+        switchMap(() => {
+          return this.http
+            .post(`${environment.apiUrl}/remove-subscription`, {
+              userId: this.user()?._id,
+            })
+            .pipe(switchMap((res: any) => this.authService.refreshUser()));
         }),
         catchError((error) => {
           this.toastService.presentToast({
@@ -88,20 +84,45 @@ export class PricingService {
           });
           return of(null);
         })
-      ) 
+      );
   }
 
-  getBillingHistory(subscriptionId: string) {
-    return this.http.get<Response>(`${environment.lemonSquezzyRootUrl}/subscription-invoices?filter[subscription_id]=${subscriptionId}`, {
+  getProductById(productId: string | undefined) {
+    return this.http
+      .get(`${environment.lemonSquezzyRootUrl}/products/${productId}`, {
         headers: {
           Accept: 'application/vnd.api+json',
           'Content-Type': 'application/vnd.api+json',
           Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
         },
       })
+      .pipe(
+        tap((data: any) => {
+          this.updateState('subscriptionProduct', data.data);
+        }),
+        catchError((error) => {
+          this.toastService.presentToast({
+            position: 'top',
+            message: error.error.message,
+            color: 'danger',
+          });
+          return of(null);
+        })
+      );
   }
 
-
+  getBillingHistory(subscriptionId: string) {
+    return this.http.get<Response>(
+      `${environment.lemonSquezzyRootUrl}/subscription-invoices?filter[subscription_id]=${subscriptionId}`,
+      {
+        headers: {
+          Accept: 'application/vnd.api+json',
+          'Content-Type': 'application/vnd.api+json',
+          Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
+        },
+      }
+    );
+  }
 
   // State updaters
   updateState<K extends keyof PricingState>(prop: K, value: PricingState[K]) {

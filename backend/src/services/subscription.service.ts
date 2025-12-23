@@ -1,6 +1,5 @@
 import { SubscriptionModel } from "../models/subscription.model";
 import { UserModel } from "../models/user.model";
-import { SubscriptionEventTypes } from "../types/subscription-event-types.enum";
 import { populateUserSubscription } from "./user.service";
 
 interface CreateSubscriptionPayload {
