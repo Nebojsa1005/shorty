@@ -9,14 +9,12 @@ interface CreateSubscriptionPayload {
 }
 
 interface CreateSubscriptionWebhookPayload {
-  eventName: string;
   userId: string;
   subscriptionId: string;
   productId: string;
 }
 
 interface DeleteSubscriptionPayload {
-  eventName: string;
   userId: string;
 }
 
@@ -29,49 +27,39 @@ export const createSubscription = async (
 };
 
 export const createSubscriptionWebhook = async ({
-  eventName,
   userId,
   subscriptionId,
   productId,
 }: CreateSubscriptionWebhookPayload) => {
-  if (
-    eventName === SubscriptionEventTypes.subscription_created ||
-    eventName === SubscriptionEventTypes.subscription_updated
-  ) {
-    const populatedUser = await populateUserSubscription(userId);
+  const populatedUser = await populateUserSubscription(userId);
 
-    if (populatedUser.subscription) {
-      await SubscriptionModel.findByIdAndUpdate(populatedUser.subscription._id, {
-        subscriptionId,
-        productId,
-        userId
-      });
-    } else {
-      const subscription = await SubscriptionModel.create({
-        subscriptionId,
-        productId,
-        userId
-      })
+  if (populatedUser.subscription) {
+    await SubscriptionModel.findByIdAndUpdate(populatedUser.subscription._id, {
+      subscriptionId,
+      productId,
+      userId,
+    });
+  } else {
+    const subscription = await SubscriptionModel.create({
+      subscriptionId,
+      productId,
+      userId,
+    });
 
-      populatedUser.subscription = subscription._id
-    }
-
-
-    await populatedUser.save();
+    populatedUser.subscription = subscription._id;
   }
+
+  await populatedUser.save();
 };
 
 export const deleteSubscriptionWebhook = async ({
-  eventName,
   userId,
 }: DeleteSubscriptionPayload) => {
-  if (eventName === SubscriptionEventTypes.subscription_cancelled) {
-    const user = await populateUserSubscription(userId);
-    console.log(user.subscription._id);
-    
-    await SubscriptionModel.findByIdAndDelete(user.subscription._id);
-    await UserModel.findByIdAndUpdate(userId, {
-      subscription: null
-    });
-  }
+  const user = await populateUserSubscription(userId);
+  console.log(user.subscription._id);
+
+  await SubscriptionModel.findByIdAndDelete(user.subscription._id);
+  await UserModel.findByIdAndUpdate(userId, {
+    subscription: null,
+  });
 };

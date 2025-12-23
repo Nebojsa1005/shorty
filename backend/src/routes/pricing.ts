@@ -8,6 +8,7 @@ import { Server } from "socket.io";
 import { UserModel } from "../models/user.model";
 import { SubscriptionModel } from "../models/subscription.model";
 import { ServerResponse } from "../utils/server-response";
+import { SubscriptionEventTypes } from "../types/subscription-event-types.enum";
 
 dotenv.config();
 
@@ -22,14 +23,22 @@ const pricingRoutes = (app: Express, io: Server) => {
       const isCancelled = event.data?.attributes.cancelled;
 
       console.log("stize webhook");
+      if (
+        eventName === SubscriptionEventTypes.subscription_created ||
+        eventName === SubscriptionEventTypes.subscription_updated
+      ) {
+        createSubscriptionWebhook({
+          userId,
+          subscriptionId,
+          productId,
+        });
+      }
 
-      createSubscriptionWebhook({
-        eventName,
-        userId,
-        subscriptionId,
-        productId,
-      });
-
+      if (eventName === SubscriptionEventTypes.subscription_cancelled) {
+        deleteSubscriptionWebhook({
+          userId
+        });
+      }
       io.to(userId).emit("subscription-updated", { userId });
       console.log("poslato na front");
     } catch (err) {
@@ -41,13 +50,17 @@ const pricingRoutes = (app: Express, io: Server) => {
     const { userId } = req.body;
 
     const user = await UserModel.findById(userId);
-    const populatedUser = await user.populate("subscription");    
+    const populatedUser = await user.populate("subscription");
     await SubscriptionModel.findByIdAndDelete(populatedUser.subscription._id);
 
-    await UserModel.findOneAndUpdate(userId, {
-      subscription: null
-    }, { new: true })
-    return ServerResponse.serverSuccess(res, 200, 'Successfully Unsubscribed', )
+    await UserModel.findOneAndUpdate(
+      userId,
+      {
+        subscription: null,
+      },
+      { new: true }
+    );
+    return ServerResponse.serverSuccess(res, 200, "Successfully Unsubscribed");
   });
 };
 
