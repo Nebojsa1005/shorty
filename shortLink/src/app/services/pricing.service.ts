@@ -71,7 +71,7 @@ export class PricingService {
       .pipe(
         switchMap(() => {
           return this.http
-            .post(`${environment.apiUrl}/remove-subscription`, {
+            .post(`${environment.apiUrl}/api/remove-subscription`, {
               userId: this.user()?._id,
             })
             .pipe(switchMap((res: any) => this.authService.refreshUser()));
