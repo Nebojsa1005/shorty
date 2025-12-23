@@ -5,6 +5,7 @@ import {
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
+import { ToastDuration } from '../shared/enums/toast.enum';
 
 interface ToastPayload {
   position?: 'top' | 'bottom';
@@ -22,7 +23,7 @@ export class ToastService {
   presentToast({
     position = 'bottom',
     message,
-    duration = 2000,
+    duration = ToastDuration.MEDIUM,
     color,
   }: ToastPayload) {
     const config: MatSnackBarConfig = {

@@ -8,10 +8,12 @@ import {
   analyticsShortLinkVisited,
 } from "../services/analytics.service";
 import { UserModel } from "../models/user.model";
-import { updateUserShortLinks } from "../services/user.service";
+import { creteShortLinkCheck, populateUserSubscription, updateUserShortLinks } from "../services/user.service";
 import { SecurityOptions } from "../types/security-options.enum";
 import { compare, hash } from "bcrypt";
 import { expirationDateCheck } from "../services/url.service";
+import { checkMaxLinks } from "../utils/productLimitations/max-links";
+import { isUserSubscribed } from "../utils/productLimitations/is-user-subscribed";
 
 dotenv.config();
 
@@ -142,6 +144,12 @@ const urlRoutes = (app: Express) => {
         }
 
         try {
+
+          const check = await creteShortLinkCheck(res, userId);
+          if (check !== true) {
+            return;
+          }
+
           const analytics = await analyticsShortLinkCreated(shortLink);
 
           const url = await UrlModel.create({

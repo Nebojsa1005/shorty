@@ -65,10 +65,13 @@ export const deleteSubscriptionWebhook = async ({
   eventName,
   userId,
 }: DeleteSubscriptionPayload) => {
-  if (eventName === SubscriptionEventTypes.subscription_cancelled) {	
+  if (eventName === SubscriptionEventTypes.subscription_cancelled) {
+    const user = await populateUserSubscription(userId);
+    console.log(user.subscription._id);
+    
+    await SubscriptionModel.findByIdAndDelete(user.subscription._id);
     await UserModel.findByIdAndUpdate(userId, {
-      subscriptionId: "",
-      productId: "",
+      subscription: null
     });
   }
 };

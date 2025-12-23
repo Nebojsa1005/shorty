@@ -12,6 +12,7 @@ import {
 import { SecurityOptions } from '../shared/enums/security-options.enum';
 import { ToastService } from './toast-service.service';
 import { AuthService } from './auth.service';
+import { ToastDuration } from '../shared/enums/toast.enum';
 
 interface UrlState {
   allUrls: UrlLink[];
@@ -165,10 +166,13 @@ export class UrlService {
           this.router.navigate(['all-links']);
         }),
         catchError((error) => {
+          console.log(error);
+          
           this.toastService.presentToast({
             position: 'top',
-            message: error.message,
+            message: error.error.message,
             color: 'warning',
+            duration: ToastDuration.LONG,
           });
           return of(null);
         }),
