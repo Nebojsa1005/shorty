@@ -1,6 +1,42 @@
+<mat-dialog-title>
+  @if (status() === 'processing') {
+    <span>Processing Payment</span>
+  }
+  @if (status() === 'success') {
+    <span>Payment Successful</span>
+  }
+  @if (status() === 'failed') {
+    <span>Payment Failed</span>
+  }
+</mat-dialog-title>
+
 <mat-dialog-content class="!text-sm">
-  We will need a couple of minutes to process your request.
+  <div class="flex flex-col items-center gap-4 py-4">
+    @if (status() === 'processing') {
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="50"
+        color="primary">
+      </mat-progress-spinner>
+    }
+    @if (status() === 'success') {
+      <mat-icon class="text-green-500 !text-5xl !w-12 !h-12">check_circle</mat-icon>
+    }
+    @if (status() === 'failed') {
+      <mat-icon class="text-red-500 !text-5xl !w-12 !h-12">error</mat-icon>
+    }
+
+    <p class="text-center">{{ message() }}</p>
+  </div>
 </mat-dialog-content>
+
 <mat-dialog-actions>
-  <button mat-raised-button mat-dialog-close cdkFocusInitial color="primary">Ok</button>
+  @if (status() === 'processing') {
+    <button mat-raised-button disabled>Please wait...</button>
+  }
+  @if (status() === 'success' || status() === 'failed') {
+    <button mat-raised-button (click)="close()" cdkFocusInitial color="primary">
+      Close
+    </button>
+  }
 </mat-dialog-actions>
