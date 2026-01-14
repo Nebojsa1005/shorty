@@ -50,21 +50,21 @@
             <p class="text-xl font-light mb-md">
               {{ product.attributes.price_formatted }}
             </p>
-
-            <button
-              class="w-full"
-              mat-flat-button
-              color="primary"
-              [disabled]="product.id | isSubscribed : userProduct()"
-              (click)="onBuyNow(product.attributes.buy_now_url)"
-            >
-              {{
-                product.id === user()?.subscription?.productId
-                  ? "Current"
-                  : "Buy Now"
-              }}
-            </button>
           </div>
+
+          <button
+            class="w-full"
+            mat-flat-button
+            color="primary"
+            [disabled]="product.id | isSubscribed : userProduct()"
+            (click)="onBuyNow(product.attributes.buy_now_url)"
+          >
+            {{
+              product.id === user()?.subscription?.productId
+                ? "Current"
+                : "Buy Now"
+            }}
+          </button>
         </div>
       </div>
       }
