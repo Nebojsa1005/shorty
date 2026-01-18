@@ -22,27 +22,64 @@ const pricingRoutes = (app: Express, io: Server) => {
       const subscriptionId = event.data.id;
       const isCancelled = event.data?.attributes.cancelled;
 
-      console.log("stize webhook");
+      console.log(`[Webhook] Received event: ${eventName} for user: ${userId}`);
+
+      // Handle subscription creation and updates
       if (
         eventName === SubscriptionEventTypes.subscription_created ||
         eventName === SubscriptionEventTypes.subscription_updated
       ) {
-        createSubscriptionWebhook({
+        await createSubscriptionWebhook({
           userId,
           subscriptionId,
           productId,
         });
+        io.to(userId).emit("subscription-updated", {
+          userId,
+          eventType: eventName,
+          subscriptionId,
+          productId
+        });
+        console.log(`[Webhook] Emitted subscription-updated for user: ${userId}`);
       }
 
+      // Handle subscription cancellation
       if (eventName === SubscriptionEventTypes.subscription_cancelled) {
-        deleteSubscriptionWebhook({
+        await deleteSubscriptionWebhook({
           userId,
         });
+        io.to(userId).emit("subscription-updated", {
+          userId,
+          eventType: eventName
+        });
+        console.log(`[Webhook] Emitted subscription-cancelled for user: ${userId}`);
       }
-      io.to(userId).emit("subscription-updated", { userId });
-      console.log("poslato na front");
+
+      // Handle payment success
+      if (eventName === SubscriptionEventTypes.subscription_payment_success) {
+        io.to(userId).emit("payment-success", {
+          userId,
+          subscriptionId,
+          productId,
+          message: "Payment processed successfully!"
+        });
+        console.log(`[Webhook] Emitted payment-success for user: ${userId}`);
+      }
+
+      // Handle payment failure
+      if (eventName === SubscriptionEventTypes.subscription_payment_failed) {
+        io.to(userId).emit("payment-failed", {
+          userId,
+          subscriptionId,
+          message: "Payment processing failed. Please check your payment method and try again."
+        });
+        console.log(`[Webhook] Emitted payment-failed for user: ${userId}`);
+      }
+
+      res.status(200).send({ received: true });
     } catch (err) {
       console.error("[Webhook] Error:", err);
+      res.status(500).send({ error: "Webhook processing failed" });
     }
   });
 

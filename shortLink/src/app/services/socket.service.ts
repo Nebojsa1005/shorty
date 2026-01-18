@@ -2,7 +2,27 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
-import { take } from 'rxjs';
+import { Observable, Subject, take } from 'rxjs';
+
+export interface PaymentSuccessEvent {
+  userId: string;
+  subscriptionId: string;
+  productId: string;
+  message: string;
+}
+
+export interface PaymentFailedEvent {
+  userId: string;
+  subscriptionId?: string;
+  message: string;
+}
+
+export interface SubscriptionUpdatedEvent {
+  userId: string;
+  eventType: string;
+  subscriptionId?: string;
+  productId?: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +35,16 @@ export class SocketService {
   private isConnected = signal(false);
   private hasJoinedRoom = signal(false);
 
+  // Subjects for payment events
+  private paymentSuccessSubject = new Subject<PaymentSuccessEvent>();
+  private paymentFailedSubject = new Subject<PaymentFailedEvent>();
+  private subscriptionUpdatedSubject = new Subject<SubscriptionUpdatedEvent>();
+
+  // Observables for components to subscribe to
+  public paymentSuccess$ = this.paymentSuccessSubject.asObservable();
+  public paymentFailed$ = this.paymentFailedSubject.asObservable();
+  public subscriptionUpdated$ = this.subscriptionUpdatedSubject.asObservable();
+
   constructor() {
     this.socket = io(environment.apiUrl, {
       autoConnect: true,
@@ -26,7 +56,7 @@ export class SocketService {
     this.socket.on('connect', () => {
       console.log('✅ Connected to backend socket:', this.socket.id);
       this.isConnected.set(true);
-      
+
       // Re-join room on reconnect if we have a userId
       if (this.userId() && !this.hasJoinedRoom()) {
         this.joinRoom();
@@ -44,9 +74,21 @@ export class SocketService {
       this.hasJoinedRoom.set(true);
     });
 
-    this.socket.on('subscription-updated', (data) => {
+    this.socket.on('subscription-updated', (data: SubscriptionUpdatedEvent) => {
       console.log('📩 Subscription updated:', data);
+      this.subscriptionUpdatedSubject.next(data);
       this.authService.refreshUser().pipe(take(1)).subscribe();
+    });
+
+    this.socket.on('payment-success', (data: PaymentSuccessEvent) => {
+      console.log('✅ Payment success:', data);
+      this.paymentSuccessSubject.next(data);
+      this.authService.refreshUser().pipe(take(1)).subscribe();
+    });
+
+    this.socket.on('payment-failed', (data: PaymentFailedEvent) => {
+      console.error('❌ Payment failed:', data);
+      this.paymentFailedSubject.next(data);
     });
   }
 
