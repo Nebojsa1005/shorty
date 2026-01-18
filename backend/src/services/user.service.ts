@@ -21,7 +21,8 @@ export const populateUserSubscription = async (userId: string) => {
 
 export const creteShortLinkCheck = async (res: Response, userId: string) => {
   const user = await populateUserSubscription(userId);
-  const isSubscribed = await isUserSubscribed(user.subscription.subscriptionId);
+  const hasSubscriptionId = user.subscription.subscriptionId
+  const isSubscribed = hasSubscriptionId ? await isUserSubscribed(user.subscription.subscriptionId) : false;
   const maxLinksReached = await checkMaxLinks(userId);
 
   console.log(maxLinksReached);
