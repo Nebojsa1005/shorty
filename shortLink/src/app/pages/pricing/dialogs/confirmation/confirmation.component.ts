@@ -18,8 +18,6 @@ export type PaymentStatus = 'processing' | 'success' | 'failed';
   imports: [
     MatButtonModule,
     MatDialogActions,
-    MatDialogClose,
-    MatDialogTitle,
     MatDialogContent,
     MatProgressSpinnerModule,
     MatIconModule,

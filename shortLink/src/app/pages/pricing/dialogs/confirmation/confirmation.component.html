@@ -1,4 +1,4 @@
-<mat-dialog-title>
+<h1 mat-dialog-title>
   @if (status() === 'processing') {
     <span>Processing Payment</span>
   }
@@ -8,7 +8,7 @@
   @if (status() === 'failed') {
     <span>Payment Failed</span>
   }
-</mat-dialog-title>
+</h1>
 
 <mat-dialog-content class="!text-sm">
   <div class="flex flex-col items-center gap-4 py-4">
