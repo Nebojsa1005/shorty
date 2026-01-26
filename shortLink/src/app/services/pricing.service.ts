@@ -32,13 +32,7 @@ export class PricingService {
 
   getAllProducts() {
     return this.http
-      .get(`${environment.lemonSquezzyRootUrl}/products`, {
-        headers: {
-          Accept: 'application/vnd.api+json',
-          'Content-Type': 'application/vnd.api+json',
-          Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
-        },
-      })
+      .get(`${environment.apiUrl}/api/products`)
       .pipe(
         tap((data: any) => {
           this.updateState('products', data.data);
@@ -46,7 +40,7 @@ export class PricingService {
         catchError((error) => {
           this.toastService.presentToast({
             position: 'top',
-            message: error.error.message,
+            message: error.error?.message || 'Failed to fetch products',
             color: 'danger',
           });
           return of(null);
@@ -57,16 +51,9 @@ export class PricingService {
   cancelSubscription() {
     return this.http
       .delete(
-        `${environment.lemonSquezzyRootUrl}/subscriptions/${
+        `${environment.apiUrl}/api/subscriptions/${
           this.user()?.subscription.subscriptionId
-        }`,
-        {
-          headers: {
-            Accept: 'application/vnd.api+json',
-            'Content-Type': 'application/vnd.api+json',
-            Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
-          },
-        }
+        }`
       )
       .pipe(
         switchMap(() => {
@@ -79,7 +66,7 @@ export class PricingService {
         catchError((error) => {
           this.toastService.presentToast({
             position: 'top',
-            message: error.error.message,
+            message: error.error?.message || 'Failed to cancel subscription',
             color: 'danger',
           });
           return of(null);
@@ -89,13 +76,7 @@ export class PricingService {
 
   getProductById(productId: string | undefined) {
     return this.http
-      .get(`${environment.lemonSquezzyRootUrl}/products/${productId}`, {
-        headers: {
-          Accept: 'application/vnd.api+json',
-          'Content-Type': 'application/vnd.api+json',
-          Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
-        },
-      })
+      .get(`${environment.apiUrl}/api/products/${productId}`)
       .pipe(
         tap((data: any) => {
           this.updateState('subscriptionProduct', data.data);
@@ -103,7 +84,7 @@ export class PricingService {
         catchError((error) => {
           this.toastService.presentToast({
             position: 'top',
-            message: error.error.message,
+            message: error.error?.message || 'Failed to fetch product',
             color: 'danger',
           });
           return of(null);
@@ -113,14 +94,7 @@ export class PricingService {
 
   getBillingHistory(subscriptionId: string) {
     return this.http.get<Response>(
-      `${environment.lemonSquezzyRootUrl}/subscription-invoices?filter[subscription_id]=${subscriptionId}`,
-      {
-        headers: {
-          Accept: 'application/vnd.api+json',
-          'Content-Type': 'application/vnd.api+json',
-          Authorization: `Bearer ${environment.lemonSquezzyApiKey}`,
-        },
-      }
+      `${environment.apiUrl}/api/subscription-invoices?subscription_id=${subscriptionId}`
     );
   }
 
