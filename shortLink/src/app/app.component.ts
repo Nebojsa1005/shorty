@@ -23,7 +23,8 @@ export class AppComponent {
 
     effect(() => {
       const user = this.user();
-
+      console.log({user});
+      
       if (user?._id) {
         this.socketService.joinRoom();
       }

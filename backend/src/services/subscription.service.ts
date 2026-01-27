@@ -1,27 +1,13 @@
-import { SubscriptionModel } from "../models/subscription.model";
+import { CreateSubscriptionPayload, CreateSubscriptionWebhookPayload, DeleteSubscriptionPayload, PRODUCT_LINKS_ALLOWED, SubscriptionModel } from "../models/subscription.model";
 import { UserModel } from "../models/user.model";
 import { populateUserSubscription } from "./user.service";
-
-interface CreateSubscriptionPayload {
-  subscriptionId: string;
-  productId: string;
-}
-
-interface CreateSubscriptionWebhookPayload {
-  userId: string;
-  subscriptionId: string;
-  productId: string;
-}
-
-interface DeleteSubscriptionPayload {
-  userId: string;
-}
 
 export const createSubscription = async (
   payload: CreateSubscriptionPayload
 ) => {
   return await SubscriptionModel.create({
     ...payload,
+    linksAllowed: payload.productId ? PRODUCT_LINKS_ALLOWED[payload.productId] : 0
   });
 };
 

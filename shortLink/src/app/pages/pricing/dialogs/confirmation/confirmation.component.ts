@@ -1,12 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogTitle,
-  MatDialogContent,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
@@ -17,8 +11,6 @@ export type PaymentStatus = 'processing' | 'success' | 'failed';
   selector: 'app-confirmation',
   imports: [
     MatButtonModule,
-    MatDialogActions,
-    MatDialogContent,
     MatProgressSpinnerModule,
     MatIconModule,
     CommonModule,

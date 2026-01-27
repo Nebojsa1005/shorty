@@ -115,11 +115,6 @@ const pricingRoutes = (app: Express, io: Server) => {
         eventName === SubscriptionEventTypes.subscription_created ||
         eventName === SubscriptionEventTypes.subscription_updated
       ) {
-        await createSubscriptionWebhook({
-          userId,
-          subscriptionId,
-          productId,
-        });
         io.to(userId).emit("subscription-updated", {
           userId,
           eventType: eventName,
@@ -143,6 +138,11 @@ const pricingRoutes = (app: Express, io: Server) => {
 
       // Handle payment success
       if (eventName === SubscriptionEventTypes.subscription_payment_success) {
+         await createSubscriptionWebhook({
+          userId,
+          subscriptionId,
+          productId,
+        });
         io.to(userId).emit("payment-success", {
           userId,
           subscriptionId,

@@ -7,7 +7,7 @@ export interface ProductDocument extends Document {
 
 
 const productSchema = new Schema<ProductDocument>({
-  productId: { type: String, required: true },  // Fixed spelling
+  productId: { type: String, required: true },
   maxLinks: { type: Number, required: true },
 });
 
