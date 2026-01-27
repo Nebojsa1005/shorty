@@ -138,11 +138,14 @@ const pricingRoutes = (app: Express, io: Server) => {
 
       // Handle payment success
       if (eventName === SubscriptionEventTypes.subscription_payment_success) {
-        const subscription: any = await fetch(`${lemonSqueezyApiUrl}/subscriptions/${subscriptionId}`,)
+        const subscription: any = await fetch(`${lemonSqueezyApiUrl}/subscriptions/${subscriptionId}`)
+        const subscriptionData = await subscription.json();
+        console.log(subscriptionData);
+
          await createSubscriptionWebhook({
           userId,
           subscriptionId,
-          productId: `${subscription.attributes.productId}`,
+          productId: `${subscriptionData.data.attributes.productId}`,
         });
         io.to(userId).emit("payment-success", {
           userId,
