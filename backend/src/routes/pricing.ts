@@ -142,7 +142,7 @@ const pricingRoutes = (app: Express, io: Server) => {
          await createSubscriptionWebhook({
           userId,
           subscriptionId,
-          productId: `${subscription.productId}`,
+          productId: `${subscription.attributes.productId}`,
         });
         io.to(userId).emit("payment-success", {
           userId,
