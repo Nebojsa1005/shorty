@@ -106,7 +106,9 @@ const pricingRoutes = (app: Express, io: Server) => {
       const eventName = event.meta?.event_name;
       const userId = event.meta?.custom_data.userId;
       const subscriptionId = event.data.id;
-      const isCancelled = event.data?.attributes.cancelled;
+
+      console.log(productId);
+      
 
       console.log(`[Webhook] Received event: ${eventName} for user: ${userId}`);
 
