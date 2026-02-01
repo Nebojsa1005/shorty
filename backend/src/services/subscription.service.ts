@@ -2,32 +2,26 @@ import { CreateSubscriptionPayload, CreateSubscriptionWebhookPayload, DeleteSubs
 import { UserModel } from "../models/user.model";
 import { populateUserSubscription } from "./user.service";
 
-export const createSubscription = async (
-  payload: CreateSubscriptionPayload
-) => {
-  return await SubscriptionModel.create({
-    ...payload,
-    linksAllowed: payload.productId ? PRODUCT_LINKS_ALLOWED[payload.productId] : 0
-  });
-};
-
-export const createSubscriptionWebhook = async ({
+export const createUpdateSubscriptionHandler = async ({
   userId,
   subscriptionId,
   productId,
 }: CreateSubscriptionWebhookPayload) => {
   const populatedUser = await populateUserSubscription(userId);
+  const linksAllowed = PRODUCT_LINKS_ALLOWED[productId] || 0;
 
   if (populatedUser.subscription) {
     await SubscriptionModel.findByIdAndUpdate(populatedUser.subscription._id, {
       subscriptionId,
       productId,
+      linksAllowed,
       userId,
     });
   } else {
     const subscription = await SubscriptionModel.create({
       subscriptionId,
       productId,
+      linksAllowed,
       userId,
     });
 
@@ -37,7 +31,7 @@ export const createSubscriptionWebhook = async ({
   await populatedUser.save();
 };
 
-export const deleteSubscriptionWebhook = async ({
+export const deleteSubscriptionHandler = async ({
   userId,
 }: DeleteSubscriptionPayload) => {
   const user = await populateUserSubscription(userId);

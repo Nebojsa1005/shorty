@@ -1,8 +1,8 @@
 import * as dotenv from "dotenv";
 import { Express } from "express";
 import {
-  createSubscriptionWebhook,
-  deleteSubscriptionWebhook,
+  createUpdateSubscriptionHandler,
+  deleteSubscriptionHandler,
 } from "../services/subscription.service";
 import { Server } from "socket.io";
 import { UserModel } from "../models/user.model";
@@ -105,10 +105,7 @@ const pricingRoutes = (app: Express, io: Server) => {
       const productId = event.data?.attributes.product_id;
       const eventName = event.meta?.event_name;
       const userId = event.meta?.custom_data.userId;
-      const subscriptionId = event.data.id;
-
-      console.log(productId);
-      
+      const subscriptionId = event.data.id;      
 
       console.log(`[Webhook] Received event: ${eventName} for user: ${userId}`);
 
@@ -117,6 +114,11 @@ const pricingRoutes = (app: Express, io: Server) => {
         eventName === SubscriptionEventTypes.subscription_created ||
         eventName === SubscriptionEventTypes.subscription_updated
       ) {
+         await createUpdateSubscriptionHandler({
+          userId,
+          subscriptionId,
+          productId,
+        });
         io.to(userId).emit("subscription-updated", {
           userId,
           eventType: eventName,
@@ -128,7 +130,7 @@ const pricingRoutes = (app: Express, io: Server) => {
 
       // Handle subscription cancellation
       if (eventName === SubscriptionEventTypes.subscription_cancelled) {
-        await deleteSubscriptionWebhook({
+        await deleteSubscriptionHandler({
           userId,
         });
         io.to(userId).emit("subscription-updated", {
@@ -140,17 +142,7 @@ const pricingRoutes = (app: Express, io: Server) => {
 
       // Handle payment success
       if (eventName === SubscriptionEventTypes.subscription_payment_success) {
-         await createSubscriptionWebhook({
-          userId,
-          subscriptionId,
-          productId,
-        });
-        io.to(userId).emit("payment-success", {
-          userId,
-          subscriptionId,
-          productId,
-          message: "Payment processed successfully!"
-        });
+        
         console.log(`[Webhook] Emitted payment-success for user: ${userId}`);
       }
 
