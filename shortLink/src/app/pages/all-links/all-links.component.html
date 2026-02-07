@@ -17,7 +17,7 @@
     </button>
   </mat-form-field>
 
-  <button mat-flat-button color="primary" (click)="newLink()"> <mat-icon>add</mat-icon> New Link</button>
+  <button mat-flat-button color="primary" [disabled]="!canCreateLink()" (click)="newLink()"> <mat-icon>add</mat-icon> New Link</button>
 </div>
 
 <!-- Table Component -->

@@ -59,6 +59,11 @@ export class UrlService {
   allUrlsLoading = computed(() => this.state().allUrlsLoading);
   isCreateEditLinkDrawerOpened = computed(() => this.state().isCreateEditLinkDrawerOpened)
   idToEdit = computed(() => this.state().idToEdit)
+  canCreateLink = computed(() => {
+    const linksAllowed = this.user()?.subscription?.linksAllowed ?? 0;
+    const currentLinkCount = this.allUrls().length;
+    return currentLinkCount < linksAllowed;
+  });
 
   // State updaters
   updateState<K extends keyof UrlState>(prop: K, value: UrlState[K]) {

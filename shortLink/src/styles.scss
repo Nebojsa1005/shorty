@@ -22,6 +22,12 @@ mat-list-item[color="primary"] {
   color: white !important;
 }
 
+button.mat-primary:disabled {
+  background: #E0E0E0 !important;
+  color: #9E9E9E !important;
+  cursor: not-allowed;
+}
+
 html,
 body {
   height: 100%;
