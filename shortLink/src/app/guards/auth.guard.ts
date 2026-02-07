@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
@@ -9,11 +9,11 @@ export class AuthGuard {
   private router = inject(Router);
   private authService = inject(AuthService);
 
-  localUser = this.authService.getUserFromLocalStorage();
-  user = computed(() => this.authService.user());
+  canActivate(): boolean {
+    const localUser = this.authService.getUserFromLocalStorage();
+    const currentUser = this.authService.user();
 
-  async canActivate() {
-    if (!this.localUser || !this.user()) {
+    if (!localUser || !currentUser) {
       this.router.navigate(['auth/sign-up']);
       return false;
     }

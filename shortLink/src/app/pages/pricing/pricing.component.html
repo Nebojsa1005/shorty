@@ -56,7 +56,7 @@
             class="w-full"
             mat-flat-button
             color="primary"
-            [disabled]="product.id | isSubscribed : userProduct()"
+            [disabled]="product.id === user()?.subscription?.productId"
             (click)="onBuyNow(product.attributes.buy_now_url)"
           >
             {{
