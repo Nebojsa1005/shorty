@@ -34,6 +34,7 @@ export class AllLinksComponent {
 
   tableLoading = computed(() => this.urlService.allUrlsLoading());
   allUrls = computed(() => this.urlService.allUrls());
+  canCreateLink = computed(() => this.urlService.canCreateLink());
   isCreateEditLinkDrawerOpened = computed(() =>
     this.urlService.isCreateEditLinkDrawerOpened()
   );

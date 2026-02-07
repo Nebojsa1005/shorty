@@ -12,7 +12,7 @@
     <button
       mat-flat-button
       color="primary"
-      [disabled]="!urlForm()?.valid"
+      [disabled]="!urlForm()?.valid || (!isEdit && !canCreateLink())"
       (click)="onSubmit()"
     >
       {{ isEdit ? 'Edit Link' : 'Create Link' }}

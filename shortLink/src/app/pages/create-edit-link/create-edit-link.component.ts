@@ -10,6 +10,7 @@ import {
 import { LinkFormComponent } from './link-form/link-form.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UrlService } from '../../services/url.service';
+import { ToastService } from '../../services/toast-service.service';
 import { MatButton } from '@angular/material/button';
 import { UrlLink } from '../../shared/types/url.interface';
 import { take } from 'rxjs';
@@ -22,11 +23,13 @@ import { take } from 'rxjs';
 })
 export class CreateEditLinkComponent {
   private urlService = inject(UrlService);
+  private toastService = inject(ToastService);
   private destroyRef = inject(DestroyRef);
 
   formSubmittedEvent = output<boolean>()
 
   urlForm = this.urlService.urlForm;
+  canCreateLink = computed(() => this.urlService.canCreateLink());
   id?: string;
   isEdit?: boolean;
   existingLink?: UrlLink;
@@ -44,6 +47,16 @@ export class CreateEditLinkComponent {
           .getShortLinkById(this.id)
           .pipe(take(1))
           .subscribe((e) => (this.existingLink = e?.data));
+      }
+    });
+
+    effect(() => {
+      if (!this.canCreateLink() && !this.isEdit) {
+        this.toastService.presentToast({
+          position: 'top',
+          message: 'You have no available links. Please upgrade your plan.',
+          color: 'warning',
+        });
       }
     });
   }
