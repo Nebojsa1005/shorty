@@ -68,7 +68,10 @@ mongoose.connection.once("open", () => {
   );
 });
 
-app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.json({
+  limit: "50mb",
+  verify: (req, _res, buf) => { (req as any).rawBody = buf; }
+}));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: false }));
 
 
