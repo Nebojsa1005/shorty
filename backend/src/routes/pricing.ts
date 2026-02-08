@@ -195,7 +195,7 @@ const pricingRoutes = (app: Express, io: Server) => {
         populatedUser.subscription?._id
       );
 
-      await UserModel.findOneAndUpdate(
+      await UserModel.findByIdAndUpdate(
         userId,
         {
           subscription: null,
