@@ -1,8 +1,9 @@
 import * as dotenv from "dotenv";
+import crypto from "crypto";
 import { Express } from "express";
 import {
   createUpdateSubscriptionHandler,
-  deleteSubscriptionHandler,
+  cancelSubscriptionHandler,
 } from "../services/subscription.service";
 import { Server } from "socket.io";
 import { UserModel } from "../models/user.model";
@@ -101,11 +102,27 @@ const pricingRoutes = (app: Express, io: Server) => {
   });
   app.post("/api/webhook", async (req, res) => {
     try {
+      // Verify webhook signature
+      const secret = process.env.LEMON_SQUEEZY_WEBHOOK_SECRET;
+      const signature = req.headers["x-signature"] as string;
+      const rawBody = (req as any).rawBody as Buffer;
+
+      if (!secret || !signature || !rawBody) {
+        return res.status(401).send({ error: "Missing signature or webhook secret" });
+      }
+
+      const hmac = crypto.createHmac("sha256", secret).update(rawBody).digest("hex");
+
+      if (!crypto.timingSafeEqual(Buffer.from(hmac), Buffer.from(signature))) {
+        return res.status(401).send({ error: "Invalid webhook signature" });
+      }
+
       const event = req.body;
       const productId = event.data?.attributes.product_id;
       const eventName = event.meta?.event_name;
       const userId = event.meta?.custom_data.userId;
-      const subscriptionId = event.data.id;      
+      const subscriptionId = event.data.id;
+      const status = event.data?.attributes?.status;
 
       console.log(`[Webhook] Received event: ${eventName} for user: ${userId}`);
 
@@ -118,6 +135,7 @@ const pricingRoutes = (app: Express, io: Server) => {
           userId,
           subscriptionId,
           productId,
+          status,
         });
         io.to(userId).emit("subscription-updated", {
           userId,
@@ -130,7 +148,7 @@ const pricingRoutes = (app: Express, io: Server) => {
 
       // Handle subscription cancellation
       if (eventName === SubscriptionEventTypes.subscription_cancelled) {
-        await deleteSubscriptionHandler({
+        await cancelSubscriptionHandler({
           userId,
         });
         io.to(userId).emit("subscription-updated", {
@@ -142,7 +160,12 @@ const pricingRoutes = (app: Express, io: Server) => {
 
       // Handle payment success
       if (eventName === SubscriptionEventTypes.subscription_payment_success) {
-        
+        io.to(userId).emit("payment-success", {
+          userId,
+          subscriptionId,
+          productId,
+          message: "Payment successful! Your subscription is now active."
+        });
         console.log(`[Webhook] Emitted payment-success for user: ${userId}`);
       }
 

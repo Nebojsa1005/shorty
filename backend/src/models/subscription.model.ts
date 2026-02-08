@@ -4,6 +4,7 @@ export interface SubscriptionDocument extends Document {
   subscriptionId: string;
   productId: string;
   linksAllowed: number;
+  status: string;
 }
 
 export interface CreateSubscriptionPayload {
@@ -15,6 +16,7 @@ export interface CreateSubscriptionWebhookPayload {
   userId: string;
   subscriptionId: string;
   productId: string;
+  status: string;
 }
 
 export interface DeleteSubscriptionPayload {
@@ -32,6 +34,7 @@ const SubscriptionSchema = new Schema<SubscriptionDocument>({
   subscriptionId: { type: String, default: "" },
   productId: { type: String, default: "" },
   linksAllowed: { type: Number, default: 0},
+  status: { type: String, default: "active" },
 });
 
 export const SubscriptionModel = model<SubscriptionDocument>(
