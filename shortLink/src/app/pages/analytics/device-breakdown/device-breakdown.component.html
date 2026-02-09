@@ -1,0 +1,24 @@
+<div class="bg-white rounded-lg p-5 h-full" style="border: 1px solid rgba(234, 234, 234, 1);">
+  <h4 class="text-lg mb-4" style="color: #151419; font-weight: 400;">Devices</h4>
+
+  @if (!breakdown() || breakdown()!.deviceTypes.length === 0) {
+    <p class="text-sm" style="color: #9CA3AF;">No device data yet.</p>
+  } @else {
+    <!-- Device type donut -->
+    @if (donutOptions()) {
+      <div echarts [options]="donutOptions()!" style="height: 260px;"></div>
+    }
+
+    <!-- Browsers -->
+    @if (browserOptions()) {
+      <h4 class="text-sm font-medium mt-5 mb-1" style="color: #6B7280;">Browsers</h4>
+      <div echarts [options]="browserOptions()!" [style.height]="browserChartHeight()"></div>
+    }
+
+    <!-- OS -->
+    @if (osOptions()) {
+      <h4 class="text-sm font-medium mt-5 mb-1" style="color: #6B7280;">Operating Systems</h4>
+      <div echarts [options]="osOptions()!" [style.height]="osChartHeight()"></div>
+    }
+  }
+</div>

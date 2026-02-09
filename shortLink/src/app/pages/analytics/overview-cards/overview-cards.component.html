@@ -1,0 +1,30 @@
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+  <!-- Total Views -->
+  <div class="bg-white rounded-lg p-5 flex flex-col gap-1" style="border: 1px solid rgba(234, 234, 234, 1);">
+    <span class="text-xs uppercase tracking-wider" style="color: #6B7280;">Total Views</span>
+    <span class="text-2xl font-semibold" style="color: #151419;">{{ overview()?.totalViews ?? 0 }}</span>
+  </div>
+
+  <!-- Total Links -->
+  <div class="bg-white rounded-lg p-5 flex flex-col gap-1" style="border: 1px solid rgba(234, 234, 234, 1);">
+    <span class="text-xs uppercase tracking-wider" style="color: #6B7280;">Total Links</span>
+    <span class="text-2xl font-semibold" style="color: #151419;">{{ overview()?.totalLinks ?? 0 }}</span>
+  </div>
+
+  <!-- Most Accessed Link -->
+  <div class="bg-white rounded-lg p-5 flex flex-col gap-1" style="border: 1px solid rgba(234, 234, 234, 1);">
+    <span class="text-xs uppercase tracking-wider" style="color: #6B7280;">Most Accessed</span>
+    @if (overview()?.mostAccessedLink) {
+      <span class="text-base font-semibold truncate" style="color: #151419;">{{ overview()!.mostAccessedLink!.urlName }}</span>
+      <span class="text-xs" style="color: #9CA3AF;">{{ overview()!.mostAccessedLink!.viewCount }} views</span>
+    } @else {
+      <span class="text-base font-semibold" style="color: #151419;">&mdash;</span>
+    }
+  </div>
+
+  <!-- Unique Countries -->
+  <div class="bg-white rounded-lg p-5 flex flex-col gap-1" style="border: 1px solid rgba(234, 234, 234, 1);">
+    <span class="text-xs uppercase tracking-wider" style="color: #6B7280;">Countries</span>
+    <span class="text-2xl font-semibold" style="color: #151419;">{{ overview()?.uniqueCountries ?? 0 }}</span>
+  </div>
+</div>

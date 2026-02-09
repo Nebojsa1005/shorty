@@ -9,6 +9,7 @@ export interface AnalyticsDocument extends Document {
   lastViewedOn: Date;
   firstViewedOn: Date;
   shortLink: string;
+  url: Schema.Types.ObjectId;
   entries: AnalyticsEntries[];
 }
 
@@ -29,6 +30,10 @@ const AnalyticsSchema = new Schema<AnalyticsDocument>({
   shortLink: {
     type: String,
     required: true,
+  },
+  url: {
+    type: Schema.Types.ObjectId,
+    ref: "Url",
   },
   entries: [
     {

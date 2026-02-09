@@ -1,0 +1,19 @@
+<div class="bg-white rounded-lg p-5 h-full" style="border: 1px solid rgba(234, 234, 234, 1);">
+  <h4 class="text-lg mb-4" style="color: #151419; font-weight: 400;">Locations</h4>
+
+  @if (!breakdown() || breakdown()!.countries.length === 0) {
+    <p class="text-sm" style="color: #9CA3AF;">No location data yet.</p>
+  } @else {
+    <!-- Countries -->
+    @if (countryOptions()) {
+      <h4 class="text-sm font-medium mb-1" style="color: #6B7280;">Countries</h4>
+      <div echarts [options]="countryOptions()!" [style.height]="countryChartHeight()"></div>
+    }
+
+    <!-- Cities -->
+    @if (cityOptions()) {
+      <h4 class="text-sm font-medium mt-4 mb-1" style="color: #6B7280;">Top Cities</h4>
+      <div echarts [options]="cityOptions()!" [style.height]="cityChartHeight()"></div>
+    }
+  }
+</div>

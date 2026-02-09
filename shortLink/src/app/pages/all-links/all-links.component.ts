@@ -7,7 +7,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { AnalyticsService } from 'src/app/services/analytics.service';
 import { TableSearchPipe } from 'src/app/shared/pipes/table-search.pipe';
 import { UrlService } from '../../services/url.service';
 import { TableLinksComponent } from '../../shared/components/table-links/table-links.component';
@@ -30,7 +29,6 @@ import { TableLinksComponent } from '../../shared/components/table-links/table-l
 export class AllLinksComponent {
   private destroyRef = inject(DestroyRef);
   private urlService = inject(UrlService);
-  private analyticsService = inject(AnalyticsService);
 
   tableLoading = computed(() => this.urlService.allUrlsLoading());
   allUrls = computed(() => this.urlService.allUrls());
