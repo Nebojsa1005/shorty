@@ -87,7 +87,7 @@ const urlRoutes = (app: Express) => {
           return ServerResponse.serverError(res, 404, "Minified URL not found");
         }
 
-        await analyticsShortLinkVisited(shortLink);
+        await analyticsShortLinkVisited(shortLink, req);
 
         if (!expirationDateCheck) {
           record = {

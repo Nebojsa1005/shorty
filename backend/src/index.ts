@@ -12,10 +12,12 @@ import MongoStore from "connect-mongo";
 import passport from "passport";
 import session from "express-session";
 import pricingRoutes from "./routes/pricing";
+import analyticsRoutes from "./routes/analytics.route";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
 
 const app = express();
+app.set("trust proxy", true);
 const env = process.env.NODE_ENV || "development";
 
 const allowedOrigins = [
@@ -120,6 +122,7 @@ app.get("/", (req, res) => {
 urlRoutes(app);
 authRoutes(app);
 pricingRoutes(app, io);
+analyticsRoutes(app);
 
 server.listen(process.env.PORT || "3000", () => {
   console.log(

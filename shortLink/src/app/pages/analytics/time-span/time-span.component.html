@@ -1,59 +1,52 @@
-<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-  <mat-form-field
-    class="w-full md:w-1/2 search-field mb-4"
-    appearance="outline"
-    color="primary"
-  >
-    <mat-label>Search</mat-label>
-    <input matInput [formControl]="searchControl" placeholder="Search" />
-    <button mat-icon-button matSuffix disabled>
-      <mat-icon>search</mat-icon>
-    </button>
-  </mat-form-field>
+<div class="bg-white rounded-lg p-5 h-full" style="border: 1px solid rgba(234, 234, 234, 1);">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+    <mat-form-field
+      class="w-full md:w-1/2 search-field"
+      appearance="outline"
+      color="primary"
+    >
+      <mat-label>Search</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="Search" />
+      <button mat-icon-button matSuffix disabled>
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
 
-  <div class="w-full md:w-1/2">
-    <button
-      mat-button
-      (click)="updateOptions('1m')"
-      [class.active]="activeOptionButton == '1m'"
-    >
-      1M
-    </button>
-    <button
-      mat-button
-      (click)="updateOptions('6m')"
-      [class.active]="activeOptionButton == '6m'"
-    >
-      6M
-    </button>
-    <button
-      mat-button
-      (click)="updateOptions('1y')"
-      [class.active]="activeOptionButton == '1y'"
-    >
-      1Y
-    </button>
-    <button
-      mat-button
-      (click)="updateOptions('all')"
-      [class.active]="activeOptionButton == 'all'"
-    >
-      All
-    </button>
+    <div class="flex gap-1">
+      <button
+        class="px-3 py-1 text-xs rounded transition-colors"
+        [style.background]="activeOptionButton() === '1m' ? '#9A4EAE' : '#F9FAFB'"
+        [style.color]="activeOptionButton() === '1m' ? 'white' : '#6B7280'"
+        [style.border]="activeOptionButton() === '1m' ? '1px solid #9A4EAE' : '1px solid #E5E7EB'"
+        (click)="updateOptions('1m')"
+      >1M</button>
+      <button
+        class="px-3 py-1 text-xs rounded transition-colors"
+        [style.background]="activeOptionButton() === '6m' ? '#9A4EAE' : '#F9FAFB'"
+        [style.color]="activeOptionButton() === '6m' ? 'white' : '#6B7280'"
+        [style.border]="activeOptionButton() === '6m' ? '1px solid #9A4EAE' : '1px solid #E5E7EB'"
+        (click)="updateOptions('6m')"
+      >6M</button>
+      <button
+        class="px-3 py-1 text-xs rounded transition-colors"
+        [style.background]="activeOptionButton() === '1y' ? '#9A4EAE' : '#F9FAFB'"
+        [style.color]="activeOptionButton() === '1y' ? 'white' : '#6B7280'"
+        [style.border]="activeOptionButton() === '1y' ? '1px solid #9A4EAE' : '1px solid #E5E7EB'"
+        (click)="updateOptions('1y')"
+      >1Y</button>
+      <button
+        class="px-3 py-1 text-xs rounded transition-colors"
+        [style.background]="activeOptionButton() === 'all' ? '#9A4EAE' : '#F9FAFB'"
+        [style.color]="activeOptionButton() === 'all' ? 'white' : '#6B7280'"
+        [style.border]="activeOptionButton() === 'all' ? '1px solid #9A4EAE' : '1px solid #E5E7EB'"
+        (click)="updateOptions('all')"
+      >All</button>
+    </div>
   </div>
-</div>
 
-<apx-chart
-  #chart
-  [series]="chartOptions().series"
-  [chart]="chartOptions().chart"
-  [colors]="chartOptions().colors"
-  [yaxis]="chartOptions().yaxis"
-  [dataLabels]="chartOptions().dataLabels"
-  [markers]="chartOptions().markers"
-  [stroke]="chartOptions().stroke"
-  [grid]="chartOptions().grid"
-  [xaxis]="chartOptions().xaxis"
-  [tooltip]="chartOptions().tooltip"
-  [annotations]="chartOptions().annotations"
-></apx-chart>
+  @if (chartOptions()) {
+    <div echarts [options]="chartOptions()!" style="height: 350px;"></div>
+  } @else {
+    <p class="text-sm" style="color: #9CA3AF;">No data to display.</p>
+  }
+</div>

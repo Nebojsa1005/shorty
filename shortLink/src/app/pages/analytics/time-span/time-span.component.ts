@@ -2,32 +2,29 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   computed,
-  effect,
   input,
   signal,
-  ViewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
-import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
+import { NgxEchartsDirective } from 'ngx-echarts';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { UrlLink } from 'src/app/shared/types/url.interface';
 import {
-  get12MonthsAgo,
-  get1Month,
   get1MonthAgo,
   get6MonthsAgo,
+  get12MonthsAgo,
 } from 'src/app/utils/date.util';
+
+const SERIES_COLORS = ['#9A4EAE', '#392A48', '#D4A5E0', '#B06CC4', '#5C3A6E'];
 
 @Component({
   selector: 'app-time-span',
   imports: [
-    NgApexchartsModule,
+    NgxEchartsDirective,
     CommonModule,
-    MatButton,
     MatInput,
     MatFormField,
     MatLabel,
@@ -38,8 +35,6 @@ import {
   styleUrl: './time-span.component.scss',
 })
 export class TimeSpanComponent {
-  @ViewChild('chart', { static: false }) chart!: ChartComponent;
-
   allLinks = input<UrlLink[]>([]);
   allLinksLoading = input<boolean>(false);
 
@@ -52,137 +47,107 @@ export class TimeSpanComponent {
     )
   );
 
-  xAxisRangeUpdate = signal(null);
+  activeOptionButton = signal<string>('1m');
 
   timeSpanLinkPerformance = computed(() => {
     const allLinks = this.allLinks();
     const searchValue = this.searchControlValueChanges();
-  
-    return allLinks.filter(link => link.urlName.includes(searchValue ?? '')).slice(0, 5)
-  });
-  xAxisRange = computed(() => {
-    const allLinks = this.allLinks();
-    let minEntryDate = 0;
-    let maxEntryDate = 0;
-
-    allLinks.forEach((link) => {
-      const { analytics } = link;
-      const millisecondsEntries = analytics.entries.map((entry) =>
-        new Date(entry.date).getTime()
-      );
-      const minLinkEntry = Math.min(...millisecondsEntries);
-      const maxLinkEntry = Math.max(...millisecondsEntries);
-
-      if (minLinkEntry < minEntryDate || minEntryDate === 0) {
-        minEntryDate = minLinkEntry - get1Month();
-      }
-
-      if (maxLinkEntry > maxEntryDate || maxEntryDate === 0) {
-        maxEntryDate = maxLinkEntry + get1Month();
-      }
-    });
-
-    return { xaxis: { min: minEntryDate, max: maxEntryDate } };
+    return allLinks
+      .filter((link) => link.urlName.includes(searchValue ?? ''))
+      .slice(0, 5);
   });
 
-  chartData = computed(() => {
-    const charDataArray: any = [];
-    this.timeSpanLinkPerformance().forEach((link) => {
-      const chartDataEntry = link.analytics.entries.map((entry) => [
-        new Date(entry.date).getTime(),
-        entry.viewCount,
-      ]);
-      charDataArray.push({
+  xAxisRange = computed<{ min: number | undefined; max: number | undefined }>(() => {
+    const option = this.activeOptionButton();
+    const now = new Date().getTime();
+
+    switch (option) {
+      case '1m':
+        return { min: get1MonthAgo(), max: now };
+      case '6m':
+        return { min: get6MonthsAgo(), max: now };
+      case '1y':
+        return { min: get12MonthsAgo(), max: now };
+      default:
+        return { min: undefined, max: undefined };
+    }
+  });
+
+  chartOptions = computed(() => {
+    const links = this.timeSpanLinkPerformance();
+    const range = this.xAxisRange();
+
+    if (links.length === 0) return null;
+
+    const series = links.map((link, i) => {
+      const entries = link.analytics.entries
+        .map((entry) => [new Date(entry.date).getTime(), entry.viewCount] as [number, number])
+        .sort((a, b) => a[0] - b[0]);
+
+      return {
         name: link.urlName,
-        data: chartDataEntry,
-      });
+        type: 'line' as const,
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        showSymbol: false,
+        lineStyle: { width: 2.5 },
+        areaStyle: {
+          color: {
+            type: 'linear',
+            x: 0, y: 0, x2: 0, y2: 1,
+            colorStops: [
+              { offset: 0, color: SERIES_COLORS[i % SERIES_COLORS.length] + '40' },
+              { offset: 1, color: SERIES_COLORS[i % SERIES_COLORS.length] + '05' },
+            ],
+          },
+        },
+        emphasis: { focus: 'series' as const },
+        data: entries,
+      };
     });
 
-    return charDataArray;
-  });
-  public chartOptions = computed<any>(() => {
     return {
-      series: this.chartData(),
-      chart: {
-        type: 'area',
-        height: 350,
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      markers: {
-        size: 0,
-      },
-      xaxis: {
-        type: 'datetime',
-        tickAmount: 6,
-      },
+      color: SERIES_COLORS,
       tooltip: {
-        x: {
-          format: 'dd MMM yyyy',
-        },
+        trigger: 'axis' as const,
+        backgroundColor: '#fff',
+        borderColor: '#E5E7EB',
+        borderWidth: 1,
+        textStyle: { color: '#151419', fontFamily: 'DM Sans', fontSize: 12 },
+        axisPointer: { type: 'cross' as const, lineStyle: { color: '#E5E7EB' } },
       },
-      fill: {
-        type: 'gradient',
-        gradient: {
-          shadeIntensity: 1,
-          opacityFrom: 0.7,
-          opacityTo: 0.9,
-          stops: [0, 100],
-        },
+      legend: {
+        bottom: 0,
+        textStyle: { color: '#6B7280', fontFamily: 'DM Sans', fontSize: 12 },
+        icon: 'circle',
+        itemWidth: 8,
+        itemHeight: 8,
+        itemGap: 16,
       },
+      grid: { left: 16, right: 16, top: 16, bottom: 40, containLabel: true },
+      xAxis: {
+        type: 'time' as const,
+        min: range.min,
+        max: range.max,
+        axisLabel: { color: '#9CA3AF', fontFamily: 'DM Sans', fontSize: 11 },
+        splitLine: { show: false },
+        axisTick: { show: false },
+        axisLine: { lineStyle: { color: '#F3F4F6' } },
+      },
+      yAxis: {
+        type: 'value' as const,
+        axisLabel: { color: '#9CA3AF', fontFamily: 'DM Sans', fontSize: 11 },
+        splitLine: { lineStyle: { color: '#F3F4F6' } },
+        axisTick: { show: false },
+        axisLine: { show: false },
+      },
+      series,
+      animationEasing: 'cubicOut' as const,
     };
   });
-  public activeOptionButton = '1m';
-  public updateOptionsData: any = {
-    '1m': {
-      xaxis: {
-        min: get1MonthAgo(),
-        max: new Date().getTime(),
-      },
-    },
-    '6m': {
-      xaxis: {
-        min: get6MonthsAgo(),
-        max: new Date().getTime(),
-      },
-    },
-    '1y': {
-      xaxis: {
-        min: get12MonthsAgo(),
-        max: new Date().getTime(),
-      },
-    },
-    all: {
-      xaxis: {
-        min: undefined,
-        max: undefined,
-      },
-    },
-  };
 
-  constructor() {
-    effect(() => {
-      const series = this.chartData();
-      const chart = this.chart;
-
-      if (chart) {
-        chart?.updateSeries(series);
-      }
-    });
-
-    effect(() => {
-      const xAxisRangeUpdate = this.xAxisRangeUpdate();
-      const xAxisRange = this.xAxisRange();
-      const range = xAxisRangeUpdate ? xAxisRangeUpdate : xAxisRange;
-
-      if (this.chart) {
-        this.chart.updateOptions(range, false, true, true);
-        this.chart.zoomX(range.xaxis.min, range.xaxis.max);
-      }
-    });
-  }
-  public updateOptions(option: string): void {
-    this.xAxisRangeUpdate.update((state) => this.updateOptionsData[option]);
+  updateOptions(option: string): void {
+    this.activeOptionButton.set(option);
   }
 }

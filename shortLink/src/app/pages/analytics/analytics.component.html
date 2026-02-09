@@ -1,15 +1,48 @@
+<div class="flex flex-col gap-4 w-full">
+	<!-- Row 1: Overview stat cards -->
+	<app-overview-cards
+	  [overview]="overview()"
+	  [loading]="analyticsLoading()"
+	></app-overview-cards>
 
-<div class="flex flex-col md:flex-row gap-4 w-full">
-	<div class="w-full md:w-1/2">
+	<!-- Row 2: Top Links + Views Over Time -->
+	<div class="flex flex-col md:flex-row gap-4 w-full">
+		<div class="w-full md:w-1/2">
+			<app-top-links
+			  [topLinks]="topLinks()"
+			  [loading]="analyticsLoading()"
+			  (periodChange)="onPeriodChange($event)"
+			></app-top-links>
+		</div>
+		<div class="w-full md:w-1/2">
+			<app-time-span
+			  [allLinks]="bestPreformingLinks()"
+			  [allLinksLoading]="allLinksLoading()"
+			></app-time-span>
+		</div>
+	</div>
+
+	<!-- Row 3: Device Breakdown + Location Breakdown -->
+	<div class="flex flex-col md:flex-row gap-4 w-full">
+		<div class="w-full md:w-1/2">
+			<app-device-breakdown
+			  [breakdown]="deviceBreakdown()"
+			  [loading]="analyticsLoading()"
+			></app-device-breakdown>
+		</div>
+		<div class="w-full md:w-1/2">
+			<app-location-breakdown
+			  [breakdown]="locationBreakdown()"
+			  [loading]="analyticsLoading()"
+			></app-location-breakdown>
+		</div>
+	</div>
+
+	<!-- Row 4: Best Performing (kept from existing) -->
+	<div class="w-full">
 		<app-best-preforming
 		  [allLinks]="bestPreformingLinks()"
 		  [allLinksLoading]="allLinksLoading()"
 		></app-best-preforming>
-	</div>
-	<div class="w-full md:w-1/2">
-		<app-time-span
-		  [allLinks]="bestPreformingLinks()"
-		  [allLinksLoading]="allLinksLoading()"
-		></app-time-span>
 	</div>
 </div>

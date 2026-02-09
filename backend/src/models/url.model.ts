@@ -1,5 +1,6 @@
 import { Schema, model, Document } from "mongoose";
 import { AnalyticsDocument, AnalyticsModel } from "./analytics.model";
+import { VisitModel } from "./visit.model";
 import { UserDocument } from "./user.model";
 import { SecurityOptions } from "../types/security-options.enum";
 
@@ -50,6 +51,7 @@ const UrlSchema = new Schema<UrlDocument>({
 
 UrlSchema.post("findOneAndDelete", async function (doc) {
   if (doc && doc.analytics) {
+    await VisitModel.deleteMany({ analytics: doc.analytics });
     await AnalyticsModel.deleteOne({ _id: doc.analytics });
   }
 });
