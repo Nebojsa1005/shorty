@@ -1,8 +1,8 @@
-<mat-sidenav-container class="h-12">
+<mat-sidenav-container class="h-full">
   <mat-sidenav
     #drawer
     class="sidenav !rounded-none"
-    mode="side"
+    [mode]="sidenavMode()"
     [opened]="isDrawerOpened()"
     fixedInViewport
     position="start"
@@ -14,7 +14,7 @@
   <!-- Right sidenav -->
   <mat-sidenav
     #createEditDraw
-    class="!rounded-none !w-4/10 main-height overflow-hidden"
+    class="!rounded-none create-edit-drawer main-height overflow-hidden"
     mode="over"
     (closedStart)="resetCreateEditLinkDrawer()"
     [opened]="isCreateEditLinkDrawerOpened()"
@@ -35,7 +35,7 @@
       </button>
     </mat-toolbar>
 
-    <main class="p-md main-height">
+    <main class="p-4 main-height">
       <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>

@@ -1,16 +1,16 @@
-<div class="h-12 w-12 d-flex flex-col justify-center items-center">
+<div class="h-full w-full flex flex-col justify-center items-center px-4">
   @if (shortLink()) {
     @if (!expirationDateCheck()) {
       <h2 class="!text-4xl">
         Sorry! The Link has Expired
       </h2>
-    } 
+    }
     @else if (shortLink()?.security === SecurityOptions.PASSWORD) {
       <!-- Title -->
-      <h2 class="!text-4xl mb-md">Please Enter the Password to the Link</h2>
+      <h2 class="!text-4xl mb-4">Please Enter the Password to the Link</h2>
 
       <!-- Password Input -->
-      <mat-form-field appearance="outline" class="full-width mb-md">
+      <mat-form-field appearance="outline" class="full-width mb-4">
         <mat-label>Password</mat-label>
         <input
           matInput
@@ -42,9 +42,9 @@
           Next
         </button>
       </div>
-    } 
+    }
   } @else {
-    <div class="h-12 w-12 d-flex items-center justify-center">
+    <div class="h-full w-full flex items-center justify-center">
       <mat-spinner color="primary" diameter="40"></mat-spinner>
     </div>
   }

@@ -9,7 +9,22 @@ main {
 	overflow: hidden;
 }
 
-
 .sidenav.collapsed {
   width: 60px; /* just enough for icons */
+}
+
+.create-edit-drawer {
+  width: 40%;
+}
+
+@media (max-width: 1023px) {
+  .create-edit-drawer {
+    width: 70%;
+  }
+}
+
+@media (max-width: 639px) {
+  .create-edit-drawer {
+    width: 100%;
+  }
 }
