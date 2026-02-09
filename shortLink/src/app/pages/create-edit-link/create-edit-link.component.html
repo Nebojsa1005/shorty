@@ -1,13 +1,13 @@
-<div class="p-md">
-  <h2 class="px-0 mb-md mat-headline">
+<div class="p-4">
+  <h2 class="px-0 mb-4 mat-headline">
     {{ isEdit ? "Edit Link" : "Add new Link" }}
   </h2>
-  
+
   <app-link-form
     (formChanges)="onFormChange($event)"
     [existingUrlLink]="existingLink"
   />
-  
+
   <div class="actions-row">
     <button
       mat-flat-button

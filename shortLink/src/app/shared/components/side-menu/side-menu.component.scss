@@ -14,3 +14,9 @@
 mat-icon {
 	color: #9A4EAE;
 }
+
+.menu-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

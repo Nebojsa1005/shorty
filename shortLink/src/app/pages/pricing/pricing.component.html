@@ -4,15 +4,15 @@
 </div>
 }
 
-<div class="flex-col justify-center items-center w-full mt-md">
-  <div class="p-md w-full">
+<div class="flex-col justify-center items-center w-full mt-4">
+  <div class="p-4 w-full">
     <div class="pricing-grid">
       @for(product of products(); track product.id; let first = $first; let last
       = $last) {
 
-      <div class="pricing-card" [ngClass]="{ 'mr-0': last, 'mr-md': !last }">
+      <div class="pricing-card" [ngClass]="{ 'mr-0': last, 'mr-4': !last }">
         <div
-          class="price-badge p-sm text-sm w-full d-flex items-center justify-center"
+          class="price-badge p-2 text-sm w-full flex items-center justify-center"
           [ngClass]="{
             'rounded-lg': first,
             'price-badge-pro': product.attributes.name === PricingPlan.PRO,
@@ -31,7 +31,7 @@
           }
         </div>
         <div
-          class="product p-md h-full"
+          class="product p-4 h-full"
           [ngClass]="{
             'product-pro': product.attributes.name === PricingPlan.PRO,
             'product-ultimate': product.attributes.name === PricingPlan.ULTIMATE
@@ -43,11 +43,11 @@
             </p>
 
             <div
-              class="text-sm/5 font-light mb-md"
+              class="text-sm/5 font-light mb-4"
               [innerHTML]="product.attributes.description"
             ></div>
 
-            <p class="text-xl font-light mb-md">
+            <p class="text-xl font-light mb-4">
               {{ product.attributes.price_formatted }}
             </p>
           </div>

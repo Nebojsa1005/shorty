@@ -1,12 +1,12 @@
-<div class="flex h-screen overflow-hidden">
-  <div class="w-2/3">
-    <img src="assets/auth-background.jpg" alt="Auth Background" />
+<div class="flex flex-col lg:flex-row h-screen overflow-hidden">
+  <div class="hidden lg:block lg:w-2/3">
+    <img class="w-full h-full object-cover" src="assets/auth-background.jpg" alt="Auth Background" />
   </div>
 
-  <div class="w-1/3 p-xxl d-flex flex-col justify-center items-center">
+  <div class="w-full lg:w-1/3 p-4 lg:p-10 flex flex-col justify-center items-center">
     <form [formGroup]="formGroup" class="sign-in-form">
       <!-- Title -->
-      <div class="mb-xxl">
+      <div class="mb-10">
         <h2 class="!text-4xl !font-light mb-0">
           Welcome, log in to your account.
         </h2>
@@ -14,14 +14,14 @@
 
       <div id="google-signin-button"></div>
 
-      <div class="w-full text-center mb-lg">
-        <span class="font-light text-sm text-light mb-xxl"
+      <div class="w-full text-center mb-6">
+        <span class="font-light text-sm text-light mb-10"
           >Or sign in with</span
         >
       </div>
 
       <!-- Email Input -->
-      <mat-form-field appearance="outline" class="w-12 mb-sm">
+      <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Email Address</mat-label>
         <input
           matInput
@@ -32,7 +32,7 @@
       </mat-form-field>
 
       <!-- Password Input with Toggle -->
-      <mat-form-field appearance="outline" class="w-12 mb-sm">
+      <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Password</mat-label>
         <input
           matInput
@@ -54,16 +54,16 @@
         }}</mat-error>
       </mat-form-field>
 
-      <div class="d-flex flex-col items-center justify-center">
+      <div class="flex flex-col items-center justify-center">
         <!-- Login Button -->
         <button
           mat-raised-button
           color="primary"
-          class="mb-sm w-full"
+          class="mb-2 w-full"
           [disabled]="!formGroup.valid || isSignInButtonLoading()"
           (click)="signIn()"
         >
-          <div class="d-flex itmes-center justify-center">
+          <div class="flex items-center justify-center">
             Sign In @if (isSignInButtonLoading()) {
             <mat-spinner class="button-loading-spinner" />
             }
@@ -72,9 +72,9 @@
       </div>
 
       <!-- Redirect to sign-up -->
-      <div class="text-center mt-md">
+      <div class="text-center mt-4">
         <span class="text-sm">
-          Don’t Have an Account?
+          Don't Have an Account?
           <a class="text-primary" routerLink="/auth/sign-up">Sign Up</a>
         </span>
       </div>

@@ -1,9 +1,5 @@
 @import "tailwindcss";
 /* You can add global styles to this file, and also import other style files */
-@import "theme/spacing";
-@import "theme/sizes.scss";
-@import "theme/display-flex.scss";
-@import "theme/text.scss";
 @import "theme/toast.scss";
 
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
@@ -39,7 +35,6 @@ body {
 }
 
 * {
-  margin: 0;
   box-sizing: border-box;
 
   .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field
@@ -52,6 +47,12 @@ body {
   font-size: 2.375rem !important;
   font-weight: 300 !important;
   padding: 0 !important;
+}
+
+@media (max-width: 639px) {
+  .title {
+    font-size: 1.5rem !important;
+  }
 }
 
 .logo {
@@ -74,12 +75,11 @@ body {
 }
 
 .divider-container {
-  @extend .d-flex;
-  @extend .flex-col;
-  @extend .justify-center;
-  @extend .items-center;
-  @extend .w-12;
-
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   height: 3rem;
 }
 
@@ -88,7 +88,7 @@ body {
 }
 
 .auth-divider-text {
-  @extend .p-sm;
+  padding: 0.5rem;
   position: absolute;
   background: white;
 }

@@ -30,6 +30,7 @@ export class HomeComponent {
   private urlService = inject(UrlService);
 
   isDrawerOpened = signal(true);
+  sidenavMode = signal<'side' | 'over'>('side');
 
   isCreateEditLinkDrawerOpened = computed(() =>
     this.urlService.isCreateEditLinkDrawerOpened()
@@ -40,6 +41,7 @@ export class HomeComponent {
       .observe([Breakpoints.Small, Breakpoints.Handset])
       .subscribe((state) => {
         this.isDrawerOpened.set(!state.matches);
+        this.sidenavMode.set(state.matches ? 'over' : 'side');
       });
   }
 

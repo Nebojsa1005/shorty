@@ -8,14 +8,14 @@
         (click)="newLink()"
       >
         <div
-          class="d-flex items-center text-white add-new-minified-link-container"
+          class="flex items-center text-white add-new-minified-link-container"
         >
-          <mat-icon class="mr-sm !text-white material-symbols-outlined">add</mat-icon>
+          <mat-icon class="mr-2 !text-white material-symbols-outlined">add</mat-icon>
           <span class="menu-label">Add New Minified Link</span>
         </div>
       </mat-list-item>
     </div>
-  
+
     <a
       routerLink="/all-links"
       routerLinkActive="active-link"
@@ -27,15 +27,15 @@
         button
         [activated]="allLinks.isActive"
       >
-        <div class="d-flex items-center">
-          <mat-icon class="material-symbols-outlined mr-sm">
+        <div class="flex items-center">
+          <mat-icon class="material-symbols-outlined mr-2">
             format_list_bulleted
           </mat-icon>
           <span class="menu-label">View All Minified Links</span>
         </div>
       </mat-list-item>
     </a>
-  
+
     <a
       routerLink="/analytics"
       routerLinkActive="active-link"
@@ -47,13 +47,13 @@
         button
         [activated]="analytics.isActive"
       >
-        <div class="d-flex items-center">
-          <mat-icon class="mr-sm material-symbols-outlined" color="primary">bar_chart</mat-icon>
+        <div class="flex items-center">
+          <mat-icon class="mr-2 material-symbols-outlined" color="primary">bar_chart</mat-icon>
           <span class="menu-label">Analytics</span>
         </div>
       </mat-list-item>
     </a>
-  
+
     <a
       routerLink="/pricing"
       routerLinkActive="active-link"
@@ -65,15 +65,15 @@
         button
         [activated]="pricing.isActive"
       >
-        <div class="d-flex items-center">
-          <mat-icon class="material-symbols-outlined mr-sm" color="primary"
+        <div class="flex items-center">
+          <mat-icon class="material-symbols-outlined mr-2" color="primary"
             >sell</mat-icon
           >
           <span class="menu-label">Pricing</span>
         </div>
       </mat-list-item>
     </a>
-  
+
     <a
       routerLink="/profile"
       routerLinkActive="active-link"
@@ -85,23 +85,22 @@
         button
         [activated]="profile.isActive"
       >
-        <div class="d-flex items-center">
-          <mat-icon class="mr-sm material-symbols-outlined" color="primary">person_outline</mat-icon>
+        <div class="flex items-center">
+          <mat-icon class="mr-2 material-symbols-outlined" color="primary">person_outline</mat-icon>
           <span class="menu-label">Profile</span>
         </div>
       </mat-list-item>
     </a>
   </mat-nav-list>
-  
+
   <mat-list-item
     class="logout-button !cursor-pointer !mb-1 !rounded-sm"
     button
     (click)="onLogout()"
   >
-    <div class="d-flex items-center">
-      <mat-icon class="mr-sm material-symbols-outlined" color="primary">logout</mat-icon>
+    <div class="flex items-center">
+      <mat-icon class="mr-2 material-symbols-outlined" color="primary">logout</mat-icon>
       <span class="menu-label">Logout</span>
     </div>
   </mat-list-item>
 </div>
-

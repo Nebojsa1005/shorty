@@ -1,8 +1,7 @@
-<div class="d-flex justify-between items-center">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
   <mat-form-field
-    class="w-6"
+    class="w-full md:w-1/2 search-field mb-4"
     appearance="outline"
-    class="search-field mb-md"
     color="primary"
   >
     <mat-label>Search</mat-label>
@@ -12,7 +11,7 @@
     </button>
   </mat-form-field>
 
-  <div class="w-6">
+  <div class="w-full md:w-1/2">
     <button
       mat-button
       (click)="updateOptions('1m')"
