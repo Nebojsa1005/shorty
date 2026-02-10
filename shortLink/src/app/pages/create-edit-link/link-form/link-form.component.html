@@ -84,4 +84,14 @@
       />
     </mat-form-field>
   </div>
+
+  @if (isEdit()) {
+    <div class="mt-4">
+      <label class="block text-sm font-medium mb-2">Analytics Data</label>
+      <mat-radio-group [formControl]="resetAnalyticsControl" class="flex gap-4">
+        <mat-radio-button [value]="ANALYTICS_OPTIONS.KEEP">Keep analytics</mat-radio-button>
+        <mat-radio-button [value]="ANALYTICS_OPTIONS.RESET">Reset analytics</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  }
 </form>

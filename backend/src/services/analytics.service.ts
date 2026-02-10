@@ -56,6 +56,20 @@ export const analyticsShortLinkVisited = async (shortLink: string, req: Request)
   }
 };
 
+export const analyticsShortLinkReset = async (shortLink: string) => {
+  const analytics = await AnalyticsModel.findOne({ shortLink });
+
+  if (analytics) {
+    await VisitModel.deleteMany({ analytics: analytics._id });
+
+    await AnalyticsModel.findByIdAndUpdate(analytics._id, {
+      viewCount: 0,
+      lastViewedOn: null,
+      entries: [{ date: new Date(), viewCount: 0 }],
+    });
+  }
+};
+
 export const analyticsShortLinkCreated = async (shortLink: string) => {
   return await AnalyticsModel.create({
     shortLink,

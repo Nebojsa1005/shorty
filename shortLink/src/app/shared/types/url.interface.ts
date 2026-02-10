@@ -15,6 +15,7 @@ export interface UrlLink {
 export interface UrlForm {
   value: UrlLink;
   valid: boolean;
+  resetAnalytics?: boolean;
 }
 
 export interface UrlSecurityOption {
