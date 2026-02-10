@@ -1,19 +1,18 @@
-import { Express, Request, Response } from "express";
+import { compare, hash } from "bcrypt";
 import * as dotenv from "dotenv";
+import { Express, Request, Response } from "express";
 import { nanoid } from "nanoid";
 import { UrlModel } from "../models/url.model";
-import { ServerResponse } from "../utils/server-response";
+import { UserModel } from "../models/user.model";
 import {
   analyticsShortLinkCreated,
+  analyticsShortLinkReset,
   analyticsShortLinkVisited,
 } from "../services/analytics.service";
-import { UserModel } from "../models/user.model";
-import { creteShortLinkCheck, populateUserSubscription, updateUserShortLinks } from "../services/user.service";
-import { SecurityOptions } from "../types/security-options.enum";
-import { compare, hash } from "bcrypt";
 import { expirationDateCheck } from "../services/url.service";
-import { checkMaxLinks } from "../utils/productLimitations/max-links";
-import { isUserSubscribed } from "../utils/productLimitations/is-user-subscribed";
+import { creteShortLinkCheck, updateUserShortLinks } from "../services/user.service";
+import { SecurityOptions } from "../types/security-options.enum";
+import { ServerResponse } from "../utils/server-response";
 
 dotenv.config();
 
@@ -76,8 +75,6 @@ const urlRoutes = (app: Express) => {
 
       if (suffix) link = `${link}/${suffix}`;
 
-      const shortLink = `${link}/${shortLinkId}`;
-
       try {
         let record: any = await UrlModel.findOne({
           shortLinkId,
@@ -87,7 +84,9 @@ const urlRoutes = (app: Express) => {
           return ServerResponse.serverError(res, 404, "Minified URL not found");
         }
 
-        await analyticsShortLinkVisited(shortLink, req);
+        if (record.security !== SecurityOptions.PASSWORD) {
+          await analyticsShortLinkVisited(record.shortLink, req);
+        }
 
         if (!expirationDateCheck) {
           record = {
@@ -183,7 +182,7 @@ const urlRoutes = (app: Express) => {
   );
 
   app.put("/api/url/edit/:id", async (req, res) => {
-    const { urlForm } = req.body;
+    const { urlForm, resetAnalytics } = req.body;
     const id = req.params["id"];
 
     try {
@@ -202,7 +201,11 @@ const urlRoutes = (app: Express) => {
         {
           new: true,
         }
-      );      
+      );
+
+      if (resetAnalytics && updatedUrlLink) {
+        await analyticsShortLinkReset(updatedUrlLink.shortLink);
+      }
 
       return ServerResponse.serverSuccess(
         res,
@@ -251,6 +254,7 @@ const urlRoutes = (app: Express) => {
       );
 
       if (verifiedPassword) {
+        await analyticsShortLinkVisited(shortLink.shortLink, req);
         return ServerResponse.serverSuccess(res, 200, "Password Correct");
       } else {
         return ServerResponse.serverError(res, 400, "Password Incorrect");

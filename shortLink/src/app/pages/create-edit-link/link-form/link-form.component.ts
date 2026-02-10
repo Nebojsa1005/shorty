@@ -10,15 +10,17 @@ import {
   output,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { tap } from 'rxjs';
+import { ANALYTICS_OPTIONS, AnalyticsOption } from '../../../shared/consts/analytics-options.const';
 import { UrlService } from '../../../services/url.service';
 import { urlValidator } from '../../../shared/validators/url-validator.validator';
 import { SecurityOptions } from '../../../shared/enums/security-options.enum';
@@ -38,6 +40,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatRadioModule,
   ],
   templateUrl: './link-form.component.html',
   styleUrl: './link-form.component.scss',
@@ -52,11 +55,13 @@ export class LinkFormComponent {
   expirationDateInput!: ElementRef;
 
   SecurityOptions = SecurityOptions;
+  ANALYTICS_OPTIONS = ANALYTICS_OPTIONS;
   currentTime = new Date().toISOString();
   showPassword = false;
 
   // Inputs
   existingUrlLink = input<UrlLink | undefined>();
+  isEdit = input<boolean>(false);
 
   // Outputs
   formChanges = output<any>();
@@ -75,6 +80,15 @@ export class LinkFormComponent {
     password: [''],
     expirationDate: [''],
   });
+
+  resetAnalyticsControl = new FormControl<AnalyticsOption>(ANALYTICS_OPTIONS.KEEP);
+
+  resetAnalyticsChanges$ = this.resetAnalyticsControl.valueChanges
+    .pipe(
+      takeUntilDestroyed(this.destroyRef),
+      tap(() => this.emitFormChanges())
+    )
+    .subscribe();
 
   securityOptionsChanges$ = this.controls.security.valueChanges
     .pipe(
@@ -98,12 +112,7 @@ export class LinkFormComponent {
   formValueChanges$ = this.formGroup.valueChanges
     .pipe(
       takeUntilDestroyed(this.destroyRef),
-      tap(() =>
-        this.formChanges.emit({
-          value: this.formGroup.getRawValue(),
-          valid: this.formGroup.valid,
-        })
-      )
+      tap(() => this.emitFormChanges())
     )
     .subscribe();
 
@@ -153,7 +162,16 @@ export class LinkFormComponent {
     effect(() => {
       if (!this.isCreateEditLinkDrawerOpened()) {
         this.formGroup.reset();
+        this.resetAnalyticsControl.setValue(ANALYTICS_OPTIONS.KEEP);
       }
+    });
+  }
+
+  emitFormChanges() {
+    this.formChanges.emit({
+      value: this.formGroup.getRawValue(),
+      valid: this.formGroup.valid,
+      resetAnalytics: this.resetAnalyticsControl.value === ANALYTICS_OPTIONS.RESET,
     });
   }
 
@@ -163,5 +181,6 @@ export class LinkFormComponent {
 
   ngOnDestroy(): void {
     this.formGroup.reset();
+    this.resetAnalyticsControl.setValue(ANALYTICS_OPTIONS.KEEP);
   }
 }

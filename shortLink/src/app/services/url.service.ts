@@ -189,6 +189,7 @@ export class UrlService {
     return this.http
       .put<Response>(`${environment.apiUrl}/api/url/edit/${id}`, {
         urlForm: this.urlForm()?.value,
+        resetAnalytics: this.urlForm()?.resetAnalytics ?? false,
       })
       .pipe(
         tap((response: Response) => {

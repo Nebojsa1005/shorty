@@ -6,6 +6,7 @@
   <app-link-form
     (formChanges)="onFormChange($event)"
     [existingUrlLink]="existingLink"
+    [isEdit]="isEdit ?? false"
   />
 
   <div class="actions-row">
