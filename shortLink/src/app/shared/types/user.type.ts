@@ -8,8 +8,12 @@ export type User = {
   subscription: Subscription
 };
 
-export type UserInfoUpdatePayload = {
-  email: string,
-  password: string
-  newPassword: string
+export type PersonalInfoPayload = {
+  name: string;
+  email: string;
+}
+
+export type PasswordUpdatePayload = {
+  currentPassword: string;
+  newPassword: string;
 }

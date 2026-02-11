@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { UserInfoUpdatePayload, User } from '../shared/types/user.type';
+import { PersonalInfoPayload, PasswordUpdatePayload, User } from '../shared/types/user.type';
 import { LocalStorageKeys } from '../shared/enums/local-storage.enum';
 import { environment } from '../../environments/environment';
 import { Response } from '../shared/types/response.type';
@@ -175,22 +175,43 @@ export class AuthService {
     this.router.navigate(['auth/sign-in']);
   }
 
-  updateUserEmail(payload: UserInfoUpdatePayload) {
-    return this.http.put(
-      `${environment.apiUrl}/api/auth/update-email/${this.user()?._id}`,
-      payload
-    );
-  }
-
-  updateUserInfo(payload: UserInfoUpdatePayload) {
+  updatePersonalInfo(payload: PersonalInfoPayload) {
     return this.http
       .put<Response>(
-        `${environment.apiUrl}/api/auth/update-user-info/${this.user()?._id}`,
+        `${environment.apiUrl}/api/auth/update-personal-info/${this.user()?._id}`,
         payload
       )
       .pipe(
         tap((res) => {
-          this.updateUser(res.data.user);
+          this.updateUser(res.data);
+
+          this.toastService.presentToast({
+            position: 'top',
+            message: res.message,
+            duration: 3000,
+            color: 'primary',
+          });
+        }),
+        catchError((error) => {
+          this.toastService.presentToast({
+            position: 'top',
+            message: error.error.message,
+            color: 'danger',
+          });
+          return of(null);
+        })
+      );
+  }
+
+  updatePassword(payload: PasswordUpdatePayload) {
+    return this.http
+      .put<Response>(
+        `${environment.apiUrl}/api/auth/update-password/${this.user()?._id}`,
+        payload
+      )
+      .pipe(
+        tap((res) => {
+          this.updateUser(res.data);
 
           this.toastService.presentToast({
             position: 'top',
