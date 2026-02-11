@@ -53,7 +53,11 @@ export class PricingService {
       .delete(
         `${environment.apiUrl}/api/subscriptions/${
           this.user()?.subscription.subscriptionId
-        }`
+        }`, {
+          body: {
+            userId: this.user()?._id,
+          }
+        }
       )
       .pipe(
         switchMap(() => {

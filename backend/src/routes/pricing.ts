@@ -4,6 +4,7 @@ import { Express } from "express";
 import {
   createUpdateSubscriptionHandler,
   cancelSubscriptionHandler,
+  deleteSubscriptionHandler,
 } from "../services/subscription.service";
 import { Server } from "socket.io";
 import { UserModel } from "../models/user.model";
@@ -62,6 +63,7 @@ const pricingRoutes = (app: Express, io: Server) => {
   app.delete("/api/subscriptions/:subscriptionId", async (req, res) => {
     try {
       const { subscriptionId } = req.params;
+      const { userId } = req.body;
       const response = await fetch(
         `${lemonSqueezyApiUrl}/subscriptions/${subscriptionId}`,
         {
@@ -70,6 +72,7 @@ const pricingRoutes = (app: Express, io: Server) => {
         }
       );
       const data = await response.json();
+      await deleteSubscriptionHandler({userId})
       return res.status(response.status).json(data);
     } catch (error) {
       return ServerResponse.serverError(
