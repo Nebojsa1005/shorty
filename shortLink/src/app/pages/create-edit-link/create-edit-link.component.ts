@@ -53,7 +53,7 @@ export class CreateEditLinkComponent {
     effect(() => {
       if (!this.canCreateLink() && !this.isEdit) {
         this.toastService.presentToast({
-          position: 'top',
+          position: 'bottom',
           message: 'You have no available links. Please upgrade your plan.',
           color: 'warning',
         });

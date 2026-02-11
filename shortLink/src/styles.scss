@@ -1,6 +1,5 @@
 @import "tailwindcss";
 /* You can add global styles to this file, and also import other style files */
-@import "theme/toast.scss";
 
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
 :root {
@@ -175,5 +174,27 @@ button {
   /* Focused label */
   &.mat-focused .mdc-floating-label {
     color: #9A4EAE !important;
+  }
+}
+
+/* Toast / Snackbar Styling */
+.toast-primary .mat-mdc-snackbar-surface,
+.toast-warning .mat-mdc-snackbar-surface,
+.toast-danger .mat-mdc-snackbar-surface,
+.success-snackbar .mat-mdc-snackbar-surface,
+.error-snackbar .mat-mdc-snackbar-surface {
+  background-color: #fff !important;
+  color: #151419 !important;
+  border-radius: 8px !important;
+  box-shadow: 0px 4px 12px rgba(21, 20, 25, 0.15) !important;
+}
+
+.toast-primary,
+.toast-warning,
+.toast-danger,
+.success-snackbar,
+.error-snackbar {
+  .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
+    color: #9a4eae !important;
   }
 }

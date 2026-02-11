@@ -39,7 +39,7 @@ export class PricingService {
         }),
         catchError((error) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.error?.message || 'Failed to fetch products',
             color: 'danger',
           });
@@ -69,7 +69,7 @@ export class PricingService {
         }),
         catchError((error) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.error?.message || 'Failed to cancel subscription',
             color: 'danger',
           });
@@ -87,7 +87,7 @@ export class PricingService {
         }),
         catchError((error) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.error?.message || 'Failed to fetch product',
             color: 'danger',
           });

@@ -105,7 +105,7 @@ export class UrlService {
         }),
         catchError((error) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.message,
             color: 'warning',
           });
@@ -120,7 +120,7 @@ export class UrlService {
       .pipe(
         catchError((error) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.error.message,
             color: 'danger',
           });
@@ -142,7 +142,7 @@ export class UrlService {
       .pipe(
         catchError((error) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.error.message,
             color: 'danger',
           });
@@ -163,7 +163,7 @@ export class UrlService {
       .pipe(
         tap((response: Response) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: response.message,
             color: 'primary',
           });
@@ -174,7 +174,7 @@ export class UrlService {
           console.log(error);
           
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.error.message,
             color: 'warning',
             duration: ToastDuration.LONG,
@@ -195,14 +195,14 @@ export class UrlService {
         tap((response: Response) => {
           this.router.navigate(['all-links']);
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: response.message,
             color: 'primary',
           });
         }),
         catchError((error) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.error.message,
             color: 'warning',
           });
@@ -219,14 +219,14 @@ export class UrlService {
         take(1),
         tap((response: Response) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: response.message,
             color: 'primary',
           });
         }),
         catchError((error) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.error.message,
             color: 'warning',
           });
@@ -245,7 +245,7 @@ export class UrlService {
         tap(() => (window.location.href = destinationUrl)),
         catchError((error) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.error.message,
             color: 'danger',
           });

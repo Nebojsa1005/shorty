@@ -112,7 +112,7 @@ export class AuthService {
           this.router.navigate(['/']);
 
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: res.message,
             duration: 3000,
             color: 'primary',
@@ -120,7 +120,7 @@ export class AuthService {
         }),
         catchError((error) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.error.message,
             color: 'danger',
           });
@@ -144,7 +144,7 @@ export class AuthService {
           this.router.navigate(['/']);
 
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: res.message,
             duration: 3000,
             color: 'primary',
@@ -152,7 +152,7 @@ export class AuthService {
         }),
         catchError((error) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.error.message,
             color: 'danger',
           });
@@ -186,7 +186,7 @@ export class AuthService {
           this.updateUser(res.data);
 
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: res.message,
             duration: 3000,
             color: 'primary',
@@ -194,7 +194,7 @@ export class AuthService {
         }),
         catchError((error) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.error.message,
             color: 'danger',
           });
@@ -214,7 +214,7 @@ export class AuthService {
           this.updateUser(res.data);
 
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: res.message,
             duration: 3000,
             color: 'primary',
@@ -222,7 +222,7 @@ export class AuthService {
         }),
         catchError((error) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.error.message,
             color: 'danger',
           });
@@ -244,7 +244,7 @@ export class AuthService {
         }),
         catchError((error) => {
           this.toastService.presentToast({
-            position: 'top',
+            position: 'bottom',
             message: error.error.message,
             color: 'danger',
           });

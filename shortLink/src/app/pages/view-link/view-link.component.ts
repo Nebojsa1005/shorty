@@ -57,7 +57,7 @@ export class ViewLinkComponent {
 
     if (!valid) {
       this.toastService.presentToast({
-        position: 'top',
+        position: 'bottom',
         message: 'Short Link Expired',
         duration: 5000,
         color: 'danger',
