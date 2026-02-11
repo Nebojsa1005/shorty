@@ -48,7 +48,7 @@ export class GoogleAuthService {
       .pipe(
         tap((res) => {
           this.authService.updateUser(res.data.user);
-          this.authService.saveUserToLocalStorage(res.data.user);
+          this.authService.saveUserIdToLocalStorage(res.data.user._id);
 
           this.router.navigate(['/']);
 
