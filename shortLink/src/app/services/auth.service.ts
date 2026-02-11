@@ -10,6 +10,7 @@ import { ToastService } from './toast-service.service';
 
 interface AuthState {
   user: User | null;
+  userLoading: boolean;
   isSignInButtonLoading: boolean;
   isSignUpButtonLoading: boolean;
 }
@@ -29,18 +30,33 @@ export class AuthService {
 
   state = signal<AuthState>({
     user: null,
+    userLoading: false,
     isSignInButtonLoading: false,
     isSignUpButtonLoading: false,
   });
 
   user = computed(() => this.state().user);
+  userLoading = computed(() => this.state().userLoading);
   isSignInButtonLoading = computed(() => this.state().isSignInButtonLoading);
   isSignUpButtonLoading = computed(() => this.state().isSignUpButtonLoading);
 
   constructor() {
-    const user = this.getUserFromLocalStorage();
+    // Migration: move old 'User' JSON object to new 'UserId' string
+    const oldUserRaw = localStorage.getItem('User');
+    if (oldUserRaw) {
+      try {
+        const oldUser = JSON.parse(oldUserRaw);
+        if (oldUser?._id) {
+          localStorage.setItem(LocalStorageKeys.USER_ID, oldUser._id);
+        }
+      } catch {}
+      localStorage.removeItem('User');
+    }
 
-    if (user) this.updateUser(user);
+    const userId = this.getUserIdFromLocalStorage();
+    if (userId) {
+      this.loadUser(userId);
+    }
   }
 
   updateState<K extends keyof AuthState>(prop: K, value: AuthState[K]) {
@@ -57,6 +73,28 @@ export class AuthService {
     }));
   }
 
+  loadUser(userId: string) {
+    this.state.update((state) => ({ ...state, userLoading: true }));
+
+    this.http
+      .get<Response>(
+        `${environment.apiUrl}/api/auth/refresh-user/${userId}`
+      )
+      .pipe(
+        tap((res) => {
+          this.updateUser(res.data);
+          this.state.update((state) => ({ ...state, userLoading: false }));
+        }),
+        catchError(() => {
+          localStorage.removeItem(LocalStorageKeys.USER_ID);
+          this.updateUser(null);
+          this.state.update((state) => ({ ...state, userLoading: false }));
+          return of(null);
+        })
+      )
+      .subscribe();
+  }
+
   signUp(userData: UserCredentials) {
     return this.http
       .post<Response>(
@@ -69,7 +107,7 @@ export class AuthService {
       .pipe(
         tap((res) => {
           this.updateUser(res.data.user);
-          this.saveUserToLocalStorage(res.data.user);
+          this.saveUserIdToLocalStorage(res.data.user._id);
 
           this.router.navigate(['/']);
 
@@ -101,7 +139,7 @@ export class AuthService {
       .pipe(
         tap((res) => {
           this.updateUser(res.data.user);
-          this.saveUserToLocalStorage(res.data.user);
+          this.saveUserIdToLocalStorage(res.data.user._id);
 
           this.router.navigate(['/']);
 
@@ -123,18 +161,16 @@ export class AuthService {
       );
   }
 
-  saveUserToLocalStorage(user: User) {
-    const userStringified = JSON.stringify(user);
-    localStorage.setItem(LocalStorageKeys.USER, userStringified);
+  saveUserIdToLocalStorage(userId: string) {
+    localStorage.setItem(LocalStorageKeys.USER_ID, userId);
   }
 
-  getUserFromLocalStorage() {
-    const userStringified = localStorage.getItem(LocalStorageKeys.USER);
-    return userStringified ? JSON.parse(userStringified) : null;
+  getUserIdFromLocalStorage(): string | null {
+    return localStorage.getItem(LocalStorageKeys.USER_ID);
   }
 
   logout() {
-    localStorage.setItem(LocalStorageKeys.USER, '');
+    localStorage.removeItem(LocalStorageKeys.USER_ID);
     this.updateUser(null);
     this.router.navigate(['auth/sign-in']);
   }
@@ -155,7 +191,6 @@ export class AuthService {
       .pipe(
         tap((res) => {
           this.updateUser(res.data.user);
-          this.saveUserToLocalStorage(res.data.user);
 
           this.toastService.presentToast({
             position: 'top',
@@ -185,7 +220,6 @@ export class AuthService {
       .pipe(
         tap((res) => {
           this.updateUser(res.data);
-          this.saveUserToLocalStorage(res.data);
         }),
         catchError((error) => {
           this.toastService.presentToast({
