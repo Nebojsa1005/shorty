@@ -71,10 +71,9 @@ export class AccountInformationComponent {
   updateUserInfo() {
     if (this.personalInfoForm.valid) {
       this.authService
-        .updateUserInfo({
+        .updatePersonalInfo({
+          name: this.personalInfoForm.value.name || '',
           email: this.personalInfoForm.value.email || '',
-          password: '',
-          newPassword: '',
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe();
@@ -90,13 +89,14 @@ export class AccountInformationComponent {
       }
 
       this.authService
-        .updateUserInfo({
-          email: this.user()?.email || '',
-          password: currentPassword || '',
+        .updatePassword({
+          currentPassword: currentPassword || '',
           newPassword: newPassword || '',
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe();
+        .subscribe(() => {
+          this.passwordForm.reset();
+        });
     }
   }
 }

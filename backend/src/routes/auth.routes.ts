@@ -82,42 +82,38 @@ const authRoutes = (app: Express) => {
     });
   });
 
-  app.put("/api/auth/update-email/:userId", async (req, res) => {
+  app.put("/api/auth/update-personal-info/:userId", async (req, res) => {
     try {
       const userId = req.params.userId;
-      const { newEmail, password } = req.body;
-      const user = await UserModel.findById(userId);
-      const verifiedPassword = await compare(password, user.password as string);
+      const { name, email } = req.body;
 
-      if (!verifiedPassword)
-        return ServerResponse.serverError(res, 401, "Password Incorrect");
-
-      const updatedUSer = await UserModel.findByIdAndUpdate(
+      await UserModel.findByIdAndUpdate(
         userId,
-        { email: newEmail },
+        { name, email },
         { new: true }
       );
+
+      const populatedUser = await populateUserSubscription(userId);
 
       return ServerResponse.serverSuccess(
         res,
         200,
-        "Email Updated",
-        updatedUSer
+        "Personal Info Updated",
+        populatedUser
       );
     } catch (err) {
-      return ServerResponse.serverError(res, 500, "Error", err);
+      return ServerResponse.serverError(res, 500, "Something Went Wrong", err);
     }
   });
 
-  app.put("/api/auth/update-user-info/:userId", async (req, res) => {
+  app.put("/api/auth/update-password/:userId", async (req, res) => {
     try {
       const userId = req.params.userId;
-      const { password, newPassword, email } = req.body;
+      const { currentPassword, newPassword } = req.body;
       const user = await UserModel.findById(userId);
-      
-      console.log(user);
+
       const verifiedPassword = await compare(
-        password,
+        currentPassword,
         user.password as string
       );
       if (!verifiedPassword)
@@ -128,18 +124,20 @@ const authRoutes = (app: Express) => {
         );
 
       const hashedPassword = await hash(newPassword, 10);
-        
-      const updatedUser = await UserModel.findByIdAndUpdate(
+
+      await UserModel.findByIdAndUpdate(
         userId,
-        { password: hashedPassword, email },
+        { password: hashedPassword },
         { new: true }
       );
+
+      const populatedUser = await populateUserSubscription(userId);
 
       return ServerResponse.serverSuccess(
         res,
         200,
         "Password Updated Successfully",
-        updatedUser
+        populatedUser
       );
     } catch (err) {
       return ServerResponse.serverError(res, 500, "Something Went Wrong", err);
