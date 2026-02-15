@@ -50,32 +50,9 @@
 
   <!-- Action Buttons -->
   <div class="action-buttons">
-    <button mat-stroked-button class="action-btn">
+    <button (click)="onChangePlan()" mat-stroked-button class="action-btn">
       <mat-icon>swap_horiz</mat-icon>
       Change Plan
     </button>
-    <button mat-stroked-button class="action-btn" (click)="getHistory()">
-      <mat-icon>history</mat-icon>
-      Billing History
-    </button>
   </div>
-
-  <!-- Billing History -->
-  @if (userBillingHistory.length) {
-    <div class="billing-history">
-      @for (invoice of userBillingHistory; track invoice.id) {
-        <div class="invoice-card">
-          <div class="invoice-info">
-            <p class="invoice-name">
-              {{ invoice.attributes.user_name }}
-              <mat-chip class="status-chip">{{ invoice.attributes.status_formatted }}</mat-chip>
-            </p>
-            <p class="invoice-date">Date: {{ invoice.attributes.created_at | date:'mediumDate' }}</p>
-            <a [href]="invoice.attributes.urls.invoice_url" target="_blank" class="invoice-link">View Details</a>
-          </div>
-          <span class="invoice-total">{{ invoice.attributes.total_formatted }}</span>
-        </div>
-      }
-    </div>
-  }
 </div>

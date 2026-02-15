@@ -13,6 +13,7 @@ import { MatButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { PricingPlan } from 'src/app/shared/enums/pricing.enum';
+import { Router } from '@angular/router';
 
 // Define tier order (lowest to highest)
 const PLAN_ORDER = [PricingPlan.ESSENTIAL, PricingPlan.PRO, PricingPlan.ULTIMATE];
@@ -27,13 +28,12 @@ const PLAN_ORDER = [PricingPlan.ESSENTIAL, PricingPlan.PRO, PricingPlan.ULTIMATE
 export class AccountSubscriptionComponent {
   private pricingService = inject(PricingService);
   private destroyRef = inject(DestroyRef);
+  private router = inject(Router)
 
   user = input.required<User | null>();
   userSubscription = computed(() => this.user()?.subscription);
   subscriptionProduct = computed(() => this.pricingService.subscriptionProduct());
   allProducts = computed(() => this.pricingService.products());
-
-  userBillingHistory: any[] = [];
 
   // Get the next tier product (higher than current)
   nextTierProduct = computed(() => {
@@ -77,14 +77,6 @@ export class AccountSubscriptionComponent {
       .subscribe();
   }
 
-  getHistory() {
-    this.pricingService
-      .getBillingHistory(this.userSubscription()?.subscriptionId || '')
-      .subscribe((e: any) => {
-        this.userBillingHistory = e.data;
-      });
-  }
-
   onCancelSubscription() {
     this.pricingService.cancelSubscription()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -99,5 +91,9 @@ export class AccountSubscriptionComponent {
         '_blank'
       );
     }
+  }
+
+  onChangePlan() {
+    this.router.navigate(['pricing'])
   }
 }
