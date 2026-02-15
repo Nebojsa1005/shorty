@@ -4,11 +4,10 @@
     class="sidenav !rounded-none"
     [mode]="sidenavMode()"
     [opened]="isDrawerOpened()"
-    fixedInViewport
     position="start"
   >
     <mat-toolbar></mat-toolbar>
-    <app-side-menu />
+    <app-side-menu (itemClicked)="onSideMenuItemClicked()" />
   </mat-sidenav>
 
   <!-- Right sidenav -->

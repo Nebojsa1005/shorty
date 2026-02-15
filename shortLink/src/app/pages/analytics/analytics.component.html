@@ -7,18 +7,12 @@
 
 	<!-- Row 2: Top Links + Views Over Time -->
 	<div class="flex flex-col md:flex-row gap-4 w-full">
-		<div class="w-full md:w-1/2">
+		<div class="w-full">
 			<app-top-links
 			  [topLinks]="topLinks()"
 			  [loading]="analyticsLoading()"
 			  (periodChange)="onPeriodChange($event)"
 			></app-top-links>
-		</div>
-		<div class="w-full md:w-1/2">
-			<app-time-span
-			  [allLinks]="bestPreformingLinks()"
-			  [allLinksLoading]="allLinksLoading()"
-			></app-time-span>
 		</div>
 	</div>
 

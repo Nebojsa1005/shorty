@@ -15,8 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class SideMenuComponent {
   private authService = inject(AuthService);
   private urlService = inject(UrlService)
-
-  constructor(private router: Router) {}
+  private router = inject(Router)
 
   navigate(path: string) {
     this.router.navigateByUrl(path);
