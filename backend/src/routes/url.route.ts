@@ -224,6 +224,12 @@ const urlRoutes = (app: Express) => {
     try {
       const deletedUrl = await UrlModel.findOneAndDelete({ _id: id });
 
+      if (deletedUrl) {
+        await UserModel.findByIdAndUpdate(deletedUrl.user, {
+          $pull: { shortLinks: id },
+        });
+      }
+
       return ServerResponse.serverSuccess(
         res,
         200,

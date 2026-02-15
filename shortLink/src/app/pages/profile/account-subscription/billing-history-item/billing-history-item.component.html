@@ -1,0 +1,8 @@
+<div class="invoice-card">
+  <div class="invoice-info">
+    <p class="invoice-name">{{ productName() }}</p>
+    <p class="invoice-date">{{ invoice().attributes.created_at | date:'mediumDate' }}</p>
+    <a [href]="invoice().attributes.urls.invoice_url" target="_blank" class="invoice-link">View Receipt</a>
+  </div>
+  <span class="invoice-total">{{ invoice().attributes.total_formatted }}</span>
+</div>

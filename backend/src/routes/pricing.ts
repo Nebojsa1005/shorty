@@ -83,18 +83,76 @@ const pricingRoutes = (app: Express, io: Server) => {
     }
   });
 
-  // Proxy route: Get billing history (subscription invoices)
+  // Proxy route: Get billing history (all subscription invoices for a user)
   app.get("/api/subscription-invoices", async (req, res) => {
     try {
-      const subscriptionId = req.query.subscription_id;
-      const response = await fetch(
-        `${lemonSqueezyApiUrl}/subscription-invoices?filter[subscription_id]=${subscriptionId}`,
-        {
-          headers: lemonSqueezyHeaders,
-        }
+      const userId = req.query.user_id as string;
+      const page = Number(req.query.page) || 1;
+      const size = Number(req.query.size) || 20;
+
+      const user = await UserModel.findById(userId);
+      if (!user) {
+        return ServerResponse.serverError(res, 404, "User not found");
+      }
+
+      // Get all subscriptions for this user by email
+      const subsUrl = `${lemonSqueezyApiUrl}/subscriptions?filter[user_email]=${encodeURIComponent(user.email)}`;
+      const subsResponse = await fetch(subsUrl, { headers: lemonSqueezyHeaders });
+      const subsData = await subsResponse.json();
+      const subscriptions = subsData.data || [];
+
+      // Build subscription_id -> product_name map
+      const productNameMap: Record<string, string> = {};
+      for (const sub of subscriptions) {
+        productNameMap[sub.id] = sub.attributes.product_name;
+      }
+
+      // Fetch invoices for each subscription in parallel
+      const invoicePromises = subscriptions.map((sub: any) =>
+        fetch(
+          `${lemonSqueezyApiUrl}/subscription-invoices?filter[subscription_id]=${sub.id}&page[size]=100`,
+          { headers: lemonSqueezyHeaders }
+        ).then((r) => r.json())
       );
-      const data = await response.json();
-      return res.status(response.status).json(data);
+      const invoiceResults = await Promise.all(invoicePromises);
+
+      // Merge all invoices and attach product_name
+      const allInvoices: any[] = [];
+      for (const result of invoiceResults) {
+        for (const invoice of result.data || []) {
+          invoice.attributes.product_name =
+            productNameMap[invoice.attributes.subscription_id] || "Subscription";
+          allInvoices.push(invoice);
+        }
+      }
+
+      // Sort by created_at descending (newest first)
+      allInvoices.sort(
+        (a, b) =>
+          new Date(b.attributes.created_at).getTime() -
+          new Date(a.attributes.created_at).getTime()
+      );
+
+      // Paginate
+      const total = allInvoices.length;
+      const lastPage = Math.max(1, Math.ceil(total / size));
+      const start = (page - 1) * size;
+      const paginatedInvoices = allInvoices.slice(start, start + size);
+
+      return res.status(200).json({
+        data: paginatedInvoices,
+        invoiceResults,
+        allInvoices,
+        subscriptions,
+        meta: {
+          page: {
+            currentPage: page,
+            lastPage,
+            perPage: size,
+            total,
+          },
+        },
+      });
     } catch (error) {
       return ServerResponse.serverError(
         res,

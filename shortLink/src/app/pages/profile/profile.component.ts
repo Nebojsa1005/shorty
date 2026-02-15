@@ -1,12 +1,13 @@
 import { Component, computed, inject } from '@angular/core';
 import { AccountInformationComponent } from './account-information/account-information.component';
 import { AccountSubscriptionComponent } from './account-subscription/account-subscription.component';
+import { BillingHistoryListComponent } from './account-subscription/billing-history-list/billing-history-list.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { PricingService } from 'src/app/services/pricing.service';
 
 @Component({
   selector: 'app-profile',
-  imports: [AccountInformationComponent, AccountSubscriptionComponent],
+  imports: [AccountInformationComponent, AccountSubscriptionComponent, BillingHistoryListComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })

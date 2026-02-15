@@ -1,0 +1,42 @@
+.invoice-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid rgba(234, 234, 234, 1);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+
+.invoice-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.invoice-name {
+  font-weight: 600;
+  margin: 0;
+  color: #151419;
+}
+
+.invoice-date {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+.invoice-link {
+  font-size: 0.875rem;
+  color: #9A4EAE;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.invoice-total {
+  font-weight: 600;
+  color: #151419;
+}

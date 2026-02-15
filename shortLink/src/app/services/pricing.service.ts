@@ -96,9 +96,11 @@ export class PricingService {
       );
   }
 
-  getBillingHistory(subscriptionId: string) {
-    return this.http.get<Response>(
-      `${environment.apiUrl}/api/subscription-invoices?subscription_id=${subscriptionId}`
+  getBillingHistory(userId: string, page = 2, size = 20) {
+    return this.http.get<any>(
+      `${environment.apiUrl}/api/subscription-invoices?user_id=${userId}&page=${page}&size=${size}`
+    ).pipe(
+      tap((a) => console.log(a) )
     );
   }
 
