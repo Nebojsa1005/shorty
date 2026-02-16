@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
@@ -17,8 +17,14 @@ export class SideMenuComponent {
   private urlService = inject(UrlService)
   private router = inject(Router)
 
+  itemClicked = output<void>();
+
   navigate(path: string) {
     this.router.navigateByUrl(path);
+  }
+
+  onNavItemClick() {
+    this.itemClicked.emit();
   }
 
   onLogout() {

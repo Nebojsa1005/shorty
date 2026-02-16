@@ -3,7 +3,7 @@ main {
 }
 
 .sidenav {
-  border-right: 1px solid var(--ion-text-color-step-400);
+  border-right: 1px solid #EAEAEA
 }
 .mat-drawer-inner-container {
 	overflow: hidden;
@@ -16,6 +16,12 @@ main {
 .create-edit-drawer {
   width: 40%;
 }
+
+
+mat-sidenav, mat-sidenav mat-toolbar {
+  background: white;
+}
+
 
 @media (max-width: 1023px) {
   .create-edit-drawer {
