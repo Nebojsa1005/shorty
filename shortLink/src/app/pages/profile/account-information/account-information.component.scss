@@ -25,6 +25,11 @@
   color: #151419 !important;
   border-color: rgba(234, 234, 234, 1) !important;
 
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
   mat-icon {
     width: 18px;
     height: 18px;
@@ -98,6 +103,13 @@
       color: #151419;
     }
   }
+}
+
+.password-mismatch-error {
+  color: #EF4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
 }
 
 @media (max-width: 640px) {

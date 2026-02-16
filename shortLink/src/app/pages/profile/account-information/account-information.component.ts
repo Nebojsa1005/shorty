@@ -1,5 +1,5 @@
-import { Component, DestroyRef, inject, input, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -40,6 +40,45 @@ export class AccountInformationComponent {
 
   showCurrentPassword = signal(false);
   showNewPassword = signal(false);
+
+  private personalInfoChanges = toSignal(this.personalInfoForm.valueChanges, {
+    initialValue: this.personalInfoForm.value,
+  });
+
+  private passwordChanges = toSignal(this.passwordForm.valueChanges, {
+    initialValue: this.passwordForm.value,
+  });
+
+  isPersonalInfoEditDisabled = computed(() => {
+    const current = this.personalInfoChanges();
+    const user = this.user();
+    const name = (current.name || '').trim();
+    const email = (current.email || '').trim();
+
+    if (!name && !email) return true;
+
+    const nameUnchanged = name === (user?.name || '');
+    const emailUnchanged = email === (user?.email || '');
+    return nameUnchanged && emailUnchanged;
+  });
+
+  passwordMismatch = computed(() => {
+    const current = this.passwordChanges();
+    const newPw = (current.newPassword || '').trim();
+    const confirmPw = (current.confirmNewPassword || '').trim();
+    return newPw.length > 0 && confirmPw.length > 0 && newPw !== confirmPw;
+  });
+
+  isPasswordEditDisabled = computed(() => {
+    const current = this.passwordChanges();
+    const currentPw = (current.currentPassword || '').trim();
+    const newPw = (current.newPassword || '').trim();
+    const confirmPw = (current.confirmNewPassword || '').trim();
+
+    if (!currentPw || !newPw || !confirmPw) return true;
+    if (newPw !== confirmPw) return true;
+    return false;
+  });
 
   get personalInfoFormControls() {
     return this.personalInfoForm.controls;

@@ -2,7 +2,7 @@
 <div class="card p-4 mb-4">
   <div class="card-header">
     <h3 class="card-title">Personal Information</h3>
-    <button mat-stroked-button (click)="updateUserInfo()" class="edit-btn">
+    <button mat-stroked-button (click)="updateUserInfo()" class="edit-btn" [disabled]="isPersonalInfoEditDisabled()">
       <mat-icon>
         <img src="assets/clipboard-edit-icon.png" alt="" />
       </mat-icon>
@@ -35,7 +35,7 @@
 <div class="card p-4">
   <div class="card-header">
     <h3 class="card-title">Password</h3>
-    <button mat-stroked-button (click)="updatePassword()" class="edit-btn">
+    <button mat-stroked-button (click)="updatePassword()" class="edit-btn" [disabled]="isPasswordEditDisabled()">
       <mat-icon>
         <img src="assets/clipboard-edit-icon.png" alt="" />
       </mat-icon>
@@ -85,5 +85,9 @@
         />
       </div>
     </div>
+
+    @if (passwordMismatch()) {
+      <p class="password-mismatch-error">New password and confirm password do not match.</p>
+    }
   </form>
 </div>
