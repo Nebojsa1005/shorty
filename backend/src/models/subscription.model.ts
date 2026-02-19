@@ -23,10 +23,16 @@ export interface DeleteSubscriptionPayload {
   userId: string;
 }
 
+export const PRODUCT_IDS = {
+  [541888]: 541888,
+  [542010]: 542010,
+  [542013]: 542013
+} as const
+
 export const PRODUCT_LINKS_ALLOWED = {
-  [541888]: 10,
-  [542010]: 50,
-  [542013]: 150
+  [PRODUCT_IDS[541888]]: 10,
+  [PRODUCT_IDS[542010]]: 50,
+  [PRODUCT_IDS[542013]]: 150
 } as const
 
 

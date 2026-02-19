@@ -1,4 +1,5 @@
 import { SecurityOptions } from '../enums/security-options.enum';
+import { LinkStatus } from '../enums/link-status.enum';
 import { Analytics } from './analytics.interface';
 
 export interface UrlLink {
@@ -8,8 +9,13 @@ export interface UrlLink {
   security: SecurityOptions;
   suffix?: string;
   password?: string;
-  expirationDate?: string
-  analytics: Analytics
+  expirationDate?: string;
+  status?: LinkStatus;
+  expiredAt?: string;
+  planExpiresAt?: string;
+  deleteAfterExpiredDays?: number;
+  createdAt?: string;
+  analytics: Analytics;
 }
 
 export interface UrlForm {

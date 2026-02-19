@@ -4,24 +4,36 @@
 </div>
 
 <div class="w-full flex flex-col md:flex-row gap-4 md:justify-between md:items-center mb-4">
-  <!-- Search Input -->
-  <mat-form-field
-    appearance="outline"
-    class="search-field mb-4 rounded-4xl"
-    color="primary"
-  >
-    <mat-label>Search</mat-label>
-    <input matInput [formControl]="searchControl"/>
-    <button mat-icon-button matSuffix disabled>
-      <mat-icon>search</mat-icon>
-    </button>
-  </mat-form-field>
+  <div class="flex flex-col md:flex-row gap-4 items-start md:items-center">
+    <!-- Search Input -->
+    <mat-form-field
+      appearance="outline"
+      class="search-field mb-4 rounded-4xl"
+      color="primary"
+    >
+      <mat-label>Search</mat-label>
+      <input matInput [formControl]="searchControl"/>
+      <button mat-icon-button matSuffix disabled>
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <!-- Status Filter -->
+    <mat-form-field appearance="outline" class="status-filter mb-4" color="primary">
+      <mat-label>Status</mat-label>
+      <mat-select [formControl]="statusFilter">
+        <mat-option value="all">All</mat-option>
+        <mat-option value="active">Active</mat-option>
+        <mat-option value="expired">Expired</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
   <button mat-flat-button color="primary" [disabled]="!canCreateLink()" (click)="newLink()"> <mat-icon>add</mat-icon> New Link</button>
 </div>
 
 <!-- Table Component -->
 <app-table-links
-  [data]="allUrls() | tableSearch : searchControl.value"
+  [data]="allUrls() | statusFilter : statusFilter.value | tableSearch : searchControl.value"
   [tableLoading]="tableLoading()"
 />

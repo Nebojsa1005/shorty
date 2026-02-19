@@ -15,6 +15,7 @@ import pricingRoutes from "./routes/pricing";
 import analyticsRoutes from "./routes/analytics.route";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
+import { startLinkExpirationCron } from "./services/link-expiration-cron";
 
 const app = express();
 app.set("trust proxy", true);
@@ -123,6 +124,8 @@ urlRoutes(app);
 authRoutes(app);
 pricingRoutes(app, io);
 analyticsRoutes(app);
+
+startLinkExpirationCron();
 
 server.listen(process.env.PORT || "3000", () => {
   console.log(
