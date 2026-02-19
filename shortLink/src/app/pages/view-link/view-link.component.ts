@@ -12,6 +12,7 @@ import { tap } from 'rxjs';
 import { UrlService } from '../../services/url.service';
 import { SecurityOptions } from '../../shared/enums/security-options.enum';
 import { UrlLink } from '../../shared/types/url.interface';
+import { LinkStatus } from '../../shared/enums/link-status.enum';
 import { ToastService } from '../../services/toast-service.service';
 @Component({
   selector: 'app-view-link',
@@ -48,6 +49,11 @@ export class ViewLinkComponent {
       return;
     }
 
+    // Check status field from backend
+    if (shortLink.status === LinkStatus.EXPIRED) {
+      return false;
+    }
+
     if (!shortLink.expirationDate) {
       return true;
     }
@@ -56,12 +62,6 @@ export class ViewLinkComponent {
       new Date(shortLink.expirationDate).getTime() > new Date().getTime();
 
     if (!valid) {
-      this.toastService.presentToast({
-        position: 'bottom',
-        message: 'Short Link Expired',
-        duration: 5000,
-        color: 'danger',
-      });
       return false;
     }
     return true;

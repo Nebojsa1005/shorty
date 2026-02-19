@@ -11,4 +11,6 @@ export const expirationDateCheck = (url: UrlDocument): boolean => {
 	const expirationDate = new Date(url.expirationDate).getTime()
 
 	if (expirationDate < now) return false
+
+	return true
 }

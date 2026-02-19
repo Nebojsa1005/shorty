@@ -1,0 +1,29 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>Reactivate Link</h2>
+    <p class="link-name">{{ linkName }}</p>
+  </div>
+
+  <div class="dialog-content">
+    <mat-checkbox
+      [checked]="noExpiration()"
+      (change)="toggleNoExpiration()"
+    >
+      Remove expiration (link never expires)
+    </mat-checkbox>
+
+    @if (!noExpiration()) {
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>New expiration date</mat-label>
+        <input matInput [matDatepicker]="picker" [formControl]="expirationDateControl" [min]="minDate" />
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    }
+  </div>
+
+  <div class="dialog-actions">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-flat-button color="primary" (click)="onReactivate()">Reactivate</button>
+  </div>
+</div>

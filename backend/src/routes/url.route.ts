@@ -10,9 +10,11 @@ import {
   analyticsShortLinkVisited,
 } from "../services/analytics.service";
 import { expirationDateCheck } from "../services/url.service";
-import { creteShortLinkCheck, updateUserShortLinks } from "../services/user.service";
+import { creteShortLinkCheck, updateUserShortLinks, populateUserSubscription } from "../services/user.service";
 import { SecurityOptions } from "../types/security-options.enum";
+import { LinkStatus } from "../types/link-status.enum";
 import { ServerResponse } from "../utils/server-response";
+import { getExpirationConfigForProduct } from "../utils/expiration-defaults";
 
 dotenv.config();
 
@@ -20,6 +22,16 @@ const BASE_URL =
   process.env.NODE_ENV === "production"
     ? process.env.FRONT_END_ORIGIN
     : process.env.CLIENT_ORIGIN;
+
+const isLinkExpired = (record: any): boolean => {
+  if (record.status === LinkStatus.EXPIRED) return true;
+
+  const now = Date.now();
+  if (record.expirationDate && new Date(record.expirationDate).getTime() < now) return true;
+  if (record.planExpiresAt && new Date(record.planExpiresAt).getTime() < now) return true;
+
+  return false;
+};
 
 const urlRoutes = (app: Express) => {
   app.get("/api/url/get-all-urls/:userId", async (req, res) => {
@@ -84,11 +96,13 @@ const urlRoutes = (app: Express) => {
           return ServerResponse.serverError(res, 404, "Minified URL not found");
         }
 
-        if (record.security !== SecurityOptions.PASSWORD) {
+        const expired = isLinkExpired(record);
+
+        if (!expired && record.security !== SecurityOptions.PASSWORD) {
           await analyticsShortLinkVisited(record.shortLink, req);
         }
 
-        if (!expirationDateCheck) {
+        if (expired) {
           record = {
             _id: record._id,
             destinationUrl: "",
@@ -99,6 +113,7 @@ const urlRoutes = (app: Express) => {
             password: record.password,
             security: record.security,
             expirationDate: record.expirationDate,
+            status: LinkStatus.EXPIRED,
             analytics: record.analytics,
             user: record.user,
             createdAt: record.createdAt,
@@ -149,6 +164,15 @@ const urlRoutes = (app: Express) => {
             return;
           }
 
+          // Look up user's subscription to get plan-based expiration config
+          const user = await populateUserSubscription(userId);
+          const productId = user.subscription?.productId;
+          const expirationConfig = getExpirationConfigForProduct(productId);
+
+          const planExpiresAt = expirationConfig.planExpirationDays != null
+            ? new Date(Date.now() + expirationConfig.planExpirationDays * 86400000)
+            : undefined;
+
           const analytics = await analyticsShortLinkCreated(shortLink);
 
           const url = await UrlModel.create({
@@ -162,6 +186,9 @@ const urlRoutes = (app: Express) => {
             analytics: analytics._id,
             user: userId,
             shortLinkId,
+            status: LinkStatus.ACTIVE,
+            planExpiresAt,
+            deleteAfterExpiredDays: expirationConfig.deleteAfterExpiredDays,
           });
 
           await updateUserShortLinks(userId, url._id);
@@ -215,6 +242,107 @@ const urlRoutes = (app: Express) => {
       );
     } catch (error) {
       return ServerResponse.serverError(res, 404, error.message, error);
+    }
+  });
+
+  app.put("/api/url/reactivate/:id", async (req: Request, res: Response): Promise<any> => {
+    try {
+      const { id } = req.params;
+      const { expirationDate, userId } = req.body;
+
+      const record = await UrlModel.findById(id);
+      if (!record) {
+        return ServerResponse.serverError(res, 404, "Link not found");
+      }
+
+      // Recalculate plan-based expiration from current date
+      const user = await populateUserSubscription(userId);
+      const productId = user.subscription?.productId;
+      const expirationConfig = getExpirationConfigForProduct(productId);
+
+      const planExpiresAt = expirationConfig.planExpirationDays != null
+        ? new Date(Date.now() + expirationConfig.planExpirationDays * 86400000)
+        : undefined;
+
+      const updatedLink = await UrlModel.findByIdAndUpdate(
+        id,
+        {
+          status: LinkStatus.ACTIVE,
+          expirationDate: expirationDate || null,
+          expiredAt: null,
+          planExpiresAt,
+          deleteAfterExpiredDays: expirationConfig.deleteAfterExpiredDays,
+        },
+        { new: true }
+      );
+
+      return ServerResponse.serverSuccess(
+        res,
+        200,
+        "Link reactivated successfully",
+        updatedLink
+      );
+    } catch (error) {
+      return ServerResponse.serverError(res, 500, error.message, error);
+    }
+  });
+
+  app.post("/api/url/clone/:id", async (req: Request, res: Response): Promise<any> => {
+    try {
+      const { id } = req.params;
+      const { userId } = req.body;
+
+      const original = await UrlModel.findById(id);
+      if (!original) {
+        return ServerResponse.serverError(res, 404, "Link not found");
+      }
+
+      const check = await creteShortLinkCheck(res, userId);
+      if (check !== true) {
+        return;
+      }
+
+      // Get plan-based expiration config
+      const user = await populateUserSubscription(userId);
+      const productId = user.subscription?.productId;
+      const expirationConfig = getExpirationConfigForProduct(productId);
+
+      const planExpiresAt = expirationConfig.planExpirationDays != null
+        ? new Date(Date.now() + expirationConfig.planExpirationDays * 86400000)
+        : undefined;
+
+      const shortLinkId = nanoid(10);
+      const shortLink = `${BASE_URL}${
+        original.suffix ? "/" + original.suffix : ""
+      }/${shortLinkId}`;
+
+      const analytics = await analyticsShortLinkCreated(shortLink);
+
+      const clonedUrl = await UrlModel.create({
+        destinationUrl: original.destinationUrl,
+        shortLink,
+        urlName: `${original.urlName} (copy)`,
+        suffix: original.suffix,
+        password: original.password,
+        security: original.security,
+        analytics: analytics._id,
+        user: userId,
+        shortLinkId,
+        status: LinkStatus.ACTIVE,
+        planExpiresAt,
+        deleteAfterExpiredDays: expirationConfig.deleteAfterExpiredDays,
+      });
+
+      await updateUserShortLinks(userId, clonedUrl._id);
+
+      return ServerResponse.serverSuccess(
+        res,
+        200,
+        "Link cloned successfully",
+        clonedUrl
+      );
+    } catch (error) {
+      return ServerResponse.serverError(res, 500, error.message, error);
     }
   });
 

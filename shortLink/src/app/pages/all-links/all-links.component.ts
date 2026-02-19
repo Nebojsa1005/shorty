@@ -6,8 +6,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { TableSearchPipe } from 'src/app/shared/pipes/table-search.pipe';
+import { StatusFilterPipe } from 'src/app/shared/pipes/status-filter.pipe';
 import { UrlService } from '../../services/url.service';
 import { TableLinksComponent } from '../../shared/components/table-links/table-links.component';
 
@@ -20,8 +22,10 @@ import { TableLinksComponent } from '../../shared/components/table-links/table-l
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatSelectModule,
     TableLinksComponent,
     TableSearchPipe,
+    StatusFilterPipe,
   ],
   templateUrl: './all-links.component.html',
   styleUrl: './all-links.component.scss',
@@ -38,6 +42,7 @@ export class AllLinksComponent {
   );
 
   searchControl = new FormControl<string>('');
+  statusFilter = new FormControl<string>('all');
 
   searchControlValueChanges$ = this.searchControl.valueChanges.pipe(
     debounceTime(300),

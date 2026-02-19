@@ -236,6 +236,63 @@ export class UrlService {
       );
   }
 
+  reactivateLink(id: string, expirationDate: string | null) {
+    const userId = this.user()?._id;
+    if (!userId) return of(null);
+
+    return this.http
+      .put<Response>(`${environment.apiUrl}/api/url/reactivate/${id}`, {
+        expirationDate,
+        userId,
+      })
+      .pipe(
+        tap((response: Response) => {
+          this.toastService.presentToast({
+            position: 'bottom',
+            message: response.message,
+            color: 'primary',
+          });
+        }),
+        catchError((error) => {
+          this.toastService.presentToast({
+            position: 'bottom',
+            message: error.error.message,
+            color: 'warning',
+          });
+          return of(null);
+        }),
+        switchMap(() => this.fetchAllUrls())
+      );
+  }
+
+  cloneLink(id: string) {
+    const userId = this.user()?._id;
+    if (!userId) return of(null);
+
+    return this.http
+      .post<Response>(`${environment.apiUrl}/api/url/clone/${id}`, {
+        userId,
+      })
+      .pipe(
+        tap((response: Response) => {
+          this.toastService.presentToast({
+            position: 'bottom',
+            message: response.message,
+            color: 'primary',
+          });
+        }),
+        catchError((error) => {
+          this.toastService.presentToast({
+            position: 'bottom',
+            message: error.error.message,
+            color: 'warning',
+          });
+          return of(null);
+        }),
+        switchMap(() => this.fetchAllUrls())
+      );
+  }
+
   passwordCheck(password: string, id: string, destinationUrl: string) {
     return this.http
       .get<Response>(
