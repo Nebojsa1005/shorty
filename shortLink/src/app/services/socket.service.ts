@@ -24,6 +24,12 @@ export interface SubscriptionUpdatedEvent {
   productId?: string;
 }
 
+export interface LinksUpdatedEvent {
+  type: 'expired' | 'deleted';
+  linkIds: string[];
+  userId: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -39,11 +45,13 @@ export class SocketService {
   private paymentSuccessSubject = new Subject<PaymentSuccessEvent>();
   private paymentFailedSubject = new Subject<PaymentFailedEvent>();
   private subscriptionUpdatedSubject = new Subject<SubscriptionUpdatedEvent>();
+  private linksUpdatedSubject = new Subject<LinksUpdatedEvent>();
 
   // Observables for components to subscribe to
   public paymentSuccess$ = this.paymentSuccessSubject.asObservable();
   public paymentFailed$ = this.paymentFailedSubject.asObservable();
   public subscriptionUpdated$ = this.subscriptionUpdatedSubject.asObservable();
+  public linksUpdated$ = this.linksUpdatedSubject.asObservable();
 
   constructor() {
     this.socket = io(environment.apiUrl, {
@@ -89,6 +97,11 @@ export class SocketService {
     this.socket.on('payment-failed', (data: PaymentFailedEvent) => {
       console.error('❌ Payment failed:', data);
       this.paymentFailedSubject.next(data);
+    });
+
+    this.socket.on('links:updated', (data: LinksUpdatedEvent) => {
+      console.log('🔗 Links updated via cron:', data);
+      this.linksUpdatedSubject.next(data);
     });
   }
 

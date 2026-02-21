@@ -7,9 +7,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { TableSearchPipe } from 'src/app/shared/pipes/table-search.pipe';
 import { StatusFilterPipe } from 'src/app/shared/pipes/status-filter.pipe';
+import { SocketService } from '../../services/socket.service';
 import { UrlService } from '../../services/url.service';
 import { TableLinksComponent } from '../../shared/components/table-links/table-links.component';
 
@@ -33,6 +34,7 @@ import { TableLinksComponent } from '../../shared/components/table-links/table-l
 export class AllLinksComponent {
   private destroyRef = inject(DestroyRef);
   private urlService = inject(UrlService);
+  private socketService = inject(SocketService);
 
   tableLoading = computed(() => this.urlService.allUrlsLoading());
   allUrls = computed(() => this.urlService.allUrls());
@@ -55,6 +57,15 @@ export class AllLinksComponent {
       .fetchAllUrls()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.urlService.updateState('allUrlsLoading', false));
+
+    // Reload links when cron job expires or deletes links
+    this.socketService.linksUpdated$
+      .pipe(
+        debounceTime(500),
+        switchMap(() => this.urlService.fetchAllUrls()),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
   }
 
   ionViewDidLeave() {

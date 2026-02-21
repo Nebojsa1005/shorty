@@ -125,7 +125,7 @@ authRoutes(app);
 pricingRoutes(app, io);
 analyticsRoutes(app);
 
-startLinkExpirationCron();
+startLinkExpirationCron(io);
 
 server.listen(process.env.PORT || "3000", () => {
   console.log(
