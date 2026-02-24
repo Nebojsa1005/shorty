@@ -169,9 +169,11 @@ const urlRoutes = (app: Express) => {
           const productId = user.subscription?.productId;
           const expirationConfig = getExpirationConfigForProduct(productId);
 
-          const planExpiresAt = expirationConfig.planExpirationDays != null
-            ? new Date(Date.now() + expirationConfig.planExpirationDays * 86400000)
-            : undefined;
+          const planExpiresAt = expirationDate
+            ? null  // user set a custom expiration date → skip plan-based expiration
+            : expirationConfig.planExpirationDays != null
+              ? new Date(Date.now() + expirationConfig.planExpirationDays * 86400000)
+              : undefined;
 
           const analytics = await analyticsShortLinkCreated(shortLink);
 
@@ -248,7 +250,7 @@ const urlRoutes = (app: Express) => {
   app.put("/api/url/reactivate/:id", async (req: Request, res: Response): Promise<any> => {
     try {
       const { id } = req.params;
-      const { expirationDate, userId } = req.body;
+      const { expirationDate, userId, noExpiration } = req.body;
 
       const record = await UrlModel.findById(id);
       if (!record) {
@@ -260,9 +262,11 @@ const urlRoutes = (app: Express) => {
       const productId = user.subscription?.productId;
       const expirationConfig = getExpirationConfigForProduct(productId);
 
-      const planExpiresAt = expirationConfig.planExpirationDays != null
-        ? new Date(Date.now() + expirationConfig.planExpirationDays * 86400000)
-        : undefined;
+      const planExpiresAt = (expirationDate || noExpiration)
+        ? null  // custom date OR explicitly "never" → skip plan-based expiration
+        : expirationConfig.planExpirationDays != null
+          ? new Date(Date.now() + expirationConfig.planExpirationDays * 86400000)
+          : undefined;
 
       const updatedLink = await UrlModel.findByIdAndUpdate(
         id,
