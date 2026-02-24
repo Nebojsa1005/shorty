@@ -54,6 +54,6 @@ export class ReactivateLinkDialogComponent {
       ? null
       : this.expirationDateControl.value?.toISOString() ?? null;
 
-    this.dialogRef.close({ expirationDate });
+    this.dialogRef.close({ expirationDate, noExpiration: this.noExpiration() });
   }
 }
