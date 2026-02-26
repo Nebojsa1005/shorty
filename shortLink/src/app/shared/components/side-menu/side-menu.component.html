@@ -97,6 +97,15 @@
     </a>
   </mat-nav-list>
 
+  <div class="px-2 pb-2">
+    <span
+      class="plan-badge"
+      [class.plan-badge--essential]="planName() === 'Essential'"
+      [class.plan-badge--pro]="planName() === 'Pro'"
+      [class.plan-badge--ultimate]="planName() === 'Ultimate'"
+    >{{ planName() }}</span>
+  </div>
+
   <mat-list-item
     class="logout-button !cursor-pointer !mb-1 !rounded-sm"
     button

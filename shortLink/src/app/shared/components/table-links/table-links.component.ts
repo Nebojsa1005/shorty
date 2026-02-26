@@ -137,7 +137,7 @@ export class TableLinksComponent {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.urlService
-          .reactivateLink(link._id, result.expirationDate)
+          .reactivateLink(link._id, result.expirationDate, result.noExpiration)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe();
       }

@@ -15,6 +15,7 @@ import { SecurityOptions } from "../types/security-options.enum";
 import { LinkStatus } from "../types/link-status.enum";
 import { ServerResponse } from "../utils/server-response";
 import { getExpirationConfigForProduct } from "../utils/expiration-defaults";
+import { getPlanFeaturesForProduct } from "../utils/plan-features";
 
 dotenv.config();
 
@@ -168,6 +169,25 @@ const urlRoutes = (app: Express) => {
           const user = await populateUserSubscription(userId);
           const productId = user.subscription?.productId;
           const expirationConfig = getExpirationConfigForProduct(productId);
+          const planFeatures = getPlanFeaturesForProduct(productId);
+
+          // 1. Password protection check
+          if (security === SecurityOptions.PASSWORD && !planFeatures.canUsePassword) {
+            return ServerResponse.serverError(res, 403, "Password protection requires a Pro or Ultimate plan");
+          }
+
+          // 2. Suffix length check
+          if (suffix && planFeatures.maxSuffixLength !== null && suffix.length > planFeatures.maxSuffixLength) {
+            return ServerResponse.serverError(res, 403, `Suffix must be ${planFeatures.maxSuffixLength} characters or fewer on your plan`);
+          }
+
+          // 3. Custom expiration date range check
+          if (expirationDate && planFeatures.maxExpirationDays !== null) {
+            const maxMs = planFeatures.maxExpirationDays * 86400000;
+            if (new Date(expirationDate).getTime() - Date.now() > maxMs) {
+              return ServerResponse.serverError(res, 403, `Expiration date cannot exceed ${planFeatures.maxExpirationDays} days on your plan`);
+            }
+          }
 
           const planExpiresAt = expirationDate
             ? null  // user set a custom expiration date → skip plan-based expiration

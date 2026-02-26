@@ -5,32 +5,63 @@
 	  [loading]="analyticsLoading()"
 	></app-overview-cards>
 
-	<!-- Row 2: Top Links + Views Over Time -->
+	<!-- Row 2: Top Links + Export button -->
 	<div class="flex flex-col md:flex-row gap-4 w-full">
 		<div class="w-full">
 			<app-top-links
 			  [topLinks]="topLinks()"
 			  [loading]="analyticsLoading()"
+			  [planLinksCount]="topLinksCount()"
 			  (periodChange)="onPeriodChange($event)"
 			></app-top-links>
 		</div>
 	</div>
 
+	<!-- Export CSV button -->
+	@if (canExportAnalytics()) {
+		<div class="flex justify-end">
+			<button
+			  class="px-4 py-2 text-sm rounded-lg font-medium"
+			  style="background: #9A4EAE; color: white; border: none; cursor: pointer;"
+			  (click)="exportAnalytics()"
+			>
+				Export CSV
+			</button>
+		</div>
+	}
+
 	<!-- Row 3: Device Breakdown + Location Breakdown -->
-	<div class="flex flex-col md:flex-row gap-4 w-full">
-		<div class="w-full md:w-1/2">
-			<app-device-breakdown
-			  [breakdown]="deviceBreakdown()"
-			  [loading]="analyticsLoading()"
-			></app-device-breakdown>
+	@if (canViewAdvancedAnalytics()) {
+		<div class="flex flex-col md:flex-row gap-4 w-full">
+			<div class="w-full md:w-1/2">
+				<app-device-breakdown
+				  [breakdown]="deviceBreakdown()"
+				  [loading]="analyticsLoading()"
+				></app-device-breakdown>
+			</div>
+			<div class="w-full md:w-1/2">
+				<app-location-breakdown
+				  [breakdown]="locationBreakdown()"
+				  [loading]="analyticsLoading()"
+				></app-location-breakdown>
+			</div>
 		</div>
-		<div class="w-full md:w-1/2">
-			<app-location-breakdown
-			  [breakdown]="locationBreakdown()"
-			  [loading]="analyticsLoading()"
-			></app-location-breakdown>
+	} @else {
+		<div class="flex flex-col md:flex-row gap-4 w-full">
+			<div class="w-full md:w-1/2">
+				<div class="bg-white rounded-lg p-5 h-full" style="border: 1px solid rgba(234, 234, 234, 1);">
+					<h4 class="text-lg mb-3" style="color: #151419; font-weight: 400;">Device Breakdown</h4>
+					<app-upgrade-prompt message="Device breakdown requires a Pro or Ultimate plan."></app-upgrade-prompt>
+				</div>
+			</div>
+			<div class="w-full md:w-1/2">
+				<div class="bg-white rounded-lg p-5 h-full" style="border: 1px solid rgba(234, 234, 234, 1);">
+					<h4 class="text-lg mb-3" style="color: #151419; font-weight: 400;">Location Breakdown</h4>
+					<app-upgrade-prompt message="Location breakdown requires a Pro or Ultimate plan."></app-upgrade-prompt>
+				</div>
+			</div>
 		</div>
-	</div>
+	}
 
 	<!-- Row 4: Best Performing (kept from existing) -->
 	<div class="w-full">

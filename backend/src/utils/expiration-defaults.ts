@@ -9,7 +9,7 @@ export interface ExpirationConfig {
 // 541888 = Essential, 542010 = Pro, 542013 = Ultimate
 const expirationConfigMap: Record<string, ExpirationConfig> = {
   [PRODUCT_IDS[541888]]: { planExpirationDays: 30, deleteAfterExpiredDays: 30 },
-  [PRODUCT_IDS[542010]]: { planExpirationDays: 90, deleteAfterExpiredDays: 30 },
+  [PRODUCT_IDS[542010]]: { planExpirationDays: 90,   deleteAfterExpiredDays: 90  }, // Pro: auto-expires after 90 days, 90-day retention after expiry
   [PRODUCT_IDS[542013]]: { planExpirationDays: null, deleteAfterExpiredDays: null },
 };
 
