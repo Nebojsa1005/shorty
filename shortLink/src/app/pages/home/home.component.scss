@@ -1,9 +1,10 @@
 main {
-	height: calc(100% - 64px);
+	min-height: calc(100vh - 64px);
 }
 
 .sidenav {
-  border-right: 1px solid #EAEAEA
+  border-right: 1px solid #EAEAEA;
+  height: 100vh;
 }
 .mat-drawer-inner-container {
 	overflow: hidden;

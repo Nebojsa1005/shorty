@@ -37,6 +37,7 @@ export class SideMenuComponent {
   }
 
   newLink() {
-    this.urlService.updateState('isCreateEditLinkDrawerOpened', true)
+    this.urlService.updateState('isCreateEditLinkDrawerOpened', true);
+    this.itemClicked.emit();
   }
 }

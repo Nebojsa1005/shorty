@@ -1,5 +1,6 @@
+import { DOCUMENT } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, computed, inject, signal, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -28,11 +29,13 @@ import { CreateEditLinkComponent } from '../create-edit-link/create-edit-link.co
 export class HomeComponent {
   private breakpointObserver = inject(BreakpointObserver);
   private urlService = inject(UrlService);
+  private document = inject(DOCUMENT);
 
   drawer = viewChild<MatSidenav>('drawer');
 
   isDrawerOpened = signal(true);
   sidenavMode = signal<'side' | 'over'>('side');
+  private drawerActuallyOpened = signal(true);
 
   isCreateEditLinkDrawerOpened = computed(() =>
     this.urlService.isCreateEditLinkDrawerOpened()
@@ -45,6 +48,15 @@ export class HomeComponent {
         this.isDrawerOpened.set(!state.matches);
         this.sidenavMode.set(state.matches ? 'over' : 'side');
       });
+
+    effect(() => {
+      const shouldLock = this.sidenavMode() === 'over' && this.drawerActuallyOpened();
+      this.document.body.style.overflow = shouldLock ? 'hidden' : '';
+    });
+  }
+
+  onDrawerOpenedChange(opened: boolean) {
+    this.drawerActuallyOpened.set(opened);
   }
 
   onSideMenuItemClicked() {
