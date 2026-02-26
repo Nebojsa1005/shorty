@@ -20,3 +20,30 @@ mat-icon {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.plan-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #E5E7EB;
+  color: #6B7280;
+
+  &--essential {
+    background: #FEF3C7;
+    color: #92400E;
+  }
+
+  &--pro {
+    background: #EDE9FE;
+    color: #5B21B6;
+  }
+
+  &--ultimate {
+    background: #9A4EAE;
+    color: #fff;
+  }
+}

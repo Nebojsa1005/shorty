@@ -23,6 +23,10 @@
   <mat-form-field appearance="outline" class="w-full">
     <mat-label>Short Suffix</mat-label>
     <input matInput [formControl]="controls.suffix" />
+    <mat-hint>{{ suffixHint() }}</mat-hint>
+    <mat-error *ngIf="controls.suffix.hasError('maxlength')">
+      Suffix must be {{ suffixMaxLength() }} characters or fewer on your plan
+    </mat-error>
   </mat-form-field>
 
   <!-- Security Option + Password -->
@@ -33,6 +37,7 @@
         <mat-option
           *ngFor="let option of securityOptions()"
           [value]="option.value"
+          [disabled]="option.value === SecurityOptions.PASSWORD && isPasswordDisabled()"
         >
           {{ option.description }}
         </mat-option>
@@ -61,29 +66,43 @@
     </mat-form-field>
   </div>
 
-  <!-- Expiration Date + Time -->
-  <div class="flex flex-col md:flex-row gap-4">
-    <mat-form-field appearance="outline" class="w-full md:w-1/2">
-      <mat-label>Expiration Date</mat-label>
-      <input
-        matInput
-        [matDatepicker]="picker"
-        [formControl]="controls.expirationDate"
-      />
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker [startAt]="currentTime"></mat-datepicker>
-    </mat-form-field>
+  @if (isPasswordDisabled()) {
+    <div class="mb-3">
+      <app-upgrade-prompt message="Password protection requires a Pro or Ultimate plan."></app-upgrade-prompt>
+    </div>
+  }
 
-    <mat-form-field appearance="outline" class="w-full md:w-1/2">
-      <mat-label>Expiration Time</mat-label>
-      <input
-        matInput
-        type="time"
-        [value]="controls.expirationDate.value | date : 'HH:mm'"
-        readonly
-      />
-    </mat-form-field>
-  </div>
+  <!-- Expiration Date + Time -->
+  @if (!isExpirationHidden()) {
+    <div class="flex flex-col md:flex-row gap-4">
+      <mat-form-field appearance="outline" class="w-full md:w-1/2">
+        <mat-label>Expiration Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          [formControl]="controls.expirationDate"
+          [max]="expirationMaxDate()"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker [startAt]="currentTime"></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full md:w-1/2">
+        <mat-label>Expiration Time</mat-label>
+        <input
+          matInput
+          type="time"
+          [value]="controls.expirationDate.value | date : 'HH:mm'"
+          readonly
+        />
+      </mat-form-field>
+    </div>
+  } @else {
+    <p class="text-sm mb-4" style="color: #6B7280;">
+      Links auto-expire in 30 days on the Essential plan.
+      <a routerLink="/pricing" style="color: #9A4EAE; font-weight: 600;">Upgrade</a> to set custom expiration dates.
+    </p>
+  }
 
   @if (isEdit()) {
     <div class="mt-4">

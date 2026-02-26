@@ -30,9 +30,9 @@ export const PRODUCT_IDS = {
 } as const
 
 export const PRODUCT_LINKS_ALLOWED = {
-  [PRODUCT_IDS[541888]]: 10,
-  [PRODUCT_IDS[542010]]: 50,
-  [PRODUCT_IDS[542013]]: 150
+  [PRODUCT_IDS[541888]]: 50,      // Essential
+  [PRODUCT_IDS[542010]]: 500,     // Pro
+  [PRODUCT_IDS[542013]]: 999999,  // Ultimate (effectively unlimited)
 } as const
 
 

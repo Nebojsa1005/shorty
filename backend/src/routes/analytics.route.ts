@@ -4,6 +4,8 @@ import { UrlModel } from "../models/url.model";
 import { VisitModel } from "../models/visit.model";
 import { AnalyticsModel } from "../models/analytics.model";
 import { ServerResponse } from "../utils/server-response";
+import { populateUserSubscription } from "../services/user.service";
+import { getPlanFeaturesForProduct } from "../utils/plan-features";
 
 async function getAnalyticsIdsForUser(userId: string): Promise<Types.ObjectId[]> {
   const urls = await UrlModel.find({ user: userId }).select("analytics").lean();
@@ -30,41 +32,75 @@ function getPeriodStart(period: string): Date | null {
   }
 }
 
+async function getPlanFeaturesHelper(userId: string) {
+  const user = await populateUserSubscription(userId);
+  return getPlanFeaturesForProduct(user.subscription?.productId);
+}
+
+function getRetentionCutoff(retentionDays: number | null): Date | null {
+  if (retentionDays === null) return null;
+  const d = new Date();
+  d.setDate(d.getDate() - retentionDays);
+  return d;
+}
+
 const analyticsRoutes = (app: Express) => {
   // Overview: total views, total links, most accessed link, unique countries
   app.get("/api/analytics/overview/:userId", async (req, res) => {
     try {
       const { userId } = req.params;
-      const urls = await UrlModel.find({ user: userId })
-        .populate("analytics")
-        .lean();
 
+      const planFeatures = await getPlanFeaturesHelper(userId);
+      const retentionCutoff = getRetentionCutoff(planFeatures.analyticsRetentionDays);
+
+      const urls = await UrlModel.find({ user: userId }).lean();
       const totalLinks = urls.length;
-      let totalViews = 0;
-      let mostAccessedLink: any = null;
-      let maxViews = 0;
-
-      for (const url of urls) {
-        const analytics = url.analytics as any;
-        if (analytics) {
-          totalViews += analytics.viewCount || 0;
-          if ((analytics.viewCount || 0) > maxViews) {
-            maxViews = analytics.viewCount;
-            mostAccessedLink = {
-              urlName: url.urlName,
-              shortLink: url.shortLink,
-              viewCount: analytics.viewCount,
-            };
-          }
-        }
-      }
 
       const analyticsIds = urls
         .filter((u) => u.analytics)
-        .map((u) => (u.analytics as any)._id);
+        .map((u) => u.analytics as unknown as Types.ObjectId);
 
+      const visitFilter: any = { analytics: { $in: analyticsIds } };
+      if (retentionCutoff) {
+        visitFilter.visitedAt = { $gte: retentionCutoff };
+      }
+
+      // Total views within retention window
+      const totalViews = await VisitModel.countDocuments(visitFilter);
+
+      // Most accessed link within retention window
+      let mostAccessedLink: any = null;
+      if (analyticsIds.length > 0) {
+        const topLinkAgg = await VisitModel.aggregate([
+          { $match: visitFilter },
+          { $group: { _id: "$analytics", visitCount: { $sum: 1 } } },
+          { $sort: { visitCount: -1 } },
+          { $limit: 1 },
+          {
+            $lookup: {
+              from: "urls",
+              localField: "_id",
+              foreignField: "analytics",
+              as: "urlDoc",
+            },
+          },
+          { $unwind: { path: "$urlDoc", preserveNullAndEmptyArrays: true } },
+        ]);
+
+        if (topLinkAgg.length > 0) {
+          const top = topLinkAgg[0];
+          mostAccessedLink = {
+            urlName: top.urlDoc?.urlName || String(top._id),
+            shortLink: top.urlDoc?.shortLink || "",
+            viewCount: top.visitCount,
+          };
+        }
+      }
+
+      // Unique countries within retention window
       const uniqueCountries = await VisitModel.distinct("country", {
         analytics: { $in: analyticsIds },
+        ...(retentionCutoff ? { visitedAt: { $gte: retentionCutoff } } : {}),
         country: { $ne: "unknown" },
       });
 
@@ -85,22 +121,33 @@ const analyticsRoutes = (app: Express) => {
       const { userId } = req.params;
       const period = (req.query.period as string) || "all";
 
+      const planFeatures = await getPlanFeaturesHelper(userId);
+
+      // Essential: no top links feature
+      if (planFeatures.topLinksCount === 0) {
+        return ServerResponse.serverSuccess(res, 200, "Top links fetched", []);
+      }
+
       const analyticsIds = await getAnalyticsIdsForUser(userId);
       if (analyticsIds.length === 0) {
         return ServerResponse.serverSuccess(res, 200, "No links found", []);
       }
 
+      const retentionCutoff = getRetentionCutoff(planFeatures.analyticsRetentionDays);
+
       const matchStage: any = { analytics: { $in: analyticsIds } };
       const periodStart = getPeriodStart(period);
       if (periodStart) {
         matchStage.visitedAt = { $gte: periodStart };
+      } else if (retentionCutoff) {
+        matchStage.visitedAt = { $gte: retentionCutoff };
       }
 
       const topLinks = await VisitModel.aggregate([
         { $match: matchStage },
         { $group: { _id: "$analytics", visitCount: { $sum: 1 } } },
         { $sort: { visitCount: -1 } },
-        { $limit: 10 },
+        { $limit: planFeatures.topLinksCount },
         {
           $lookup: {
             from: "analytics",
@@ -138,6 +185,12 @@ const analyticsRoutes = (app: Express) => {
   app.get("/api/analytics/device-breakdown/:userId", async (req, res) => {
     try {
       const { userId } = req.params;
+
+      const planFeatures = await getPlanFeaturesHelper(userId);
+      if (!planFeatures.canExportAnalytics) {
+        return ServerResponse.serverError(res, 403, "Device breakdown requires a Pro or Ultimate plan");
+      }
+
       const analyticsIds = await getAnalyticsIdsForUser(userId);
 
       if (analyticsIds.length === 0) {
@@ -148,7 +201,11 @@ const analyticsRoutes = (app: Express) => {
         });
       }
 
-      const matchStage = { analytics: { $in: analyticsIds } };
+      const retentionCutoff = getRetentionCutoff(planFeatures.analyticsRetentionDays);
+      const matchStage: any = { analytics: { $in: analyticsIds } };
+      if (retentionCutoff) {
+        matchStage.visitedAt = { $gte: retentionCutoff };
+      }
 
       const [deviceTypes, browsers, operatingSystems] = await Promise.all([
         VisitModel.aggregate([
@@ -184,6 +241,12 @@ const analyticsRoutes = (app: Express) => {
   app.get("/api/analytics/location-breakdown/:userId", async (req, res) => {
     try {
       const { userId } = req.params;
+
+      const planFeatures = await getPlanFeaturesHelper(userId);
+      if (!planFeatures.canExportAnalytics) {
+        return ServerResponse.serverError(res, 403, "Location breakdown requires a Pro or Ultimate plan");
+      }
+
       const analyticsIds = await getAnalyticsIdsForUser(userId);
 
       if (analyticsIds.length === 0) {
@@ -193,7 +256,11 @@ const analyticsRoutes = (app: Express) => {
         });
       }
 
-      const matchStage = { analytics: { $in: analyticsIds } };
+      const retentionCutoff = getRetentionCutoff(planFeatures.analyticsRetentionDays);
+      const matchStage: any = { analytics: { $in: analyticsIds } };
+      if (retentionCutoff) {
+        matchStage.visitedAt = { $gte: retentionCutoff };
+      }
 
       const [countries, cities] = await Promise.all([
         VisitModel.aggregate([
@@ -214,6 +281,77 @@ const analyticsRoutes = (app: Express) => {
         countries,
         cities,
       });
+    } catch (error: any) {
+      return ServerResponse.serverError(res, 500, error.message, error);
+    }
+  });
+
+  // Export analytics as CSV
+  app.get("/api/analytics/export/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+
+      const planFeatures = await getPlanFeaturesHelper(userId);
+      if (!planFeatures.canExportAnalytics) {
+        return ServerResponse.serverError(res, 403, "Analytics export requires a Pro or Ultimate plan");
+      }
+
+      const analyticsIds = await getAnalyticsIdsForUser(userId);
+      if (analyticsIds.length === 0) {
+        res.setHeader("Content-Type", "text/csv");
+        res.setHeader("Content-Disposition", "attachment; filename=analytics.csv");
+        return res.send("urlName,shortLink,visitCount\n");
+      }
+
+      const retentionCutoff = getRetentionCutoff(planFeatures.analyticsRetentionDays);
+      const matchStage: any = { analytics: { $in: analyticsIds } };
+      if (retentionCutoff) {
+        matchStage.visitedAt = { $gte: retentionCutoff };
+      }
+
+      const topLinks = await VisitModel.aggregate([
+        { $match: matchStage },
+        { $group: { _id: "$analytics", visitCount: { $sum: 1 } } },
+        { $sort: { visitCount: -1 } },
+        { $limit: planFeatures.topLinksCount },
+        {
+          $lookup: {
+            from: "analytics",
+            localField: "_id",
+            foreignField: "_id",
+            as: "analyticsDoc",
+          },
+        },
+        { $unwind: "$analyticsDoc" },
+        {
+          $lookup: {
+            from: "urls",
+            localField: "_id",
+            foreignField: "analytics",
+            as: "urlDoc",
+          },
+        },
+        { $unwind: { path: "$urlDoc", preserveNullAndEmptyArrays: true } },
+        {
+          $project: {
+            visitCount: 1,
+            shortLink: "$analyticsDoc.shortLink",
+            urlName: { $ifNull: ["$urlDoc.urlName", "$analyticsDoc.shortLink"] },
+          },
+        },
+      ]);
+
+      const rows = topLinks.map((link) => {
+        const urlName = String(link.urlName || "").replace(/,/g, " ");
+        const shortLink = String(link.shortLink || "").replace(/,/g, " ");
+        return `${urlName},${shortLink},${link.visitCount}`;
+      });
+
+      const csv = ["urlName,shortLink,visitCount", ...rows].join("\n");
+
+      res.setHeader("Content-Type", "text/csv");
+      res.setHeader("Content-Disposition", "attachment; filename=analytics.csv");
+      return res.send(csv);
     } catch (error: any) {
       return ServerResponse.serverError(res, 500, error.message, error);
     }

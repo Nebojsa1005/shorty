@@ -236,7 +236,7 @@ export class UrlService {
       );
   }
 
-  reactivateLink(id: string, expirationDate: string | null) {
+  reactivateLink(id: string, expirationDate: string | null, noExpiration: boolean = false) {
     const userId = this.user()?._id;
     if (!userId) return of(null);
 
@@ -244,6 +244,7 @@ export class UrlService {
       .put<Response>(`${environment.apiUrl}/api/url/reactivate/${id}`, {
         expirationDate,
         userId,
+        noExpiration,
       })
       .pipe(
         tap((response: Response) => {

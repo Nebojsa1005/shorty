@@ -12,6 +12,7 @@ import { TableSearchPipe } from 'src/app/shared/pipes/table-search.pipe';
 import { StatusFilterPipe } from 'src/app/shared/pipes/status-filter.pipe';
 import { SocketService } from '../../services/socket.service';
 import { UrlService } from '../../services/url.service';
+import { PlanFeaturesService } from '../../services/plan-features.service';
 import { TableLinksComponent } from '../../shared/components/table-links/table-links.component';
 
 @Component({
@@ -35,10 +36,13 @@ export class AllLinksComponent {
   private destroyRef = inject(DestroyRef);
   private urlService = inject(UrlService);
   private socketService = inject(SocketService);
+  private planFeatures = inject(PlanFeaturesService);
 
   tableLoading = computed(() => this.urlService.allUrlsLoading());
   allUrls = computed(() => this.urlService.allUrls());
   canCreateLink = computed(() => this.urlService.canCreateLink());
+  linksUsed = computed(() => this.urlService.allUrls().length);
+  linksAllowed = computed(() => this.planFeatures.linksAllowed());
   isCreateEditLinkDrawerOpened = computed(() =>
     this.urlService.isCreateEditLinkDrawerOpened()
   );
