@@ -44,8 +44,12 @@
     </div>
   </div>
 
-  @if (chartOptions()) {
-    <div echarts [options]="chartOptions()!" style="height: 350px;"></div>
+  @if (hasData()) {
+    <app-d3-line-chart
+      [series]="lineSeries()"
+      [height]="350"
+      [dateRange]="xAxisRange()"
+    ></app-d3-line-chart>
   } @else {
     <p class="text-sm" style="color: #9CA3AF;">No data to display.</p>
   }

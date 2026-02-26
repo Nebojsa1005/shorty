@@ -9,7 +9,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
-import { NgxEchartsDirective } from 'ngx-echarts';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { UrlLink } from 'src/app/shared/types/url.interface';
 import {
@@ -17,13 +16,17 @@ import {
   get6MonthsAgo,
   get12MonthsAgo,
 } from 'src/app/utils/date.util';
+import {
+  D3LineChartComponent,
+  LineChartSeries,
+} from 'src/app/shared/components/charts/d3-line-chart/d3-line-chart.component';
 
 const SERIES_COLORS = ['#9A4EAE', '#392A48', '#D4A5E0', '#B06CC4', '#5C3A6E'];
 
 @Component({
   selector: 'app-time-span',
   imports: [
-    NgxEchartsDirective,
+    D3LineChartComponent,
     CommonModule,
     MatInput,
     MatFormField,
@@ -73,79 +76,18 @@ export class TimeSpanComponent {
     }
   });
 
-  chartOptions = computed(() => {
+  lineSeries = computed<LineChartSeries[]>(() => {
     const links = this.timeSpanLinkPerformance();
-    const range = this.xAxisRange();
-
-    if (links.length === 0) return null;
-
-    const series = links.map((link, i) => {
-      const entries = link.analytics.entries
-        .map((entry) => [new Date(entry.date).getTime(), entry.viewCount] as [number, number])
-        .sort((a, b) => a[0] - b[0]);
-
-      return {
-        name: link.urlName,
-        type: 'line' as const,
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 6,
-        showSymbol: false,
-        lineStyle: { width: 2.5 },
-        areaStyle: {
-          color: {
-            type: 'linear',
-            x: 0, y: 0, x2: 0, y2: 1,
-            colorStops: [
-              { offset: 0, color: SERIES_COLORS[i % SERIES_COLORS.length] + '40' },
-              { offset: 1, color: SERIES_COLORS[i % SERIES_COLORS.length] + '05' },
-            ],
-          },
-        },
-        emphasis: { focus: 'series' as const },
-        data: entries,
-      };
-    });
-
-    return {
-      color: SERIES_COLORS,
-      tooltip: {
-        trigger: 'axis' as const,
-        backgroundColor: '#fff',
-        borderColor: '#E5E7EB',
-        borderWidth: 1,
-        textStyle: { color: '#151419', fontFamily: 'DM Sans', fontSize: 12 },
-        axisPointer: { type: 'cross' as const, lineStyle: { color: '#E5E7EB' } },
-      },
-      legend: {
-        bottom: 0,
-        textStyle: { color: '#6B7280', fontFamily: 'DM Sans', fontSize: 12 },
-        icon: 'circle',
-        itemWidth: 8,
-        itemHeight: 8,
-        itemGap: 16,
-      },
-      grid: { left: 16, right: 16, top: 16, bottom: 40, containLabel: true },
-      xAxis: {
-        type: 'time' as const,
-        min: range.min,
-        max: range.max,
-        axisLabel: { color: '#9CA3AF', fontFamily: 'DM Sans', fontSize: 11 },
-        splitLine: { show: false },
-        axisTick: { show: false },
-        axisLine: { lineStyle: { color: '#F3F4F6' } },
-      },
-      yAxis: {
-        type: 'value' as const,
-        axisLabel: { color: '#9CA3AF', fontFamily: 'DM Sans', fontSize: 11 },
-        splitLine: { lineStyle: { color: '#F3F4F6' } },
-        axisTick: { show: false },
-        axisLine: { show: false },
-      },
-      series,
-      animationEasing: 'cubicOut' as const,
-    };
+    return links.map((link, i) => ({
+      name: link.urlName,
+      color: SERIES_COLORS[i % SERIES_COLORS.length],
+      data: link.analytics.entries
+        .map(entry => [new Date(entry.date).getTime(), entry.viewCount] as [number, number])
+        .sort((a, b) => a[0] - b[0]),
+    }));
   });
+
+  hasData = computed(() => this.lineSeries().some(s => s.data.length > 0));
 
   updateOptions(option: string): void {
     this.activeOptionButton.set(option);

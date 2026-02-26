@@ -17,20 +17,7 @@
 		</div>
 	</div>
 
-	<!-- Export CSV button -->
-	@if (canExportAnalytics()) {
-		<div class="flex justify-end">
-			<button
-			  class="px-4 py-2 text-sm rounded-lg font-medium"
-			  style="background: #9A4EAE; color: white; border: none; cursor: pointer;"
-			  (click)="exportAnalytics()"
-			>
-				Export CSV
-			</button>
-		</div>
-	}
-
-	<!-- Row 3: Device Breakdown + Location Breakdown -->
+<!-- Row 3: Device Breakdown + Location Breakdown -->
 	@if (canViewAdvancedAnalytics()) {
 		<div class="flex flex-col md:flex-row gap-4 w-full">
 			<div class="w-full md:w-1/2">
