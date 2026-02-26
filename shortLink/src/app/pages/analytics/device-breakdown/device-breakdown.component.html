@@ -5,20 +5,37 @@
     <p class="text-sm" style="color: #9CA3AF;">No device data yet.</p>
   } @else {
     <!-- Device type donut -->
-    @if (donutOptions()) {
-      <div echarts [options]="donutOptions()!" style="height: 260px;"></div>
+    @if (deviceItems().length > 0) {
+      <app-d3-donut-chart
+        [data]="deviceItems()"
+        [colors]="donutColors"
+        [height]="240"
+        centerLabel="Total visits"
+      ></app-d3-donut-chart>
     }
 
     <!-- Browsers -->
-    @if (browserOptions()) {
-      <h4 class="text-sm font-medium mt-5 mb-1" style="color: #6B7280;">Browsers</h4>
-      <div echarts [options]="browserOptions()!" [style.height]="browserChartHeight()"></div>
+    @if (browserItems().length > 0) {
+      <h4 class="text-sm font-medium mt-5 mb-2" style="color: #6B7280;">Browsers</h4>
+      <app-d3-bar-chart
+        [data]="browserItems()"
+        [gradientStart]="browserGradStart"
+        [gradientEnd]="browserGradEnd"
+        [labelWidth]="80"
+        tooltipSuffix="clicks"
+      ></app-d3-bar-chart>
     }
 
     <!-- OS -->
-    @if (osOptions()) {
-      <h4 class="text-sm font-medium mt-5 mb-1" style="color: #6B7280;">Operating Systems</h4>
-      <div echarts [options]="osOptions()!" [style.height]="osChartHeight()"></div>
+    @if (osItems().length > 0) {
+      <h4 class="text-sm font-medium mt-5 mb-2" style="color: #6B7280;">Operating Systems</h4>
+      <app-d3-bar-chart
+        [data]="osItems()"
+        [gradientStart]="osGradStart"
+        [gradientEnd]="osGradEnd"
+        [labelWidth]="80"
+        tooltipSuffix="clicks"
+      ></app-d3-bar-chart>
     }
   }
 </div>

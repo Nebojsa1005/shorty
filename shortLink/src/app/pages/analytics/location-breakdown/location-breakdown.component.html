@@ -1,19 +1,50 @@
 <div class="bg-white rounded-lg p-5 h-full" style="border: 1px solid rgba(234, 234, 234, 1);">
   <h4 class="text-lg mb-4" style="color: #151419; font-weight: 400;">Locations</h4>
 
-  @if (!breakdown() || breakdown()!.countries.length === 0) {
+  @if (!breakdown() || !hasCountries()) {
     <p class="text-sm" style="color: #9CA3AF;">No location data yet.</p>
   } @else {
-    <!-- Countries -->
-    @if (countryOptions()) {
-      <h4 class="text-sm font-medium mb-1" style="color: #6B7280;">Countries</h4>
-      <div echarts [options]="countryOptions()!" [style.height]="countryChartHeight()"></div>
-    }
+    <!-- World choropleth map -->
+    <h4 class="text-sm font-medium mb-2" style="color: #6B7280;">Geographic Distribution</h4>
+    <app-d3-choropleth-map
+      [countries]="mapCountries()"
+      [height]="280"
+      [loading]="loading()"
+    ></app-d3-choropleth-map>
 
-    <!-- Cities -->
-    @if (cityOptions()) {
-      <h4 class="text-sm font-medium mt-4 mb-1" style="color: #6B7280;">Top Cities</h4>
-      <div echarts [options]="cityOptions()!" [style.height]="cityChartHeight()"></div>
+    <!-- Top 3 countries -->
+    @if (topCountries().length > 0) {
+      <h4 class="text-sm font-medium mt-6 mb-3" style="color: #6B7280;">Top Countries</h4>
+      <div class="flex flex-col gap-3">
+        @for (country of topCountries(); track country.code; let i = $index) {
+          <div class="flex items-center gap-3">
+            <!-- Rank badge -->
+            <span
+              class="flex-shrink-0 flex items-center justify-center text-xs font-semibold rounded-full"
+              style="width: 24px; height: 24px; color: white;"
+              [style.background]="rankColors[i]"
+            >{{ i + 1 }}</span>
+
+            <!-- Name + bar -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm truncate" style="color: #151419; font-weight: 500;">{{ country.name }}</span>
+                <span class="text-xs ml-3 flex-shrink-0" style="color: #6B7280;">
+                  {{ country.clicks.toLocaleString() }} click{{ country.clicks !== 1 ? 's' : '' }}
+                </span>
+              </div>
+              <div class="w-full rounded-full" style="height: 6px; background: #F3F4F6;">
+                <div
+                  class="rounded-full"
+                  style="height: 6px; transition: width 0.6s cubic-bezier(0.4,0,0.2,1);"
+                  [style.width]="country.pct + '%'"
+                  [style.background]="rankColors[i]"
+                ></div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
     }
   }
 </div>
