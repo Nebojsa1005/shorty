@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from 'src/app/guards/auth.guard';
+import { analyticsFeatureGuard } from 'src/app/guards/feature.guard';
 
 export const homeRoutes: Routes = [
   {
@@ -22,9 +23,17 @@ export const homeRoutes: Routes = [
       },
       {
         path: 'analytics',
+        canActivate: [analyticsFeatureGuard], // FEATURE FLAG: FeatureGuard
         loadChildren: () =>
           import('../analytics/analytics.routes').then(
             (r) => r.analyticsRoutes
+          ),
+      },
+      {
+        path: 'coming-soon',
+        loadComponent: () =>
+          import('../coming-soon/coming-soon.component').then(
+            (c) => c.ComingSoonComponent
           ),
       },
       {

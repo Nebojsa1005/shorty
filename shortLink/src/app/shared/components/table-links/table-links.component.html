@@ -86,10 +86,13 @@
               <mat-icon color="primary">content_copy</mat-icon>
               <span>Clone</span>
             </button>
-            <button mat-menu-item (click)="onViewAnalytics(row)">
-              <mat-icon color="primary">bar_chart</mat-icon>
-              <span>View Analytics</span>
-            </button>
+            <!-- FEATURE FLAG: Controlled by environment.features.ANALYTICS_ENABLED -->
+            @if (environment.features.ANALYTICS_ENABLED) {
+              <button mat-menu-item (click)="onViewAnalytics(row)">
+                <mat-icon color="primary">bar_chart</mat-icon>
+                <span>View Analytics</span>
+              </button>
+            }
           }
           <button mat-menu-item (click)="onDelete(row._id)">
             <mat-icon color="primary">delete_outline</mat-icon>

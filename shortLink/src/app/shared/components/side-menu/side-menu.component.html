@@ -37,24 +37,27 @@
       </mat-list-item>
     </a>
 
-    <a
-      routerLink="/analytics"
-      routerLinkActive="active-link"
-      #analytics="routerLinkActive"
-      [routerLinkActiveOptions]="{ exact: true }"
-      (click)="onNavItemClick()"
-    >
-      <mat-list-item
-        class="!mb-1 !rounded-sm"
-        button
-        [activated]="analytics.isActive"
+    <!-- FEATURE FLAG: Controlled by environment.features.ANALYTICS_ENABLED -->
+    @if (environment.features.ANALYTICS_ENABLED) {
+      <a
+        routerLink="/analytics"
+        routerLinkActive="active-link"
+        #analytics="routerLinkActive"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="onNavItemClick()"
       >
-        <div class="flex items-center">
-          <mat-icon class="mr-2 material-symbols-outlined" color="primary">bar_chart</mat-icon>
-          <span class="menu-label">Analytics</span>
-        </div>
-      </mat-list-item>
-    </a>
+        <mat-list-item
+          class="!mb-1 !rounded-sm"
+          button
+          [activated]="analytics.isActive"
+        >
+          <div class="flex items-center">
+            <mat-icon class="mr-2 material-symbols-outlined" color="primary">bar_chart</mat-icon>
+            <span class="menu-label">Analytics</span>
+          </div>
+        </mat-list-item>
+      </a>
+    }
 
     <a
       routerLink="/pricing"

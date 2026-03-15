@@ -7,6 +7,7 @@ import { AuthService } from '../../../services/auth.service';
 import { UrlService } from 'src/app/services/url.service';
 import { PlanFeaturesService } from '../../../services/plan-features.service';
 import { MatButtonModule } from '@angular/material/button';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-side-menu',
@@ -21,6 +22,7 @@ export class SideMenuComponent {
   private router = inject(Router);
 
   planName = computed(() => this.planFeaturesService.planName());
+  protected environment = environment; // FEATURE FLAG
 
   itemClicked = output<void>();
 

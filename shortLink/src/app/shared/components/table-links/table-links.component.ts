@@ -1,4 +1,5 @@
 import { DatePipe } from '@angular/common';
+import { environment } from 'src/environments/environment';
 import {
   Component,
   computed,
@@ -62,6 +63,7 @@ export class TableLinksComponent {
   private router = inject(Router);
 
   LinkStatus = LinkStatus;
+  protected environment = environment; // FEATURE FLAG
 
   paginator = viewChild(MatPaginator)
   sort = viewChild(MatSort)
