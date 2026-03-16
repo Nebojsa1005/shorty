@@ -17,7 +17,7 @@ export class AuthGuard {
     const userId = this.authService.getUserIdFromLocalStorage();
 
     if (!userId) {
-      this.router.navigate(['auth/sign-up']);
+      this.router.navigate(['landing']);
       return false;
     }
 

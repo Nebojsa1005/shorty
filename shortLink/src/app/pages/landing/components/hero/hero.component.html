@@ -1,0 +1,82 @@
+<section class="hero">
+  <div class="hero__bg-blob" aria-hidden="true"></div>
+  <div class="hero__bg-blob hero__bg-blob--2" aria-hidden="true"></div>
+
+  <div class="hero__content fade-in">
+    <span class="hero__badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9a4eae" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      </svg>
+      New &mdash; Analytics dashboard is live
+    </span>
+
+    <h1 class="hero__headline">
+      Short links that<br />
+      <span class="hero__headline--accent">mean business</span>
+    </h1>
+
+    <p class="hero__subheading">
+      Create branded short links in seconds. Track every click, device, and
+      location — all in one clean dashboard.
+    </p>
+
+    <div class="hero__ctas">
+      <a [routerLink]="['/auth']" class="btn-primary">
+        Start for free
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+        </svg>
+      </a>
+      <button class="btn-ghost" (click)="scrollToFeatures()">See how it works</button>
+    </div>
+
+    <p class="hero__social-proof">
+      Trusted by <strong>1,200+</strong> teams &amp; creators
+    </p>
+  </div>
+
+  <!-- Preview card -->
+  <div class="hero__preview fade-in fade-in--delay">
+    <div class="preview-card">
+      <div class="preview-card__header">
+        <span class="dot dot--red"></span>
+        <span class="dot dot--yellow"></span>
+        <span class="dot dot--green"></span>
+        <span class="preview-card__title">shorty.app / dashboard</span>
+      </div>
+      <div class="preview-card__body">
+        <div class="stat-row">
+          <div class="stat">
+            <span class="stat__label">Total clicks</span>
+            <span class="stat__value">48,291</span>
+            <span class="stat__delta up">+12.4%</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label">Active links</span>
+            <span class="stat__value">142</span>
+            <span class="stat__delta up">+3</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label">Countries</span>
+            <span class="stat__value">34</span>
+          </div>
+        </div>
+        <div class="bar-chart" aria-hidden="true">
+          @for (h of barHeights; track $index) {
+            <div class="bar" [style.height.%]="h"></div>
+          }
+        </div>
+        <div class="link-row">
+          <div class="link-item">
+            <span class="link-pill">go.co/launch</span>
+            <span class="link-clicks">21k clicks</span>
+          </div>
+          <div class="link-item">
+            <span class="link-pill">go.co/promo</span>
+            <span class="link-clicks">9.4k clicks</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
