@@ -1,0 +1,55 @@
+<nav class="navbar" [class.scrolled]="scrolled()">
+  <div class="navbar__inner">
+    <!-- Logo -->
+    <a class="navbar__logo" (click)="scrollTo('hero')">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="8" fill="url(#logo-grad)" />
+        <path d="M8 14.5l4 4 8-9" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+        <defs>
+          <linearGradient id="logo-grad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#9a4eae" />
+            <stop offset="1" stop-color="#392a48" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <span>Shorty</span>
+    </a>
+
+    <!-- Desktop links -->
+    <ul class="navbar__links">
+      <li><button (click)="scrollTo('features')">Features</button></li>
+      <li><button (click)="scrollTo('testimonials')">Testimonials</button></li>
+      <li><a [routerLink]="['/pricing']">Pricing</a></li>
+    </ul>
+
+    <!-- Desktop CTA -->
+    <div class="navbar__actions">
+      <a [routerLink]="['/auth']" class="btn-ghost">Log in</a>
+      <a [routerLink]="['/auth']" class="btn-primary">Get started</a>
+    </div>
+
+    <!-- Hamburger -->
+    <button class="navbar__hamburger" (click)="toggleMenu()" aria-label="Toggle menu">
+      @if (menuOpen()) {
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      } @else {
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="7" x2="21" y2="7" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="17" x2="21" y2="17" />
+        </svg>
+      }
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  @if (menuOpen()) {
+    <div class="navbar__mobile-menu">
+      <button (click)="scrollTo('features')">Features</button>
+      <button (click)="scrollTo('testimonials')">Testimonials</button>
+      <a [routerLink]="['/pricing']" (click)="menuOpen.set(false)">Pricing</a>
+      <a [routerLink]="['/auth']" class="btn-ghost" (click)="menuOpen.set(false)">Log in</a>
+      <a [routerLink]="['/auth']" class="btn-primary" (click)="menuOpen.set(false)">Get started</a>
+    </div>
+  }
+</nav>
