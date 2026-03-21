@@ -1,0 +1,143 @@
+<div class="flex flex-col gap-4 w-full p-4">
+
+  <!-- Header -->
+  <div class="flex items-center gap-3">
+    <button mat-icon-button (click)="goBack()" aria-label="Back to all links">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div>
+      <h2 class="text-xl font-semibold" style="color: #151419;">
+        {{ data()?.urlName ?? '...' }}
+      </h2>
+      @if (data()?.shortLink) {
+        <div class="flex items-center gap-1">
+          <span class="text-sm" style="color: #6B7280;">{{ data()!.shortLink }}</span>
+          <img
+            class="cursor-pointer opacity-60 hover:opacity-100 transition-opacity"
+            style="width: 14px; height: 14px;"
+            [appCopyClipboard]="data()!.shortLink"
+            src="assets/copy-icon.png"
+            #copyTooltip="matTooltip"
+            matTooltip="Copy"
+            matTooltipPosition="above"
+            (click)="onCopy(copyTooltip)"
+          />
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  @if (loading()) {
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      @for (_ of [1, 2, 3]; track $index) {
+        <div class="bg-white rounded-lg p-5" style="border: 1px solid rgba(234, 234, 234, 1); height: 80px;
+          background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
+          background-size: 200% 100%;
+          animation: shimmer 1.5s infinite;"></div>
+      }
+    </div>
+    <div class="bg-white rounded-lg p-5" style="border: 1px solid rgba(234, 234, 234, 1); height: 300px;
+      background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;"></div>
+
+  <!-- Empty / no data state -->
+  } @else if (!data()) {
+    <div
+      class="bg-white rounded-lg p-12 flex flex-col items-center gap-3"
+      style="border: 1px solid rgba(234, 234, 234, 1);"
+    >
+      <mat-icon style="font-size: 40px; width: 40px; height: 40px; color: #D1D5DB;">bar_chart</mat-icon>
+      <p class="text-sm" style="color: #9CA3AF;">No analytics data yet for this link.</p>
+    </div>
+
+  <!-- Data view -->
+  } @else {
+
+    <!-- Stat cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-white rounded-lg p-5 flex flex-col gap-1" style="border: 1px solid rgba(234, 234, 234, 1);">
+        <span class="text-xs uppercase tracking-wider" style="color: #6B7280;">Total Views</span>
+        <span class="text-2xl font-semibold" style="color: #151419;">{{ data()!.totalViews }}</span>
+      </div>
+      <div class="bg-white rounded-lg p-5 flex flex-col gap-1" style="border: 1px solid rgba(234, 234, 234, 1);">
+        <span class="text-xs uppercase tracking-wider" style="color: #6B7280;">First Viewed</span>
+        <span class="text-base font-semibold" style="color: #151419;">
+          {{ data()!.firstViewedOn ? (data()!.firstViewedOn | date:'mediumDate') : '—' }}
+        </span>
+      </div>
+      <div class="bg-white rounded-lg p-5 flex flex-col gap-1" style="border: 1px solid rgba(234, 234, 234, 1);">
+        <span class="text-xs uppercase tracking-wider" style="color: #6B7280;">Last Viewed</span>
+        <span class="text-base font-semibold" style="color: #151419;">
+          {{ data()!.lastViewedOn ? (data()!.lastViewedOn | date:'mediumDate') : '—' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Daily Views chart -->
+    @if (entrySeries()[0]?.data?.length) {
+      <div class="bg-white rounded-lg p-5" style="border: 1px solid rgba(234, 234, 234, 1);">
+        <h4 class="text-lg mb-4" style="color: #151419; font-weight: 400;">Daily Views</h4>
+        <app-d3-line-chart [series]="entrySeries()" [height]="260"></app-d3-line-chart>
+      </div>
+    }
+
+    <!-- Countries + Devices -->
+    <div class="flex flex-col md:flex-row gap-4">
+
+      <!-- Countries -->
+      <div class="bg-white rounded-lg p-5 w-full md:w-1/2" style="border: 1px solid rgba(234, 234, 234, 1);">
+        <h4 class="text-lg mb-4" style="color: #151419; font-weight: 400;">Countries</h4>
+        @if (countryItems().length === 0) {
+          <p class="text-sm" style="color: #9CA3AF;">No country data yet.</p>
+        } @else {
+          <app-d3-choropleth-map [countries]="mapCountries()" [height]="220"></app-d3-choropleth-map>
+          <div class="mt-4">
+            <app-d3-bar-chart
+              [data]="countryItems()"
+              gradientStart="#9A4EAE"
+              gradientEnd="#392A48"
+              [labelWidth]="80"
+              tooltipSuffix="clicks"
+            ></app-d3-bar-chart>
+          </div>
+        }
+      </div>
+
+      <!-- Devices -->
+      <div class="bg-white rounded-lg p-5 w-full md:w-1/2" style="border: 1px solid rgba(234, 234, 234, 1);">
+        <h4 class="text-lg mb-4" style="color: #151419; font-weight: 400;">Devices</h4>
+        @if (deviceItems().length === 0) {
+          <p class="text-sm" style="color: #9CA3AF;">No device data yet.</p>
+        } @else {
+          <app-d3-donut-chart
+            [data]="deviceItems()"
+            [colors]="donutColors"
+            [height]="240"
+            centerLabel="Total visits"
+          ></app-d3-donut-chart>
+          @if (browserItems().length > 0) {
+            <h4 class="text-sm font-medium mt-5 mb-2" style="color: #6B7280;">Browsers</h4>
+            <app-d3-bar-chart
+              [data]="browserItems()"
+              gradientStart="#9A4EAE"
+              gradientEnd="#392A48"
+              [labelWidth]="80"
+              tooltipSuffix="clicks"
+            ></app-d3-bar-chart>
+          }
+        }
+      </div>
+
+    </div>
+  }
+
+</div>
+
+<style>
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+</style>
