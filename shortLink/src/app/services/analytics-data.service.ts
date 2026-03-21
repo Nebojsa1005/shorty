@@ -97,6 +97,15 @@ export class AnalyticsDataService {
       );
   }
 
+  fetchLinkAnalytics(linkId: string) {
+    return this.http
+      .get<Response>(
+        `${environment.apiUrl}/api/analytics/link-detail/${linkId}`,
+        { params: { userId: this.userId } }
+      )
+      .pipe(catchError(() => of(null)));
+  }
+
   fetchAll() {
     this.state.update((s) => ({ ...s, loading: true }));
     return forkJoin([

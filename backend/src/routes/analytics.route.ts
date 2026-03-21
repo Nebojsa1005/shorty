@@ -286,6 +286,64 @@ const analyticsRoutes = (app: Express) => {
     }
   });
 
+  // Per-link analytics detail
+  app.get("/api/analytics/link-detail/:linkId", async (req, res) => {
+    try {
+      const { linkId } = req.params;
+      const userId = req.query.userId as string;
+
+      const url = await UrlModel.findOne({ _id: linkId, user: userId })
+        .select("analytics urlName shortLink")
+        .lean();
+
+      if (!url) {
+        return ServerResponse.serverError(res, 404, "Link not found");
+      }
+
+      const analyticsId = url.analytics as unknown as Types.ObjectId;
+      const analyticsDoc = await AnalyticsModel.findById(analyticsId).lean();
+
+      if (!analyticsDoc) {
+        return ServerResponse.serverSuccess(res, 200, "No analytics data", null);
+      }
+
+      const matchStage = { analytics: analyticsId };
+
+      const [countries, deviceTypes, browsers] = await Promise.all([
+        VisitModel.aggregate([
+          { $match: matchStage },
+          { $group: { _id: "$country", count: { $sum: 1 } } },
+          { $sort: { count: -1 } },
+        ]),
+        VisitModel.aggregate([
+          { $match: matchStage },
+          { $group: { _id: "$deviceType", count: { $sum: 1 } } },
+          { $sort: { count: -1 } },
+        ]),
+        VisitModel.aggregate([
+          { $match: matchStage },
+          { $group: { _id: "$browser", count: { $sum: 1 } } },
+          { $sort: { count: -1 } },
+          { $limit: 10 },
+        ]),
+      ]);
+
+      return ServerResponse.serverSuccess(res, 200, "Link analytics fetched", {
+        urlName: url.urlName,
+        shortLink: url.shortLink,
+        totalViews: analyticsDoc.viewCount,
+        firstViewedOn: analyticsDoc.firstViewedOn,
+        lastViewedOn: analyticsDoc.lastViewedOn,
+        entries: analyticsDoc.entries,
+        countries,
+        deviceTypes,
+        browsers,
+      });
+    } catch (error: any) {
+      return ServerResponse.serverError(res, 500, error.message, error);
+    }
+  });
+
   // Export analytics as CSV
   app.get("/api/analytics/export/:userId", async (req, res) => {
     try {

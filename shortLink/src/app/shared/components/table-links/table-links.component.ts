@@ -154,7 +154,7 @@ export class TableLinksComponent {
   }
 
   onViewAnalytics(link: UrlLink) {
-    this.router.navigate(['analytics'], {
+    this.router.navigate(['analytics', 'link'], {
       queryParams: { linkId: link._id },
     });
   }

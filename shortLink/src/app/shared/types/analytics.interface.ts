@@ -37,3 +37,15 @@ export interface LocationBreakdown {
   countries: { _id: string; count: number }[];
   cities: { _id: string; count: number }[];
 }
+
+export interface LinkAnalyticsData {
+  urlName: string;
+  shortLink: string;
+  totalViews: number;
+  firstViewedOn: Date | null;
+  lastViewedOn: Date | null;
+  entries: { date: Date; viewCount: number }[];
+  countries: { _id: string; count: number }[];
+  deviceTypes: { _id: string; count: number }[];
+  browsers: { _id: string; count: number }[];
+}
