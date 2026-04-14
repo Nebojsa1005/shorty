@@ -31,7 +31,7 @@ const ZOOM_STEP = 1.4;
     @if (loading()) {
       <div [style.height.px]="height()" style="
         width: 100%;
-        background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
+        background: linear-gradient(90deg, #1E293B 25%, #243044 50%, #1E293B 75%);
         background-size: 200% 100%;
         border-radius: 8px;
         animation: shimmer 1.5s infinite;
@@ -68,13 +68,13 @@ const ZOOM_STEP = 1.4;
         @if (canExpand()) {
           <button
             style="position: absolute; top: 6px; right: 6px; z-index: 10; width: 28px; height: 28px;
-              border-radius: 6px; background: white; border: 1px solid #E5E7EB;
+              border-radius: 6px; background: #243044; border: 1px solid #334155;
               cursor: pointer; display: flex; align-items: center; justify-content: center;
-              box-shadow: 0 1px 3px rgba(0,0,0,0.1);"
+              box-shadow: 0 1px 3px rgba(0,0,0,0.4);"
             (click)="openExpandModal($event)"
             title="Expand map"
           >
-            <mat-icon style="font-size: 16px; width: 16px; height: 16px; line-height: 16px; color: #6B7280;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px; line-height: 16px; color: #94A3B8;">
               open_in_full
             </mat-icon>
           </button>
@@ -83,25 +83,25 @@ const ZOOM_STEP = 1.4;
         <!-- Zoom controls (bottom-right) -->
         <div style="position: absolute; bottom: 8px; right: 6px; z-index: 10; display: flex; flex-direction: column; gap: 4px;">
           <button
-            style="width: 28px; height: 28px; border-radius: 6px; background: white; border: 1px solid #E5E7EB;
+            style="width: 28px; height: 28px; border-radius: 6px; background: #243044; border: 1px solid #334155;
               cursor: pointer; font-size: 18px; line-height: 1; display: flex; align-items: center;
-              justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); color: #374151;"
+              justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.4); color: #F1F5F9;"
             (click)="zoomIn($event)"
             title="Zoom in"
           >+</button>
           @if (zoom() > 1) {
             <button
-              style="width: 28px; height: 28px; border-radius: 6px; background: white; border: 1px solid #E5E7EB;
+              style="width: 28px; height: 28px; border-radius: 6px; background: #243044; border: 1px solid #334155;
                 cursor: pointer; font-size: 13px; display: flex; align-items: center;
-                justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); color: #374151;"
+                justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.4); color: #F1F5F9;"
               (click)="resetZoom($event)"
               title="Reset zoom"
             >↺</button>
           }
           <button
-            style="width: 28px; height: 28px; border-radius: 6px; background: white; border: 1px solid #E5E7EB;
+            style="width: 28px; height: 28px; border-radius: 6px; background: #243044; border: 1px solid #334155;
               cursor: pointer; font-size: 22px; line-height: 1; display: flex; align-items: center;
-              justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); color: #374151;"
+              justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.4); color: #F1F5F9;"
             (click)="zoomOut($event)"
             title="Zoom out"
           >−</button>
@@ -166,10 +166,10 @@ export class D3ChoroplethMapComponent implements AfterViewInit, OnDestroy {
   chartOptions = computed(() => ({
     height: this.height(),
     displayMode: 'regions',
-    colorAxis: { colors: ['#E9D5FF', '#9A4EAE', '#581C87'] },
-    backgroundColor: '#F8FAFC',
-    datalessRegionColor: '#F3F4F6',
-    defaultColor: '#F3F4F6',
+    colorAxis: { colors: ['#818CF8', '#6366F1', '#4F46E5'] },
+    backgroundColor: '#1E293B',
+    datalessRegionColor: '#243044',
+    defaultColor: '#243044',
     tooltip: { textStyle: { fontName: 'DM Sans', fontSize: 12 } },
     enableInteractivity: false,
   }));

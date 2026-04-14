@@ -1,0 +1,35 @@
+.form-panel {
+  background: var(--color-surface);
+  height: 100%;
+  overflow-y: auto;
+}
+
+.form-header {
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--color-surface-border);
+  background: var(--color-surface);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-raised);
+}
+
+.form-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+  letter-spacing: -0.015em;
+  font-family: var(--font-family);
+}
+
+.form-body {
+  padding: var(--space-6);
+}
+
+.actions-row {
+  margin-top: var(--space-5);
+
+  button {
+    width: 100%;
+  }
+}

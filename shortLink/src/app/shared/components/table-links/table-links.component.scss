@@ -1,31 +1,66 @@
 .short-link {
   text-decoration: none;
+  color: var(--color-primary);
+  font-weight: var(--font-medium);
+  font-size: var(--text-sm);
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+  }
 }
 
 .table-container {
-  border: 1px solid #eaeaea;
-  border-radius: 4px;
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
   overflow-x: auto;
+  box-shadow: var(--shadow-card);
 }
 
+/* Header row */
 table th {
-  background-color: rgba(154, 78, 174, 0.08) !important;
-  border-color: #eaeaea !important;
+  background-color: var(--color-surface-subtle) !important;
+  border-color: var(--color-surface-border) !important;
+  font-size: 11px !important;
+  font-weight: var(--font-semibold) !important;
+  color: var(--color-text-muted) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.07em !important;
+  font-family: var(--font-family) !important;
 }
 
+/* Body rows */
 table tr {
-	border-bottom: 1px solid rgba(234, 234, 234, 1) !important;
+  border-bottom: 1px solid var(--color-surface-border) !important;
+  transition: background-color var(--transition-fast);
+}
+
+table tbody tr:hover td {
+  background-color: var(--color-surface-raised);
 }
 
 table td {
-  border: none !important
+  border: none !important;
+  font-size: var(--text-sm) !important;
+  color: var(--color-text-primary) !important;
+  font-family: var(--font-family) !important;
 }
 
+/* Copy icon */
 .copy-icon {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   cursor: pointer;
-  margin-left: 8px;
+  margin-left: var(--space-2);
+  filter: brightness(0) invert(1);
+  opacity: 0.55;
+  transition: opacity var(--transition-fast);
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .status-cell {
@@ -34,28 +69,35 @@ table td {
   gap: 2px;
 }
 
+/* Status badge */
 .status-badge {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: var(--font-semibold);
+  font-family: var(--font-family);
+  letter-spacing: 0.02em;
   width: fit-content;
 
   &.active {
-    background-color: #dcfce7;
-    color: #166534;
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+    border: 1px solid var(--color-success-border);
   }
 
   &.expired {
-    background-color: #fee2e2;
-    color: #991b1b;
+    background-color: var(--color-error-bg);
+    color: var(--color-error);
+    border: 1px solid var(--color-error-border);
   }
 }
 
 .expiration-info {
   font-size: 11px;
-  color: #6b7280;
+  color: var(--color-text-muted);
+  font-family: var(--font-family);
 }
 
 @media (max-width: 639px) {

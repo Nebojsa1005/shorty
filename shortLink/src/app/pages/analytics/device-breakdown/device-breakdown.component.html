@@ -1,10 +1,9 @@
-<div class="bg-white rounded-lg p-5 h-full" style="border: 1px solid rgba(234, 234, 234, 1);">
-  <h4 class="text-lg mb-4" style="color: #151419; font-weight: 400;">Devices</h4>
+<div class="breakdown-card">
+  <h4 class="breakdown-title">Devices</h4>
 
   @if (!breakdown() || breakdown()!.deviceTypes.length === 0) {
-    <p class="text-sm" style="color: #9CA3AF;">No device data yet.</p>
+    <p class="breakdown-empty">No device data yet.</p>
   } @else {
-    <!-- Device type donut -->
     @if (deviceItems().length > 0) {
       <app-d3-donut-chart
         [data]="deviceItems()"
@@ -14,9 +13,8 @@
       ></app-d3-donut-chart>
     }
 
-    <!-- Browsers -->
     @if (browserItems().length > 0) {
-      <h4 class="text-sm font-medium mt-5 mb-2" style="color: #6B7280;">Browsers</h4>
+      <h4 class="breakdown-subtitle">Browsers</h4>
       <app-d3-bar-chart
         [data]="browserItems()"
         [gradientStart]="browserGradStart"
@@ -26,9 +24,8 @@
       ></app-d3-bar-chart>
     }
 
-    <!-- OS -->
     @if (osItems().length > 0) {
-      <h4 class="text-sm font-medium mt-5 mb-2" style="color: #6B7280;">Operating Systems</h4>
+      <h4 class="breakdown-subtitle">Operating Systems</h4>
       <app-d3-bar-chart
         [data]="osItems()"
         [gradientStart]="osGradStart"

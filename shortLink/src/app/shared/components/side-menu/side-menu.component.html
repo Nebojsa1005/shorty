@@ -1,19 +1,15 @@
 <div class="!flex !flex-col justify-between side-menu-container">
   <mat-nav-list class="!p-2">
-    <div class="add-new-link-container !py-5 !my-5">
-      <mat-list-item
+    <div class="add-new-link-container">
+      <button
+        mat-flat-button
         color="primary"
-        class="!mb-1 !rounded-sm"
-        button
+        class="add-new-link-btn"
         (click)="newLink()"
       >
-        <div
-          class="flex items-center text-white add-new-minified-link-container"
-        >
-          <mat-icon class="mr-2 !text-white material-symbols-outlined">add</mat-icon>
-          <span class="menu-label">Add New Minified Link</span>
-        </div>
-      </mat-list-item>
+        <mat-icon class="material-symbols-outlined">add</mat-icon>
+        Add New Minified Link
+      </button>
     </div>
 
     <a

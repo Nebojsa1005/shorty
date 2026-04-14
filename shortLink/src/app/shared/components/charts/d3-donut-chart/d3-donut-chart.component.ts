@@ -41,9 +41,10 @@ export class D3DonutChartComponent {
 
   chartOptions = computed(() => ({
     height: this.height(),
+    backgroundColor: 'transparent',
     pieHole: 0.4,
     colors: this.colors(),
-    legend: { position: 'bottom', textStyle: { color: '#6B7280', fontName: 'DM Sans', fontSize: 12 } },
+    legend: { position: 'bottom', textStyle: { color: '#94A3B8', fontName: 'DM Sans', fontSize: 12 } },
     chartArea: { left: 16, right: 16, top: 16, bottom: 40 },
     pieSliceText: 'none',
     tooltip: { textStyle: { fontName: 'DM Sans', fontSize: 12 } },

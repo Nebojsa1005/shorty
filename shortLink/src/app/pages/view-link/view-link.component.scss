@@ -3,10 +3,11 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background: white;
-  border-radius: 16px;
-  padding: 48px 32px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-12) var(--space-8);
+  box-shadow: var(--shadow-md);
   max-width: 440px;
   width: 100%;
 }
@@ -15,20 +16,23 @@
   font-size: 64px;
   width: 64px;
   height: 64px;
-  color: #9a4eae;
-  margin-bottom: 16px;
+  color: var(--color-primary);
+  margin-bottom: var(--space-4);
 }
 
 .expired-title {
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0 0 8px 0;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+  font-family: var(--font-family);
+  margin: 0 0 var(--space-2) 0;
 }
 
 .expired-subtitle {
-  font-size: 1rem;
-  color: #6b7280;
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
   margin: 0;
 }
 
@@ -38,7 +42,7 @@
   }
 
   .expired-card {
-    padding: 32px 20px;
+    padding: var(--space-8) var(--space-5);
   }
 
   .expired-icon {
@@ -48,6 +52,6 @@
   }
 
   .expired-title {
-    font-size: 1.25rem;
+    font-size: var(--text-xl);
   }
 }

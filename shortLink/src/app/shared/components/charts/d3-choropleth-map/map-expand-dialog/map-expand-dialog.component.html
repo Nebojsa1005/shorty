@@ -1,24 +1,15 @@
-<div style="display: flex; flex-direction: column; background: white; border-radius: 12px; overflow-y: auto; min-width: 320px;">
+<div class="med-container">
 
   <!-- Header -->
-  <div style="display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 20px; border-bottom: 1px solid rgba(234, 234, 234, 1); flex-shrink: 0;
-    position: sticky; top: 0; background: white; z-index: 10;">
-    <h3 style="margin: 0; font-size: 18px; font-weight: 500; color: #151419; font-family: 'DM Sans', sans-serif;">
-      Geographic Distribution
-    </h3>
-    <button
-      mat-icon-button
-      (click)="close()"
-      aria-label="Close"
-      style="margin: -8px -8px -8px 0;"
-    >
+  <div class="med-header">
+    <h3 class="med-title">Geographic Distribution</h3>
+    <button mat-icon-button (click)="close()" aria-label="Close" class="med-close-btn">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
   <!-- Map -->
-  <div style="padding: 16px 20px; flex-shrink: 0;">
+  <div class="med-map">
     <app-d3-choropleth-map
       [countries]="data.countries"
       [height]="380"
@@ -28,48 +19,34 @@
 
   <!-- Country table -->
   @if (rows().length > 0) {
-    <div style="padding: 0 20px 20px;">
-      <h4 style="margin: 0 0 10px; font-size: 13px; font-weight: 500; color: #6B7280;
-        text-transform: uppercase; letter-spacing: 0.05em; font-family: 'DM Sans', sans-serif;">
-        Countries
-      </h4>
-      <table style="width: 100%; border-collapse: collapse;">
+    <div class="med-table-wrap">
+      <h4 class="med-table-heading">Countries</h4>
+      <table class="med-table">
         <thead>
-          <tr style="border-bottom: 1px solid #F3F4F6;">
-            <th style="text-align: left; padding: 6px 8px; font-size: 11px; font-weight: 500;
-              color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.05em;">Country</th>
-            <th style="text-align: right; padding: 6px 8px; font-size: 11px; font-weight: 500;
-              color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.05em;">Views</th>
-            <th style="text-align: right; padding: 6px 8px; font-size: 11px; font-weight: 500;
-              color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.05em;">Share</th>
+          <tr class="med-thead-row">
+            <th class="med-th">Country</th>
+            <th class="med-th med-th--right">Views</th>
+            <th class="med-th med-th--right">Share</th>
           </tr>
         </thead>
         <tbody>
           @for (row of rows(); track row.name) {
-            <tr style="border-bottom: 1px solid #F9FAFB;">
-              <td style="padding: 8px 8px;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 18px; line-height: 1; flex-shrink: 0;">{{ row.flag }}</span>
-                  <span style="font-size: 14px; color: #151419; font-family: 'DM Sans', sans-serif;">{{ row.name }}</span>
+            <tr class="med-tr">
+              <td class="med-td">
+                <div class="med-country-cell">
+                  <span class="med-flag">{{ row.flag }}</span>
+                  <span class="med-country-name">{{ row.name }}</span>
                 </div>
               </td>
-              <td style="padding: 8px 8px; font-size: 14px; color: #151419; text-align: right;
-                font-variant-numeric: tabular-nums; font-family: 'DM Sans', sans-serif;">
-                {{ row.clicks.toLocaleString() }}
-              </td>
-              <td style="padding: 8px 8px; font-size: 14px; color: #6B7280; text-align: right;
-                font-variant-numeric: tabular-nums; font-family: 'DM Sans', sans-serif;">
-                {{ row.pct }}%
-              </td>
+              <td class="med-td med-td--right med-td--num">{{ row.clicks.toLocaleString() }}</td>
+              <td class="med-td med-td--right med-td--muted med-td--num">{{ row.pct }}%</td>
             </tr>
           }
         </tbody>
       </table>
     </div>
   } @else {
-    <div style="padding: 20px; text-align: center; color: #9CA3AF; font-size: 14px; font-family: 'DM Sans', sans-serif;">
-      No country data available.
-    </div>
+    <div class="med-empty">No country data available.</div>
   }
 
 </div>

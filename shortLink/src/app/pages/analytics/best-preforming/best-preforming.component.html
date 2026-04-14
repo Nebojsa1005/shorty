@@ -1,5 +1,5 @@
-<div class="bg-white rounded-lg p-5" style="border: 1px solid rgba(234, 234, 234, 1);">
-  <h4 class="text-lg mb-4" style="color: #151419; font-weight: 400;">Best Performing</h4>
+<div class="breakdown-card">
+  <h4 class="breakdown-title">Best Performing</h4>
 
   @if (hasData()) {
     <app-d3-bar-chart
@@ -10,6 +10,6 @@
       tooltipSuffix="clicks"
     ></app-d3-bar-chart>
   } @else {
-    <p class="text-sm" style="color: #9CA3AF;">No link data yet.</p>
+    <p class="breakdown-empty">No link data yet.</p>
   }
 </div>
