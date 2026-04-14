@@ -56,17 +56,18 @@ export class D3BarChartComponent {
 
     return {
       height,
+      backgroundColor: 'transparent',
       legend: { position: 'none' },
       colors,
       chartArea: { left: this.labelWidth(), right: 56, top: 8, bottom: 8 },
       hAxis: {
-        textStyle: { color: '#9CA3AF', fontName: 'DM Sans', fontSize: 11 },
-        gridlines: { color: '#F9FAFB' },
+        textStyle: { color: '#94A3B8', fontName: 'DM Sans', fontSize: 11 },
+        gridlines: { color: '#334155' },
         baselineColor: 'transparent',
         minValue: 0,
       },
       vAxis: {
-        textStyle: { color: '#151419', fontName: 'DM Sans', fontSize: 12 },
+        textStyle: { color: '#94A3B8', fontName: 'DM Sans', fontSize: 12 },
       },
       bar: { groupWidth: barHeight },
       tooltip: {

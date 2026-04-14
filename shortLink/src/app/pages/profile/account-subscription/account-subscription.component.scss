@@ -1,109 +1,121 @@
 .card {
-  border: 1px solid rgba(234, 234, 234, 1);
-  border-radius: 8px;
-  background: white;
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
 }
 
 .card-title {
-  font-size: 1.5rem;
-  font-weight: 400;
-  margin: 0 0 1rem 0;
-  color: #151419;
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  margin: 0 0 var(--space-5) 0;
+  color: var(--color-text-primary);
+  letter-spacing: -0.015em;
 }
 
-// Current Plan Card
+/* Current plan row */
 .plan-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  border: 1px solid rgba(234, 234, 234, 1);
-  border-radius: 8px;
-  margin-bottom: 1rem;
+  padding: var(--space-4);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  background: var(--color-surface-raised);
 }
 
 .plan-info {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--space-3);
 }
 
 .plan-name {
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
   margin: 0;
-  color: #151419;
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
 }
 
 .current-plan-chip {
-  font-size: 0.75rem !important;
-  background-color: #F3F4F6 !important;
-  color: #6B7280 !important;
+  font-size: var(--text-xs) !important;
+  font-family: var(--font-family) !important;
+  background-color: rgba(79, 70, 229, 0.15) !important;
+  color: var(--color-text-primary) !important;
+  border: 1px solid rgba(79, 70, 229, 0.22) !important;
 }
 
 .plan-price {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #151419;
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
 }
 
-// Special Offer Section
+/* Upgrade offer */
 .special-offer {
-  padding: 1rem;
-  border: 1px solid #9A4EAE;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+  padding: var(--space-4);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  background: var(--color-primary-tint);
 }
 
 .special-offer-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #9A4EAE;
-  margin: 0 0 0.75rem 0;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-primary);
+  margin: 0 0 var(--space-3) 0;
+  font-family: var(--font-family);
 }
 
 .special-offer-description {
-  font-size: 0.875rem;
-  color: #6B7280;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.5;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-2) 0;
+  line-height: 1.6;
+  font-family: var(--font-family);
 }
 
 .special-offer-price {
-  font-size: 0.875rem;
-  color: #151419;
-  margin: 0 0 1rem 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-4) 0;
+  font-family: var(--font-family);
 
   strong {
-    font-weight: 600;
+    font-weight: var(--font-bold);
   }
 }
 
 .upgrade-btn {
   width: 100%;
-  background: linear-gradient(96.09deg, #9A4EAE -0.15%, #392A48 99.85%) !important;
-  color: white !important;
-  padding: 0.75rem 1.5rem !important;
-  font-weight: 500 !important;
+  background: var(--gradient-brand-btn) !important;
+  color: var(--color-text-inverse) !important;
+  padding: var(--space-3) var(--space-6) !important;
+  font-weight: var(--font-semibold) !important;
+  font-family: var(--font-family) !important;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.28) !important;
 }
 
-// Highest Tier Message (when user is on Ultimate plan)
 .highest-tier-message {
-  padding: 1rem;
-  border: 1px solid rgba(234, 234, 234, 1);
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  background-color: #F9FAFB;
+  padding: var(--space-4);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  background-color: var(--color-surface-raised);
 
   .special-offer-title {
-    color: #151419;
+    color: var(--color-text-primary);
+    background: none;
   }
 }
 
-// Action Buttons
 .action-buttons {
   display: flex;
-  gap: 1rem;
+  gap: var(--space-3);
 }
 
 .action-btn {
@@ -111,26 +123,40 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem !important;
-  border-color: rgba(234, 234, 234, 1) !important;
-  color: #151419 !important;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4) !important;
+  border-color: var(--color-surface-border) !important;
+  color: var(--color-text-secondary) !important;
+  font-family: var(--font-family) !important;
+  font-size: var(--text-sm) !important;
 
   mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    background: var(--color-surface-subtle) !important;
+    color: var(--color-text-primary) !important;
   }
 }
 
-// Responsive
+.cancel-btn {
+  color: var(--color-error) !important;
+  border-color: var(--color-error-border) !important;
+
+  &:hover {
+    background: var(--color-error-bg) !important;
+  }
+}
+
+::ng-deep .current-plan-chip .mdc-evolution-chip__text-label {
+  color: var(--color-text-primary) !important;
+}
+
 @media (max-width: 640px) {
   .action-buttons {
     flex-direction: column;
   }
-}
-
-
-.cancel-btn {
-  color: #EF4444 !important;
 }

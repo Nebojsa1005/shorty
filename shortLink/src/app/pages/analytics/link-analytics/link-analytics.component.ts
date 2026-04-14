@@ -40,6 +40,7 @@ import {
     D3ChoroplethMapComponent,
   ],
   templateUrl: './link-analytics.component.html',
+  styleUrl: './link-analytics.component.scss',
 })
 export class LinkAnalyticsComponent {
   private route = inject(ActivatedRoute);

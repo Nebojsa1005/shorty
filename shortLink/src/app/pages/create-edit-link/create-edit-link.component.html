@@ -1,22 +1,24 @@
-<div class="p-4">
-  <h2 class="px-0 mb-4 mat-headline">
-    {{ isEdit ? "Edit Link" : "Add new Link" }}
-  </h2>
+<div class="form-panel">
+  <div class="form-header">
+    <h2 class="form-title">{{ isEdit ? "Edit Link" : "Add New Link" }}</h2>
+  </div>
 
-  <app-link-form
-    (formChanges)="onFormChange($event)"
-    [existingUrlLink]="existingLink"
-    [isEdit]="isEdit ?? false"
-  />
+  <div class="form-body">
+    <app-link-form
+      (formChanges)="onFormChange($event)"
+      [existingUrlLink]="existingLink"
+      [isEdit]="isEdit ?? false"
+    />
 
-  <div class="actions-row">
-    <button
-      mat-flat-button
-      color="primary"
-      [disabled]="!urlForm()?.valid || (!isEdit && !canCreateLink())"
-      (click)="onSubmit()"
-    >
-      {{ isEdit ? 'Edit Link' : 'Create Link' }}
-    </button>
+    <div class="actions-row">
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="!urlForm()?.valid || (!isEdit && !canCreateLink())"
+        (click)="onSubmit()"
+      >
+        {{ isEdit ? 'Edit Link' : 'Create Link' }}
+      </button>
+    </div>
   </div>
 </div>

@@ -8,26 +8,27 @@
 }
 
 .dialog-header {
-  padding: 1.5rem 1.5rem 0;
+  padding: var(--space-6) var(--space-6) 0;
   text-align: center;
 
   h2 {
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: #151419;
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-primary);
+    font-family: var(--font-family);
     margin: 0;
   }
 }
 
 .dialog-content {
-  padding: 1.5rem;
+  padding: var(--space-6);
 }
 
 .status-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: var(--space-6);
 }
 
 .icon-wrapper {
@@ -39,15 +40,15 @@
   justify-content: center;
 
   &.processing {
-    background-color: rgba(154, 78, 174, 0.1);
+    background-color: var(--color-primary-tint);
   }
 
   &.success {
-    background-color: rgba(45, 213, 91, 0.1);
+    background-color: var(--color-success-bg);
   }
 
   &.failed {
-    background-color: rgba(244, 67, 54, 0.1);
+    background-color: var(--color-error-bg);
   }
 }
 
@@ -57,39 +58,41 @@
   font-size: 48px !important;
 
   &.success-icon {
-    color: #2dd55b;
+    color: var(--color-success);
   }
 
   &.failed-icon {
-    color: #f44336;
+    color: var(--color-error);
   }
 }
 
 .message {
-  font-size: 0.9375rem;
-  color: #6B7280;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
   text-align: center;
-  line-height: 1.5;
+  line-height: 1.6;
   margin: 0;
 }
 
 .dialog-actions {
-  padding: 0 1.5rem 1.5rem;
+  padding: 0 var(--space-6) var(--space-6);
   display: flex;
   justify-content: center;
 
   button {
     min-width: 120px;
     height: 44px;
-    font-size: 0.9375rem;
-    font-weight: 500;
-    border-radius: 8px !important;
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    font-family: var(--font-family);
+    border-radius: var(--radius-md) !important;
   }
 }
 
 .btn-close {
-  background: linear-gradient(96.09deg, #9a4eae -0.15%, #392a48 99.85%) !important;
-  color: white !important;
+  background: var(--gradient-brand-btn) !important;
+  color: var(--color-text-inverse) !important;
   border: none;
 
   &:hover {
@@ -98,7 +101,7 @@
 }
 
 .btn-disabled {
-  background-color: #E5E7EB !important;
-  color: #9CA3AF !important;
+  background-color: var(--color-surface-subtle) !important;
+  color: var(--color-text-muted) !important;
   border: none;
 }

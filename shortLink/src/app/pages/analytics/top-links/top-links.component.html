@@ -1,14 +1,12 @@
-<div class="bg-white rounded-lg p-5 h-full" style="border: 1px solid rgba(234, 234, 234, 1);">
-  <div class="flex items-center justify-between mb-4">
-    <h4 class="text-lg" style="color: #151419; font-weight: 400;">Top Links</h4>
+<div class="top-links-card">
+  <div class="top-links-header">
+    <h4 class="top-links-title">Top Links</h4>
     @if (planLinksCount() > 0) {
-      <div class="flex gap-1">
+      <div class="period-selector">
         @for (period of periods; track period) {
           <button
-            class="px-3 py-1 text-xs rounded transition-colors"
-            [style.background]="activePeriod() === period ? '#9A4EAE' : '#F9FAFB'"
-            [style.color]="activePeriod() === period ? 'white' : '#6B7280'"
-            [style.border]="activePeriod() === period ? '1px solid #9A4EAE' : '1px solid #E5E7EB'"
+            class="period-btn"
+            [class.period-btn--active]="activePeriod() === period"
             (click)="selectPeriod(period)"
           >
             {{ period | titlecase }}
@@ -21,27 +19,26 @@
   @if (planLinksCount() === 0) {
     <app-upgrade-prompt message="Top links analytics requires a Pro or Ultimate plan."></app-upgrade-prompt>
   } @else if (displayedLinks().length === 0) {
-    <p class="text-sm" style="color: #9CA3AF;">No visit data yet.</p>
+    <p class="top-links-empty">No visit data yet.</p>
   } @else {
-    <div class="flex flex-col gap-3">
+    <div class="top-links-list">
       @for (link of displayedLinks(); track link._id; let i = $index) {
-        <div class="flex items-center justify-between gap-4">
-          <div class="flex items-center gap-3 min-w-0">
-            <span class="text-xs font-medium w-5 text-center shrink-0" style="color: #9CA3AF;">{{ i + 1 }}</span>
-            <div class="min-w-0">
-              <p class="text-sm truncate" style="color: #151419;">{{ link.urlName }}</p>
-              <p class="text-xs truncate" style="color: #9CA3AF;">{{ link.shortLink }}</p>
+        <div class="top-link-row">
+          <div class="top-link-info">
+            <span class="top-link-rank">{{ i + 1 }}</span>
+            <div class="top-link-meta">
+              <p class="top-link-name">{{ link.urlName }}</p>
+              <p class="top-link-url">{{ link.shortLink }}</p>
             </div>
           </div>
-          <div class="flex items-center gap-3 shrink-0">
-            <div class="w-24 h-2 rounded-full overflow-hidden" style="background: #F3F4F6;">
+          <div class="top-link-bar-wrap">
+            <div class="top-link-track">
               <div
-                class="h-full rounded-full transition-all duration-300"
-                style="background: linear-gradient(96.09deg, #9A4EAE -0.15%, #392A48 99.85%);"
+                class="top-link-fill"
                 [style.width.%]="(link.visitCount / maxVisitCount()) * 100"
               ></div>
             </div>
-            <span class="text-sm font-medium w-10 text-right" style="color: #151419;">{{ link.visitCount }}</span>
+            <span class="top-link-count">{{ link.visitCount }}</span>
           </div>
         </div>
       }

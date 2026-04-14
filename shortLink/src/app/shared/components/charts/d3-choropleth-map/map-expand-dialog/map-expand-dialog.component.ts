@@ -43,6 +43,7 @@ function countryFlag(alpha2: string): string {
     D3ChoroplethMapComponent,
   ],
   templateUrl: './map-expand-dialog.component.html',
+  styleUrl: './map-expand-dialog.component.scss',
 })
 export class MapExpandDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<MapExpandDialogComponent>);

@@ -1,32 +1,48 @@
 mat-sidenav-container {
   height: 100vh;
-  background: white;
+  background: var(--color-app-bg);
+}
+
+.menu-button,
+.menu-button mat-icon {
+  color: white !important;
 }
 
 main {
-	height: calc(100% - 64px);
+  height: calc(100% - 64px);
+  overflow-y: auto;
+  padding: var(--space-6);
 }
 
+/* Dark sidebar */
 .sidenav {
-  border-right: 1px solid #EAEAEA
-}
-.mat-drawer-inner-container {
-	overflow: hidden;
-}
-
-.sidenav.collapsed {
-  width: 60px; /* just enough for icons */
+  background: var(--sidebar-bg) !important;
+  border-right: 1px solid var(--sidebar-border) !important;
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.25);
+  width: 280px;
+  height: 100vh !important;
+  overflow: hidden !important;
 }
 
+::ng-deep .sidenav .mat-drawer-inner-container {
+  overflow: hidden !important;
+  height: 100% !important;
+}
+
+/* Toolbar spacer at top of sidenav */
+mat-sidenav mat-toolbar {
+  background: var(--sidebar-bg) !important;
+  min-height: 64px;
+  border-bottom: 1px solid var(--sidebar-border);
+}
+
+/* Right drawer — create/edit link */
 .create-edit-drawer {
   width: 40%;
+  background: var(--color-surface) !important;
+  border-left: 1px solid var(--color-surface-border) !important;
+  box-shadow: var(--shadow-xl) !important;
 }
-
-
-mat-sidenav, mat-sidenav mat-toolbar {
-  background: white;
-}
-
 
 @media (max-width: 1023px) {
   .create-edit-drawer {
@@ -37,5 +53,9 @@ mat-sidenav, mat-sidenav mat-toolbar {
 @media (max-width: 639px) {
   .create-edit-drawer {
     width: 100%;
+  }
+
+  main {
+    padding: var(--space-4);
   }
 }

@@ -30,7 +30,7 @@
   </div>
 
   <div class="flex items-center gap-3">
-    <span class="text-sm px-3 py-1 rounded-full" style="background: #F3F4F6; color: #6B7280;">
+    <span class="usage-badge">
       {{ linksUsed() }} / {{ linksAllowed() !== null ? linksAllowed() : 'Unlimited' }} links
     </span>
     <button mat-flat-button color="primary" [disabled]="!canCreateLink()" (click)="newLink()"> <mat-icon>add</mat-icon> New Link</button>
