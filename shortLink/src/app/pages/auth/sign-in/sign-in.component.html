@@ -1,49 +1,145 @@
-<div class="flex flex-col lg:flex-row h-screen overflow-hidden">
-  <div class="hidden lg:block lg:w-2/3">
-    <img class="w-full h-full object-cover" src="assets/auth-background.jpg" alt="Auth Background" />
+<div class="auth-layout">
+
+  <!-- ===== Left Brand Panel (desktop only, decorative) ===== -->
+  <div class="auth-brand-panel" aria-hidden="true">
+    <div class="brand-blob brand-blob--1"></div>
+    <div class="brand-blob brand-blob--2"></div>
+
+    <div class="brand-inner">
+
+      <!-- Logo -->
+      <div class="auth-logo">
+        <span class="auth-logo__mark">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M13.828 10.172a4 4 0 0 0-5.656 0l-4 4a4 4 0 1 0 5.656 5.656l1.102-1.101m-.758-4.899a4 4 0 0 0 5.656 0l4-4a4 4 0 0 0-5.656-5.656l-1.1 1.1"
+                  stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="auth-logo__name">Shorty</span>
+      </div>
+
+      <!-- Headline -->
+      <div class="brand-copy">
+        <h1 class="brand-headline">
+          Powerful links.<br>
+          <span class="brand-headline--accent">Simple analytics.</span>
+        </h1>
+        <p class="brand-sub">
+          Shorten, track, and optimise every link — all from one elegant dashboard.
+        </p>
+      </div>
+
+      <!-- Feature list -->
+      <ul class="brand-features" role="list">
+        <li class="brand-feature">
+          <span class="brand-feature__icon">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"/>
+            </svg>
+          </span>
+          <span>Custom short URLs in seconds</span>
+        </li>
+        <li class="brand-feature">
+          <span class="brand-feature__icon">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+            </svg>
+          </span>
+          <span>Real-time click analytics &amp; geo data</span>
+        </li>
+        <li class="brand-feature">
+          <span class="brand-feature__icon">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+            </svg>
+          </span>
+          <span>Password protection &amp; link expiry</span>
+        </li>
+      </ul>
+
+      <!-- Decorative stats card -->
+      <div class="brand-stats">
+        <div class="brand-stat">
+          <span class="brand-stat__value">12.4k</span>
+          <span class="brand-stat__label">Clicks Today</span>
+        </div>
+        <div class="brand-stats__sep"></div>
+        <div class="brand-stat">
+          <span class="brand-stat__value">98</span>
+          <span class="brand-stat__label">Active Links</span>
+        </div>
+        <div class="brand-stats__sep"></div>
+        <div class="brand-stat">
+          <span class="brand-stat__value">4.2×</span>
+          <span class="brand-stat__label">Avg. CTR</span>
+        </div>
+      </div>
+
+    </div>
   </div>
 
-  <div class="w-full lg:w-1/3 p-4 lg:p-10 flex flex-col justify-center items-center">
-    <form [formGroup]="formGroup" class="sign-in-form">
-      <!-- Title -->
-      <div class="mb-10">
-        <h2 class="!text-4xl !font-light mb-0">
-          Welcome, log in to your account.
-        </h2>
+  <!-- ===== Right Form Panel ===== -->
+  <div class="auth-form-panel">
+
+    <!-- Mobile logo (hidden on desktop) -->
+    <div class="auth-logo auth-logo--mobile">
+      <span class="auth-logo__mark">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M13.828 10.172a4 4 0 0 0-5.656 0l-4 4a4 4 0 1 0 5.656 5.656l1.102-1.101m-.758-4.899a4 4 0 0 0 5.656 0l4-4a4 4 0 0 0-5.656-5.656l-1.1 1.1"
+                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="auth-logo__name">Shorty</span>
+    </div>
+
+    <form [formGroup]="formGroup" class="sign-in-form" novalidate>
+
+      <!-- Header -->
+      <div class="form-header">
+        <h2>Welcome back</h2>
+        <p class="form-header__sub">Sign in to your account to continue</p>
       </div>
 
-      <div id="google-signin-button"></div>
-
-      <div class="w-full text-center mb-6">
-        <span class="font-light text-sm text-light mb-10"
-          >Or sign in with</span
-        >
+      <!-- Google Sign In -->
+      <div class="google-area">
+        <div id="google-signin-button"></div>
       </div>
 
-      <!-- Email Input -->
+      <!-- Or divider -->
+      <div class="or-divider" role="separator" aria-label="Or">
+        <span class="or-divider__line"></span>
+        <span class="or-divider__label">or continue with email</span>
+        <span class="or-divider__line"></span>
+      </div>
+
+      <!-- Email -->
       <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Email Address</mat-label>
         <input
           matInput
           [formControl]="controls.email"
-          placeholder="example@domain.com"
+          placeholder="you@example.com"
+          type="email"
+          autocomplete="email"
         />
         <mat-error *ngIf="emailErrorMessage">{{ emailErrorMessage }}</mat-error>
       </mat-form-field>
 
-      <!-- Password Input with Toggle -->
-      <mat-form-field appearance="outline" class="w-full mb-2">
+      <!-- Password -->
+      <mat-form-field appearance="outline" class="w-full mb-1">
         <mat-label>Password</mat-label>
         <input
           matInput
           [type]="showPassword ? 'text' : 'password'"
           [formControl]="controls.password"
+          autocomplete="current-password"
         />
         <button
           mat-icon-button
           matSuffix
           (click)="togglePasswordVisibility()"
           type="button"
+          [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
         >
           <mat-icon color="primary">{{
             showPassword ? "visibility_off" : "visibility"
@@ -54,30 +150,30 @@
         }}</mat-error>
       </mat-form-field>
 
-      <div class="flex flex-col items-center justify-center">
-        <!-- Login Button -->
-        <button
-          mat-raised-button
-          color="primary"
-          class="mb-2 w-full"
-          [disabled]="!formGroup.valid || isSignInButtonLoading()"
-          (click)="signIn()"
-        >
-          <div class="flex items-center justify-center">
-            Sign In @if (isSignInButtonLoading()) {
-            <mat-spinner class="button-loading-spinner" />
-            }
-          </div>
-        </button>
+      <!-- Submit -->
+      <button
+        mat-raised-button
+        color="primary"
+        class="w-full submit-btn"
+        [disabled]="!formGroup.valid || isSignInButtonLoading()"
+        (click)="signIn()"
+        type="button"
+        aria-label="Sign in to your account"
+      >
+        <div class="flex items-center justify-center">
+          Sign In @if (isSignInButtonLoading()) {
+          <mat-spinner class="button-loading-spinner" />
+          }
+        </div>
+      </button>
+
+      <!-- Footer -->
+      <div class="form-footer">
+        Don't have an account?
+        <a routerLink="/auth/sign-up">Sign up free</a>
       </div>
 
-      <!-- Redirect to sign-up -->
-      <div class="text-center mt-4">
-        <span class="text-sm">
-          Don't Have an Account?
-          <a class="text-primary" routerLink="/auth/sign-up">Sign Up</a>
-        </span>
-      </div>
     </form>
   </div>
+
 </div>
