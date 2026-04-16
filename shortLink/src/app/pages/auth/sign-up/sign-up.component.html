@@ -1,49 +1,144 @@
-<div class="flex flex-col lg:flex-row h-screen overflow-hidden">
-  <div class="hidden lg:block lg:w-2/3">
-    <img class="w-full h-full object-cover" src="assets/auth-background.jpg" alt="Auth Background" />
+<div class="auth-layout">
+
+  <!-- ===== Left Brand Panel (desktop only, decorative) ===== -->
+  <div class="auth-brand-panel" aria-hidden="true">
+    <div class="brand-blob brand-blob--1"></div>
+    <div class="brand-blob brand-blob--2"></div>
+
+    <div class="brand-inner">
+
+      <!-- Logo -->
+      <div class="auth-logo">
+        <span class="auth-logo__mark">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M13.828 10.172a4 4 0 0 0-5.656 0l-4 4a4 4 0 1 0 5.656 5.656l1.102-1.101m-.758-4.899a4 4 0 0 0 5.656 0l4-4a4 4 0 0 0-5.656-5.656l-1.1 1.1"
+                  stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="auth-logo__name">Shorty</span>
+      </div>
+
+      <!-- Headline -->
+      <div class="brand-copy">
+        <h1 class="brand-headline">
+          Your links,<br>
+          <span class="brand-headline--accent">your analytics.</span>
+        </h1>
+        <p class="brand-sub">
+          Join thousands of creators and teams who trust Shorty to manage their links.
+        </p>
+      </div>
+
+      <!-- Feature list -->
+      <ul class="brand-features" role="list">
+        <li class="brand-feature">
+          <span class="brand-feature__icon">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+          </span>
+          <span>Free to start — no credit card required</span>
+        </li>
+        <li class="brand-feature">
+          <span class="brand-feature__icon">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+            </svg>
+          </span>
+          <span>Click analytics &amp; location insights</span>
+        </li>
+        <li class="brand-feature">
+          <span class="brand-feature__icon">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+            </svg>
+          </span>
+          <span>Custom suffixes &amp; password protection</span>
+        </li>
+      </ul>
+
+      <!-- Decorative stats card -->
+      <div class="brand-stats">
+        <div class="brand-stat">
+          <span class="brand-stat__value">50k+</span>
+          <span class="brand-stat__label">Users</span>
+        </div>
+        <div class="brand-stats__sep"></div>
+        <div class="brand-stat">
+          <span class="brand-stat__value">2M+</span>
+          <span class="brand-stat__label">Links Created</span>
+        </div>
+        <div class="brand-stats__sep"></div>
+        <div class="brand-stat">
+          <span class="brand-stat__value">99.9%</span>
+          <span class="brand-stat__label">Uptime</span>
+        </div>
+      </div>
+
+    </div>
   </div>
 
-  <div class="w-full lg:w-1/3 p-4 lg:p-10 flex flex-col justify-center items-center">
-    <form [formGroup]="formGroup" class="sign-up-form">
-      <!-- Title -->
-      <div class="mb-10">
-        <h2 class="!text-4xl !font-light mb-0">
-          Create your account to get started.
-        </h2>
+  <!-- ===== Right Form Panel ===== -->
+  <div class="auth-form-panel">
+
+    <!-- Mobile logo (hidden on desktop) -->
+    <div class="auth-logo auth-logo--mobile">
+      <span class="auth-logo__mark">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M13.828 10.172a4 4 0 0 0-5.656 0l-4 4a4 4 0 1 0 5.656 5.656l1.102-1.101m-.758-4.899a4 4 0 0 0 5.656 0l4-4a4 4 0 0 0-5.656-5.656l-1.1 1.1"
+                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="auth-logo__name">Shorty</span>
+    </div>
+
+    <form [formGroup]="formGroup" class="sign-up-form" novalidate>
+
+      <!-- Header -->
+      <div class="form-header">
+        <h2>Create your account</h2>
+        <p class="form-header__sub">Get started for free — no credit card required</p>
       </div>
 
-      <div id="google-signin-button"></div>
-
-
-      <div class="w-full text-center mb-6">
-        <span class="font-light text-sm text-light mb-10"
-          >Or sign in with</span
-        >
+      <!-- Google Sign In -->
+      <div class="google-area">
+        <div id="google-signin-button"></div>
       </div>
 
-      <!-- Email Input -->
+      <!-- Or divider -->
+      <div class="or-divider" role="separator" aria-label="Or">
+        <span class="or-divider__line"></span>
+        <span class="or-divider__label">or sign up with email</span>
+        <span class="or-divider__line"></span>
+      </div>
+
+      <!-- Email -->
       <mat-form-field appearance="outline" class="w-full mb-2">
         <mat-label>Email Address</mat-label>
         <input
           matInput
           [formControl]="controls.email"
-          placeholder="example@domain.com"
+          placeholder="you@example.com"
+          type="email"
+          autocomplete="email"
         />
       </mat-form-field>
 
-      <!-- Password Input with Toggle -->
-      <mat-form-field appearance="outline" class="w-full mb-2">
+      <!-- Password -->
+      <mat-form-field appearance="outline" class="w-full mb-1">
         <mat-label>Password</mat-label>
         <input
           matInput
           [type]="showPassword ? 'text' : 'password'"
           [formControl]="controls.password"
+          autocomplete="new-password"
         />
         <button
           mat-icon-button
           matSuffix
           (click)="togglePasswordVisibility()"
           type="button"
+          [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
         >
           <mat-icon color="primary">{{
             showPassword ? "visibility_off" : "visibility"
@@ -51,30 +146,30 @@
         </button>
       </mat-form-field>
 
-      <div class="flex flex-col items-center justify-center">
-        <!-- Sign Up Button -->
-        <button
-          mat-raised-button
-          color="primary"
-          class="mb-2 w-full"
-          [disabled]="!formGroup.valid || isSignUpButtonLoading()"
-          (click)="onSignUp()"
-        >
-          <div class="flex items-center justify-center">
-            Sign Up @if (isSignUpButtonLoading()) {
-            <mat-spinner class="button-loading-spinner" />
-            }
-          </div>
-        </button>
+      <!-- Submit -->
+      <button
+        mat-raised-button
+        color="primary"
+        class="w-full submit-btn"
+        [disabled]="!formGroup.valid || isSignUpButtonLoading()"
+        (click)="onSignUp()"
+        type="button"
+        aria-label="Create your account"
+      >
+        <div class="flex items-center justify-center">
+          Sign Up @if (isSignUpButtonLoading()) {
+          <mat-spinner class="button-loading-spinner" />
+          }
+        </div>
+      </button>
+
+      <!-- Footer -->
+      <div class="form-footer">
+        Already have an account?
+        <a routerLink="/auth/sign-in">Sign in</a>
       </div>
 
-      <!-- Redirect to sign-up -->
-      <div class="text-center mt-4">
-        <span class="text-sm">
-         Already Have an Account?
-          <a class="text-primary" routerLink="/auth/sign-in">Sign In</a>
-        </span>
-      </div>
     </form>
   </div>
+
 </div>

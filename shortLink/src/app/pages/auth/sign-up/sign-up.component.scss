@@ -1,23 +1,369 @@
+/* =====================================================
+   Auth Layout — full-screen split
+   ===================================================== */
+.auth-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  @media (min-width: 1024px) {
+    flex-direction: row;
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
+/* =====================================================
+   Brand Panel — left, desktop only
+   ===================================================== */
+.auth-brand-panel {
+  display: none;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--sidebar-bg);
+  background-image: radial-gradient(circle, rgba(129, 140, 248, 0.065) 1px, transparent 1px);
+  background-size: 26px 26px;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+
+  @media (min-width: 1024px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 0 0 50%;
+  }
+}
+
+/* Background blobs */
+.brand-blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(90px);
+
+  &--1 {
+    width: 460px;
+    height: 460px;
+    background: radial-gradient(circle, #8B5CF6, transparent 70%);
+    top: -150px;
+    left: -150px;
+    opacity: 0.22;
+  }
+
+  &--2 {
+    width: 340px;
+    height: 340px;
+    background: radial-gradient(circle, #6366F1, transparent 70%);
+    bottom: -100px;
+    right: -70px;
+    opacity: 0.14;
+  }
+}
+
+/* Brand inner wrapper */
+.brand-inner {
+  position: relative;
+  z-index: 1;
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* =====================================================
+   Logo — shared between brand panel & mobile top
+   ===================================================== */
+.auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+
+  &__mark {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    background: var(--gradient-brand);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45);
+
+    svg {
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+  }
+
+  &__name {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  /* Visible only on mobile */
+  &--mobile {
+    display: flex;
+    margin-bottom: 2rem;
+
+    @media (min-width: 1024px) {
+      display: none;
+    }
+  }
+}
+
+/* =====================================================
+   Brand copy
+   ===================================================== */
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.brand-headline {
+  font-size: clamp(1.75rem, 2.4vw, 2.25rem);
+  font-weight: var(--font-extrabold);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--color-text-primary);
+  margin: 0;
+
+  &--accent {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+.brand-sub {
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* =====================================================
+   Feature list
+   ===================================================== */
+.brand-features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.brand-feature {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+
+  &__icon {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    background: var(--color-primary-tint);
+    border: 1px solid rgba(129, 140, 248, 0.18);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 15px;
+      height: 15px;
+      color: var(--color-primary-light);
+    }
+  }
+}
+
+/* =====================================================
+   Stats card
+   ===================================================== */
+.brand-stats {
+  display: flex;
+  align-items: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-lg);
+  padding: 1.125rem 1.25rem;
+  box-shadow: var(--shadow-lg);
+
+  &__sep {
+    width: 1px;
+    height: 2rem;
+    background: var(--color-surface-border);
+    margin: 0 1rem;
+    flex-shrink: 0;
+  }
+}
+
+.brand-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+
+  &__value {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  &__label {
+    font-size: 10px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: var(--font-medium);
+    white-space: nowrap;
+  }
+}
+
+/* =====================================================
+   Form Panel — right side
+   ===================================================== */
+.auth-form-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  background: var(--color-app-bg);
+  overflow-y: auto;
+
+  /* Fade-up entrance */
+  animation: auth-panel-in 0.35s ease both;
+
+  @media (max-width: 374px) {
+    padding: 2rem 1rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 3rem 2.5rem;
+  }
+}
+
+@keyframes auth-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-form-panel {
+    animation: none;
+  }
+}
+
+/* =====================================================
+   Sign-up Form
+   ===================================================== */
 .sign-up-form {
   width: 100%;
-  max-width: 380px;
+  max-width: 400px;
 }
 
-h2 {
-  font-size: var(--text-3xl) !important;
-  font-weight: var(--font-bold) !important;
-  letter-spacing: -0.025em !important;
-  color: var(--color-text-primary);
-  line-height: 1.2;
+/* Form header */
+.form-header {
+  margin-bottom: 1.75rem;
+
+  h2 {
+    font-size: var(--text-3xl) !important;
+    font-weight: var(--font-bold) !important;
+    letter-spacing: -0.025em !important;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+    margin: 0 0 0.375rem !important;
+  }
+
+  &__sub {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
 }
 
-a {
-  color: var(--color-primary);
-  font-weight: var(--font-semibold);
-  text-decoration: none;
-  transition: color var(--transition-fast);
+/* Google button area */
+.google-area {
+  margin-bottom: 1.25rem;
+  min-height: 44px;
 
-  &:hover {
-    color: var(--color-primary-dark);
+  #google-signin-button {
+    width: 100%;
+  }
+}
+
+/* "Or" divider */
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+
+  &__line {
+    flex: 1;
+    height: 1px;
+    background: var(--color-surface-border);
+  }
+
+  &__label {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    font-weight: var(--font-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+}
+
+/* Submit button */
+.submit-btn {
+  height: 44px !important;
+  width: 100%;
+  margin-top: 0.375rem;
+  cursor: pointer;
+}
+
+/* Footer */
+.form-footer {
+  text-align: center;
+  margin-top: 1.25rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+
+  a {
+    color: var(--color-primary);
+    font-weight: var(--font-semibold);
+    text-decoration: none;
+    margin-left: 0.25rem;
+    transition: color var(--transition-fast);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-primary-light);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
   }
 }
