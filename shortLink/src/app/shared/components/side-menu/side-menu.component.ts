@@ -22,7 +22,7 @@ export class SideMenuComponent {
   private router = inject(Router);
 
   planName = computed(() => this.planFeaturesService.planName());
-  protected environment = environment; // FEATURE FLAG  
+     environment = environment; // FEATURE FLAG  
 
   itemClicked = output<void>();
   constructor() {
