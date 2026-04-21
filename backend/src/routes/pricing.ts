@@ -224,19 +224,17 @@ const pricingRoutes = (app: Express, io: Server) => {
         console.log(`[Webhook] Emitted ${eventName} for user: ${userId}`);
       }
 
-      // Handle subscription resume and payment recovery — restore active subscription
-      if (
-        eventName === SubscriptionEventTypes.subscription_resumed ||
-        eventName === SubscriptionEventTypes.subscription_payment_recovered
-      ) {
+      // Handle subscription resume — data is a Subscription object so productId is correct here
+      if (eventName === SubscriptionEventTypes.subscription_resumed) {
         await createUpdateSubscriptionHandler({ userId, subscriptionId, productId, status: 'active' });
         io.to(userId).emit("subscription-updated", { userId, eventType: eventName, subscriptionId, productId });
         console.log(`[Webhook] Emitted ${eventName} for user: ${userId}`);
       }
 
-      // Handle payment success — persist confirmed active subscription then notify frontend
+      // Handle payment success — data is a SubscriptionInvoice, NOT a Subscription.
+      // product_id does not exist on invoices, so we must not call createUpdateSubscriptionHandler here.
+      // The subscription record is already correct from the subscription_created event that fires first.
       if (eventName === SubscriptionEventTypes.subscription_payment_success) {
-        await createUpdateSubscriptionHandler({ userId, subscriptionId, productId, status: 'active' });
         io.to(userId).emit("payment-success", {
           userId,
           subscriptionId,
@@ -244,6 +242,13 @@ const pricingRoutes = (app: Express, io: Server) => {
           message: "Payment successful! Your subscription is now active."
         });
         console.log(`[Webhook] Emitted payment-success for user: ${userId}`);
+      }
+
+      // Handle payment recovery — also a SubscriptionInvoice event; same reason as above.
+      // Re-activation is handled by subscription_updated (Subscription object) which fires alongside this.
+      if (eventName === SubscriptionEventTypes.subscription_payment_recovered) {
+        io.to(userId).emit("subscription-updated", { userId, eventType: eventName });
+        console.log(`[Webhook] Emitted ${eventName} for user: ${userId}`);
       }
 
       // Handle payment failure
