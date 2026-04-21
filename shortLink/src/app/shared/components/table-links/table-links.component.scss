@@ -94,6 +94,10 @@ table td {
   }
 }
 
+.paginator {
+  margin-top: var(--space-2);
+}
+
 .expiration-info {
   font-size: 11px;
   color: var(--color-text-muted);

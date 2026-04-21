@@ -16,7 +16,11 @@
       "Bash(claude mcp:*)",
       "Bash(python3 skills/ui-ux-pro-max/scripts/search.py \"SaaS dashboard URL shortener dark auth login signup\" --design-system -p \"Shorty\")",
       "Bash(python.exe skills/ui-ux-pro-max/scripts/search.py \"SaaS dashboard auth signin signup dark\" --design-system -p \"Shorty\")",
-      "Bash(python.exe .claude/skills/ui-ux-pro-max/scripts/search.py \"SaaS dashboard auth signin signup dark\" --design-system -p \"Shorty\")"
+      "Bash(python.exe .claude/skills/ui-ux-pro-max/scripts/search.py \"SaaS dashboard auth signin signup dark\" --design-system -p \"Shorty\")",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.lemonsqueezy.com)",
+      "WebFetch(domain:www.postman.com)"
     ]
   }
 }
