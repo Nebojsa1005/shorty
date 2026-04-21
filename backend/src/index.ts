@@ -46,9 +46,13 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
   socket.on('join-room', (roomId) => {
     socket.join(roomId);
-    
     socket.emit('room-joined', { roomId, socketId: socket.id });
+  });
 
+  socket.on('leave-room', (roomId) => {
+    if (roomId) {
+      socket.leave(roomId);
+    }
   });
 
   socket.on('disconnect', () => {

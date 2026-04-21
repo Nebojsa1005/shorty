@@ -52,7 +52,7 @@ export class PricingService {
     return this.http
       .delete(
         `${environment.apiUrl}/api/subscriptions/${
-          this.user()?.subscription.subscriptionId
+          this.user()?.subscription?.subscriptionId
         }`, {
           body: {
             userId: this.user()?._id,
@@ -60,13 +60,7 @@ export class PricingService {
         }
       )
       .pipe(
-        switchMap(() => {
-          return this.http
-            .post(`${environment.apiUrl}/api/remove-subscription`, {
-              userId: this.user()?._id,
-            })
-            .pipe(switchMap((res: any) => this.authService.refreshUser()));
-        }),
+        switchMap(() => this.authService.refreshUser()),
         catchError((error) => {
           this.toastService.presentToast({
             position: 'bottom',

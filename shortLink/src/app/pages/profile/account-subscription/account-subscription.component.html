@@ -11,15 +11,35 @@
       <span class="plan-price">{{ subscriptionProduct()?.attributes?.price_formatted }}</span>
     </div>
 
-     <!-- Cancel Subscription -->
-  @if (userSubscription()) {
-    <div class="cancel-section !my-3">
-      <button mat-button class="cancel-btn" (click)="onCancelSubscription()">
-        <mat-icon>cancel</mat-icon>
-        Cancel Subscription
-      </button>
-    </div>
-  }
+    <!-- Cancel Subscription -->
+    @if (!showCancelConfirm()) {
+      <div class="cancel-section !my-3">
+        <button
+          mat-button
+          class="cancel-btn"
+          [disabled]="isCancelling()"
+          (click)="onCancelSubscription()"
+        >
+          @if (isCancelling()) {
+            <mat-spinner diameter="16" />
+          } @else {
+            <mat-icon>cancel</mat-icon>
+          }
+          Cancel Subscription
+        </button>
+      </div>
+    }
+
+    <!-- Inline cancel confirmation -->
+    @if (showCancelConfirm()) {
+      <div class="cancel-confirm !my-3">
+        <p class="cancel-confirm-text">Are you sure you want to cancel your subscription? You will lose access immediately.</p>
+        <div class="cancel-confirm-actions">
+          <button mat-flat-button color="warn" (click)="onConfirmCancel()">Yes, cancel</button>
+          <button mat-button (click)="onDismissCancel()">Keep subscription</button>
+        </div>
+      </div>
+    }
   }
 
   <!-- Special Offer Section - Only show if there's a higher tier available -->
