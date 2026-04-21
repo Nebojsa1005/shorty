@@ -4,6 +4,7 @@ import {
   computed,
   CUSTOM_ELEMENTS_SCHEMA,
   inject,
+  signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -50,6 +51,7 @@ export class PricingComponent {
   userProduct = computed(() => this.user()?.subscription?.productId);
 
   private currentDialogRef: MatDialogRef<ConfirmationComponent> | null = null;
+  isCheckoutOpen = signal(false);
 
   constructor() {
     this.pricingService.getAllProducts().pipe(takeUntilDestroyed()).subscribe();
@@ -114,6 +116,9 @@ export class PricingComponent {
   }
 
   onBuyNow(buyNowUrl: string) {
+    if (this.isCheckoutOpen()) return;
+
+    this.isCheckoutOpen.set(true);
     window.open(
       `${buyNowUrl}?checkout[custom][userId]=${this.user()?._id}`,
       '_blank'
@@ -125,11 +130,12 @@ export class PricingComponent {
   openConfirmationDialog() {
     this.currentDialogRef = this.dialog.open(ConfirmationComponent, {
       width: '400px',
-      disableClose: true, // Prevent closing while processing
+      disableClose: true,
     });
 
     this.currentDialogRef.afterClosed().subscribe(() => {
       this.currentDialogRef = null;
+      this.isCheckoutOpen.set(false);
     });
   }
 

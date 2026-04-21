@@ -209,18 +209,34 @@ const pricingRoutes = (app: Express, io: Server) => {
 
       // Handle subscription cancellation
       if (eventName === SubscriptionEventTypes.subscription_cancelled) {
-        await cancelSubscriptionHandler({
-          userId,
-        });
-        io.to(userId).emit("subscription-updated", {
-          userId,
-          eventType: eventName
-        });
+        await cancelSubscriptionHandler({ userId });
+        io.to(userId).emit("subscription-updated", { userId, eventType: eventName });
         console.log(`[Webhook] Emitted subscription-cancelled for user: ${userId}`);
       }
 
-      // Handle payment success
+      // Handle subscription expiry and pause — revoke access the same way as cancellation
+      if (
+        eventName === SubscriptionEventTypes.subscription_expired ||
+        eventName === SubscriptionEventTypes.subscription_paused
+      ) {
+        await cancelSubscriptionHandler({ userId });
+        io.to(userId).emit("subscription-updated", { userId, eventType: eventName });
+        console.log(`[Webhook] Emitted ${eventName} for user: ${userId}`);
+      }
+
+      // Handle subscription resume and payment recovery — restore active subscription
+      if (
+        eventName === SubscriptionEventTypes.subscription_resumed ||
+        eventName === SubscriptionEventTypes.subscription_payment_recovered
+      ) {
+        await createUpdateSubscriptionHandler({ userId, subscriptionId, productId, status: 'active' });
+        io.to(userId).emit("subscription-updated", { userId, eventType: eventName, subscriptionId, productId });
+        console.log(`[Webhook] Emitted ${eventName} for user: ${userId}`);
+      }
+
+      // Handle payment success — persist confirmed active subscription then notify frontend
       if (eventName === SubscriptionEventTypes.subscription_payment_success) {
+        await createUpdateSubscriptionHandler({ userId, subscriptionId, productId, status: 'active' });
         io.to(userId).emit("payment-success", {
           userId,
           subscriptionId,

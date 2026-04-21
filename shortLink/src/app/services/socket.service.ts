@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal, untracked } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
@@ -103,11 +103,20 @@ export class SocketService {
       console.log('🔗 Links updated via cron:', data);
       this.linksUpdatedSubject.next(data);
     });
+
+    // When user logs out (userId becomes null), disconnect the socket.
+    // Socket.IO automatically removes the socket from all rooms on disconnect.
+    effect(() => {
+      const userId = this.userId();
+      if (!userId && untracked(() => this.hasJoinedRoom())) {
+        this.socket.disconnect();
+      }
+    });
   }
 
   joinRoom() {
     const userId = this.userId();
-    
+
     if (!userId) {
       console.warn('⚠️ Cannot join room: userId is not available');
       return;
@@ -118,7 +127,11 @@ export class SocketService {
     }
 
     if (!this.isConnected()) {
-      console.warn('⚠️ Cannot join room: socket not connected, will join on connect');
+      // Reconnect if socket was explicitly disconnected (e.g. after logout)
+      if (!this.socket.connected) {
+        this.socket.connect();
+      }
+      // Will join the room once the 'connect' event fires
       return;
     }
 

@@ -32,6 +32,10 @@ export const createUpdateSubscriptionHandler = async ({
   }
 
   await populatedUser.save();
+
+  if (status !== 'active') {
+    await UserModel.findByIdAndUpdate(userId, { subscription: null });
+  }
 };
 
 export const cancelSubscriptionHandler = async ({
@@ -47,6 +51,10 @@ export const cancelSubscriptionHandler = async ({
   await SubscriptionModel.findByIdAndUpdate(user.subscription._id, {
     status: "cancelled",
     linksAllowed: 0,
+  });
+
+  await UserModel.findByIdAndUpdate(userId, {
+    subscription: null,
   });
 };
 
