@@ -72,7 +72,16 @@ const pricingRoutes = (app: Express, io: Server) => {
         }
       );
       const data = await response.json();
-      await deleteSubscriptionHandler({userId})
+
+      // Only clear local state when Lemon Squeezy confirms the cancellation.
+      // If the LS call fails (wrong ID, auth error, etc.) we must not touch
+      // the local DB — the subscription is still active on their side.
+      if (response.ok) {
+        await deleteSubscriptionHandler({ userId });
+      } else {
+        console.error(`[Cancel] Lemon Squeezy rejected cancellation for subscription ${subscriptionId}: ${response.status}`, data);
+      }
+
       return res.status(response.status).json(data);
     } catch (error) {
       return ServerResponse.serverError(
