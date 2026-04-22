@@ -77,35 +77,32 @@
   align-items: center;
   gap: 0.625rem;
 
-  &__mark {
-    width: 36px;
+  img:first-child {
     height: 36px;
-    min-width: 36px;
-    background: var(--gradient-brand);
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45);
-
-    svg {
-      width: 20px;
-      height: 20px;
-      display: block;
-    }
+    width: auto;
+    display: block;
   }
 
-  &__name {
-    font-size: var(--text-xl);
-    font-weight: var(--font-bold);
-    color: var(--color-text-primary);
-    letter-spacing: -0.02em;
+  img:last-child {
+    height: 26px;
+    width: auto;
+    display: block;
   }
 
   /* Visible only on mobile */
   &--mobile {
     display: flex;
     margin-bottom: 2rem;
+
+    img:first-child {
+      height: var(--space-8);
+      width: auto;
+    }
+
+    img:last-child {
+      height: 22px;
+      width: auto;
+    }
 
     @media (min-width: 1024px) {
       display: none;

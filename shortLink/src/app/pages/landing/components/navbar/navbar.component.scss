@@ -44,6 +44,12 @@
     span {
       transition: color 0.15s;
     }
+
+    img {
+      height: 28px;
+      width: auto;
+      display: block;
+    }
   }
 
   &__links {

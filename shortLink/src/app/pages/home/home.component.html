@@ -6,7 +6,10 @@
     [opened]="isDrawerOpened()"
     position="start"
   >
-    <mat-toolbar></mat-toolbar>
+    <mat-toolbar class="sidenav-brand">
+      <img src="assets/shrink/purple-tile-medium.png" alt="" aria-hidden="true" />
+      <img src="assets/wordmark/gradient-medium.png" alt="minculum" />
+    </mat-toolbar>
     <app-side-menu (itemClicked)="onSideMenuItemClicked()" />
   </mat-sidenav>
 

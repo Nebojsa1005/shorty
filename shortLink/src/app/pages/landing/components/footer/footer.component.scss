@@ -35,6 +35,12 @@
   font-size: 1rem;
   letter-spacing: -0.02em;
 
+  img {
+    height: var(--space-6);
+    width: auto;
+    display: block;
+  }
+
   &:hover {
     opacity: 0.85;
   }
