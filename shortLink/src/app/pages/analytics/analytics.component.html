@@ -5,52 +5,48 @@
 	  [loading]="analyticsLoading()"
 	></app-overview-cards>
 
-	<!-- Row 2: Top Links + Export button -->
+	<!-- Row 2: Top Links -->
 	<div class="flex flex-col md:flex-row gap-4 w-full">
 		<div class="w-full">
 			<app-top-links
 			  [topLinks]="topLinks()"
 			  [loading]="analyticsLoading()"
-			  [planLinksCount]="topLinksCount()"
 			  (periodChange)="onPeriodChange($event)"
 			></app-top-links>
 		</div>
 	</div>
 
-<!-- Row 3: Device Breakdown + Location Breakdown -->
-	@if (canViewAdvancedAnalytics()) {
-		<div class="flex flex-col md:flex-row gap-4 w-full">
-			<div class="w-full md:w-1/2">
+	<!-- Row 3: Device Breakdown + Location Breakdown -->
+	<div class="flex flex-col md:flex-row gap-4 w-full">
+		<div class="w-full md:w-1/2">
+			@if (canViewAdvancedAnalytics() && !deviceBreakdownError()) {
 				<app-device-breakdown
 				  [breakdown]="deviceBreakdown()"
 				  [loading]="analyticsLoading()"
 				></app-device-breakdown>
-			</div>
-			<div class="w-full md:w-1/2">
+			} @else {
+				<app-upgrade-prompt
+				  featureName="Device Breakdown"
+				  [message]="deviceBreakdownError() || 'Device breakdown requires a Pro or Ultimate plan.'"
+				></app-upgrade-prompt>
+			}
+		</div>
+		<div class="w-full md:w-1/2">
+			@if (canViewAdvancedAnalytics() && !locationBreakdownError()) {
 				<app-location-breakdown
 				  [breakdown]="locationBreakdown()"
 				  [loading]="analyticsLoading()"
 				></app-location-breakdown>
-			</div>
+			} @else {
+				<app-upgrade-prompt
+				  featureName="Location Breakdown"
+				  [message]="locationBreakdownError() || 'Location breakdown requires a Pro or Ultimate plan.'"
+				></app-upgrade-prompt>
+			}
 		</div>
-	} @else {
-		<div class="flex flex-col md:flex-row gap-4 w-full">
-			<div class="w-full md:w-1/2">
-				<div class="analytics-locked-card">
-					<h4 class="analytics-section-title">Device Breakdown</h4>
-					<app-upgrade-prompt message="Device breakdown requires a Pro or Ultimate plan."></app-upgrade-prompt>
-				</div>
-			</div>
-			<div class="w-full md:w-1/2">
-				<div class="analytics-locked-card">
-					<h4 class="analytics-section-title">Location Breakdown</h4>
-					<app-upgrade-prompt message="Location breakdown requires a Pro or Ultimate plan."></app-upgrade-prompt>
-				</div>
-			</div>
-		</div>
-	}
+	</div>
 
-	<!-- Row 4: Best Performing (kept from existing) -->
+	<!-- Row 4: Best Performing -->
 	<div class="w-full">
 		<app-best-preforming
 		  [allLinks]="bestPreformingLinks()"

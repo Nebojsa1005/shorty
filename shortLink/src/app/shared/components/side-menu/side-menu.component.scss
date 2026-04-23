@@ -64,6 +64,36 @@
   font-weight: var(--font-medium);
   color: var(--sidebar-text);
   font-family: var(--font-family);
+  transition: color var(--transition-fast);
+}
+
+/* Nav link hover & active state transitions */
+a[routerLink] {
+  mat-list-item {
+    transition:
+      background-color var(--transition-fast),
+      border-left-color var(--transition-fast) !important;
+
+    &:hover .menu-label {
+      color: var(--sidebar-text-hover);
+    }
+  }
+
+  &.active-link {
+    mat-list-item {
+      background: var(--sidebar-active-bg) !important;
+      border-left: 2px solid var(--sidebar-active-border);
+
+      .menu-label {
+        color: var(--sidebar-text-active);
+        font-weight: var(--font-semibold);
+      }
+
+      mat-icon {
+        color: var(--sidebar-icon-active) !important;
+      }
+    }
+  }
 }
 
 /* Plan badge */

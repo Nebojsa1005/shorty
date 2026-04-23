@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, DestroyRef, inject } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, OnDestroy, computed, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { UrlService } from 'src/app/services/url.service';
@@ -12,6 +12,8 @@ import { TopLinksComponent } from './top-links/top-links.component';
 import { DeviceBreakdownComponent } from './device-breakdown/device-breakdown.component';
 import { LocationBreakdownComponent } from './location-breakdown/location-breakdown.component';
 import { UpgradePromptComponent } from 'src/app/shared/components/upgrade-prompt/upgrade-prompt.component';
+import gsap from 'gsap';
+import { prefersReducedMotion } from 'src/app/shared/utils/gsap-animations';
 
 @Component({
   selector: 'app-analytics',
@@ -29,11 +31,13 @@ import { UpgradePromptComponent } from 'src/app/shared/components/upgrade-prompt
   templateUrl: './analytics.component.html',
   styleUrl: './analytics.component.scss',
 })
-export class AnalyticsComponent {
+export class AnalyticsComponent implements AfterViewInit, OnDestroy {
   private urlService = inject(UrlService);
   private analyticsDataService = inject(AnalyticsDataService);
   private destroyRef = inject(DestroyRef);
   private planFeaturesService = inject(PlanFeaturesService);
+  private el = inject(ElementRef<HTMLElement>);
+  private gsapCtx?: gsap.Context;
 
   allLinks = computed(() => this.urlService.allUrls());
   bestPreformingLinks = computed(() =>
@@ -49,19 +53,37 @@ export class AnalyticsComponent {
   topLinks = computed(() => this.analyticsDataService.topLinks());
   deviceBreakdown = computed(() => this.analyticsDataService.deviceBreakdown());
   locationBreakdown = computed(() => this.analyticsDataService.locationBreakdown());
+  deviceBreakdownError = computed(() => this.analyticsDataService.deviceBreakdownError());
+  locationBreakdownError = computed(() => this.analyticsDataService.locationBreakdownError());
   analyticsLoading = computed(() => this.analyticsDataService.loading());
 
-  // Plan feature gates
   canViewAdvancedAnalytics = computed(() => this.planFeaturesService.canViewAdvancedAnalytics());
-  topLinksCount            = computed(() => this.planFeaturesService.topLinksCount());
 
   constructor() {
     this.urlService.fetchAllUrls().pipe(takeUntilDestroyed()).subscribe();
     this.analyticsDataService.fetchAll().pipe(takeUntilDestroyed()).subscribe();
   }
 
+  ngAfterViewInit(): void {
+    if (prefersReducedMotion()) return;
+
+    this.gsapCtx = gsap.context(() => {
+      gsap.from('.flex.flex-col.gap-4.w-full > *', {
+        opacity: 0,
+        y: 20,
+        duration: 0.45,
+        stagger: 0.1,
+        ease: 'power2.out',
+        clearProps: 'all',
+      });
+    }, this.el.nativeElement);
+  }
+
+  ngOnDestroy(): void {
+    this.gsapCtx?.revert();
+  }
+
   onPeriodChange(period: string) {
     this.analyticsDataService.fetchTopLinks(period).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
-
 }

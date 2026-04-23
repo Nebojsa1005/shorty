@@ -1,5 +1,40 @@
 <div class="upgrade-prompt">
-  <span class="upgrade-prompt__icon">&#9432;</span>
-  <span class="upgrade-prompt__message">{{ message }}</span>
-  <a routerLink="/pricing" class="upgrade-prompt__link">Upgrade Plan</a>
+
+  <!-- Blurred chart placeholder (decorative) -->
+  <div class="upgrade-prompt__placeholder" aria-hidden="true">
+    <div class="ph-bars">
+      @for (b of barCount; track $index) {
+        <div class="ph-bar"></div>
+      }
+    </div>
+    <div class="ph-rows">
+      <div class="ph-row"></div>
+      <div class="ph-row ph-row--short"></div>
+      <div class="ph-row ph-row--shorter"></div>
+    </div>
+  </div>
+
+  <!-- Semi-opaque overlay that creates the frosted effect -->
+  <div class="upgrade-prompt__glass" aria-hidden="true"></div>
+
+  <!-- Main locked-state content -->
+  <div class="upgrade-prompt__content">
+    <div class="upgrade-prompt__lock-icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </svg>
+    </div>
+
+    <h4 class="upgrade-prompt__title">{{ featureName }}</h4>
+    <p class="upgrade-prompt__message">{{ message }}</p>
+
+    <a routerLink="/pricing" class="upgrade-prompt__cta">
+      Upgrade Plan
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+      </svg>
+    </a>
+  </div>
+
 </div>

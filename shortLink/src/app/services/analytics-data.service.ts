@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, forkJoin, of, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -16,6 +16,8 @@ interface AnalyticsDataState {
   topLinks: TopLink[];
   deviceBreakdown: DeviceBreakdown | null;
   locationBreakdown: LocationBreakdown | null;
+  deviceBreakdownError: string | null;
+  locationBreakdownError: string | null;
   loading: boolean;
 }
 
@@ -31,6 +33,8 @@ export class AnalyticsDataService {
     topLinks: [],
     deviceBreakdown: null,
     locationBreakdown: null,
+    deviceBreakdownError: null,
+    locationBreakdownError: null,
     loading: false,
   });
 
@@ -38,6 +42,8 @@ export class AnalyticsDataService {
   topLinks = computed(() => this.state().topLinks);
   deviceBreakdown = computed(() => this.state().deviceBreakdown);
   locationBreakdown = computed(() => this.state().locationBreakdown);
+  deviceBreakdownError = computed(() => this.state().deviceBreakdownError);
+  locationBreakdownError = computed(() => this.state().locationBreakdownError);
   loading = computed(() => this.state().loading);
 
   private get userId(): string {
@@ -78,9 +84,15 @@ export class AnalyticsDataService {
       )
       .pipe(
         tap((res) =>
-          this.state.update((s) => ({ ...s, deviceBreakdown: res.data }))
+          this.state.update((s) => ({ ...s, deviceBreakdown: res.data, deviceBreakdownError: null }))
         ),
-        catchError(() => of(null))
+        catchError((err: HttpErrorResponse) => {
+          if (err.status === 403) {
+            const message: string = err.error?.message ?? 'Device breakdown requires a Pro or Ultimate plan.';
+            this.state.update((s) => ({ ...s, deviceBreakdownError: message }));
+          }
+          return of(null);
+        })
       );
   }
 
@@ -91,9 +103,15 @@ export class AnalyticsDataService {
       )
       .pipe(
         tap((res) =>
-          this.state.update((s) => ({ ...s, locationBreakdown: res.data }))
+          this.state.update((s) => ({ ...s, locationBreakdown: res.data, locationBreakdownError: null }))
         ),
-        catchError(() => of(null))
+        catchError((err: HttpErrorResponse) => {
+          if (err.status === 403) {
+            const message: string = err.error?.message ?? 'Location breakdown requires a Pro or Ultimate plan.';
+            this.state.update((s) => ({ ...s, locationBreakdownError: message }));
+          }
+          return of(null);
+        })
       );
   }
 

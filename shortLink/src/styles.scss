@@ -633,3 +633,67 @@ mat-sidenav.sidenav {
   font-size: var(--text-xs) !important;
   border-radius: var(--radius-sm) !important;
 }
+
+/* ============================================================
+   GLOBAL ANIMATIONS & INTERACTIONS
+   ============================================================ */
+
+/* Button micro-interactions */
+.mat-mdc-raised-button,
+.mat-mdc-flat-button,
+.mat-mdc-outlined-button,
+button[mat-flat-button],
+button[mat-raised-button],
+button[mat-button] {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast) !important;
+
+  &:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md) !important;
+  }
+
+  &:not(:disabled):active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: var(--shadow-xs) !important;
+    transition-duration: 80ms !important;
+  }
+}
+
+/* Card hover effects — dashboard cards */
+.mat-mdc-card,
+.analytics-card,
+.overview-card,
+.top-link-card {
+  transition: transform var(--transition-base), box-shadow var(--transition-base) !important;
+  cursor: default;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg) !important;
+  }
+}
+
+/* Sidebar nav item transitions */
+mat-list-item {
+  transition: background-color var(--transition-fast), color var(--transition-fast) !important;
+}
+
+/* ============================================================
+   PREFERS-REDUCED-MOTION — disable all motion globally
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Ensure GSAP-animated elements remain visible */
+  [style*="opacity: 0"],
+  [style*="opacity:0"] {
+    opacity: 1 !important;
+  }
+}

@@ -42,11 +42,19 @@ export class AccountSubscriptionComponent {
   showCancelConfirm = signal(false);
   isCancelling = signal(false);
 
+  hasSubscription = computed(() => !!this.userSubscription()?.productId);
+
   nextTierProduct = computed(() => {
     const products = this.allProducts();
-    const currentProduct = this.subscriptionProduct();
 
-    if (!products || !currentProduct) return null;
+    if (!products) return null;
+
+    if (!this.hasSubscription()) {
+      return products.find((p: any) => p.attributes?.name === PricingPlan.ESSENTIAL) || null;
+    }
+
+    const currentProduct = this.subscriptionProduct();
+    if (!currentProduct) return null;
 
     const currentPlanName = currentProduct.attributes?.name;
     const currentTierIndex = PLAN_ORDER.indexOf(currentPlanName as PricingPlan);
@@ -66,10 +74,13 @@ export class AccountSubscriptionComponent {
   });
 
   ngOnInit() {
-    this.pricingService
-      .getProductById(this.userSubscription()?.productId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+    const productId = this.userSubscription()?.productId;
+    if (productId) {
+      this.pricingService
+        .getProductById(productId)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe();
+    }
 
     this.pricingService
       .getAllProducts()

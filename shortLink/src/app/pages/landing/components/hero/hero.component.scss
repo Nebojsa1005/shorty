@@ -17,29 +17,29 @@
   }
 }
 
-/* Soft background blobs */
+/* Gradient background blobs */
 .hero__bg-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
+  filter: blur(90px);
   pointer-events: none;
   z-index: 0;
-  opacity: 0.15;
-  width: 520px;
-  height: 520px;
-  background: radial-gradient(circle, #9a4eae, transparent 70%);
-  top: -100px;
-  left: -100px;
+  opacity: 0.18;
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(circle, #8B5CF6, transparent 70%);
+  top: -120px;
+  left: -120px;
 
   &--2 {
-    background: radial-gradient(circle, #6366f1, transparent 70%);
+    background: radial-gradient(circle, #6366F1, transparent 70%);
     top: auto;
     left: auto;
-    bottom: -120px;
+    bottom: -100px;
     right: -80px;
-    width: 400px;
-    height: 400px;
-    opacity: 0.1;
+    width: 420px;
+    height: 420px;
+    opacity: 0.12;
   }
 }
 
@@ -47,7 +47,7 @@
   position: relative;
   z-index: 1;
   flex: 1;
-  max-width: 540px;
+  max-width: 560px;
 
   @media (max-width: 900px) {
     max-width: 100%;
@@ -59,25 +59,34 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.35rem 0.85rem;
-  background: #f5f0ff;
-  border: 1px solid #e0d4f5;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #6b21a8;
+  background: var(--color-primary-tint);
+  border: 1px solid rgba(129, 140, 248, 0.2);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--color-primary-light);
   margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: var(--font-family);
+
+  svg {
+    color: var(--color-primary);
+    flex-shrink: 0;
+  }
 }
 
 .hero__headline {
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
-  font-weight: 800;
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-weight: var(--font-extrabold);
   line-height: 1.1;
   letter-spacing: -0.03em;
-  color: #0f172a;
+  color: var(--color-text-primary);
   margin: 0 0 1.25rem;
+  font-family: var(--font-family);
 
   &--accent {
-    background: linear-gradient(96deg, #9a4eae, #6366f1);
+    background: var(--gradient-brand);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -85,11 +94,12 @@
 }
 
 .hero__subheading {
-  font-size: 1.1rem;
+  font-size: var(--text-lg);
   line-height: 1.7;
-  color: #64748b;
+  color: var(--color-text-secondary);
   margin: 0 0 2rem;
   max-width: 460px;
+  font-family: var(--font-family);
 
   @media (max-width: 900px) {
     max-width: 100%;
@@ -109,15 +119,17 @@
 
 .hero__social-proof {
   margin: 1.5rem 0 0;
-  font-size: 0.85rem;
-  color: #94a3b8;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-family: var(--font-family);
 
   strong {
-    color: #475569;
+    color: var(--color-text-secondary);
+    font-weight: var(--font-semibold);
   }
 }
 
-/* Preview card */
+/* Dashboard preview card */
 .hero__preview {
   position: relative;
   z-index: 1;
@@ -131,10 +143,10 @@
 }
 
 .preview-card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.07);
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
   overflow: hidden;
 
   &__header {
@@ -142,14 +154,15 @@
     align-items: center;
     gap: 0.4rem;
     padding: 0.75rem 1rem;
-    background: #f9fafb;
-    border-bottom: 1px solid #f1f5f9;
+    background: var(--color-surface-raised);
+    border-bottom: 1px solid var(--color-surface-border);
   }
 
   &__title {
-    font-size: 0.75rem;
-    color: #94a3b8;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
     margin-left: 0.25rem;
+    font-family: var(--font-family);
   }
 
   &__body {
@@ -182,26 +195,27 @@
   flex: 1;
 
   &__label {
-    font-size: 0.72rem;
-    color: #94a3b8;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    font-family: var(--font-family);
   }
 
   &__value {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #0f172a;
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    color: var(--color-text-primary);
     letter-spacing: -0.02em;
+    font-family: var(--font-family);
   }
 
   &__delta {
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    font-family: var(--font-family);
 
-    &.up {
-      color: #16a34a;
-    }
+    &.up { color: var(--color-success); }
   }
 }
 
@@ -210,21 +224,19 @@
   align-items: flex-end;
   gap: 4px;
   height: 80px;
-  background: #f8fafc;
-  border-radius: 10px;
+  background: var(--color-surface-subtle);
+  border-radius: var(--radius-md);
   padding: 0.75rem 0.75rem 0;
 }
 
 .bar {
   flex: 1;
   border-radius: 4px 4px 0 0;
-  background: linear-gradient(180deg, #9a4eae, #c084fc);
-  opacity: 0.85;
-  transition: opacity 0.2s;
+  background: var(--gradient-brand);
+  opacity: 0.65;
+  transition: opacity var(--transition-fast);
 
-  &:hover {
-    opacity: 1;
-  }
+  &:hover { opacity: 1; }
 }
 
 .link-row {
@@ -238,81 +250,77 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 0.75rem;
-  background: #f8fafc;
-  border-radius: 8px;
-  border: 1px solid #f1f5f9;
+  background: var(--color-surface-subtle);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-surface-border);
 }
 
 .link-pill {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #7c3aed;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--color-primary-light);
+  font-family: var(--font-family);
 }
 
 .link-clicks {
-  font-size: 0.78rem;
-  color: #94a3b8;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-family);
 }
 
-/* Shared CTA styles */
+/* CTA buttons */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.7rem 1.4rem;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
   color: #fff;
   text-decoration: none;
-  background: linear-gradient(96deg, #9a4eae -0.15%, #392a48 99.85%);
+  background: var(--gradient-brand-btn);
   border: none;
   cursor: pointer;
-  transition: opacity 0.15s, transform 0.15s;
+  font-family: var(--font-family);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+  transition: opacity var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
 
   &:hover {
     opacity: 0.9;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.45);
     transform: translateY(-1px);
   }
+
+  &:active { transform: translateY(0); }
 }
 
 .btn-ghost {
   display: inline-flex;
   align-items: center;
-  padding: 0.7rem 1.4rem;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #374151;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
   background: none;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-surface-border);
   cursor: pointer;
-  font-family: inherit;
-  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  font-family: var(--font-family);
+  transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
 
   &:hover {
-    border-color: #d1d5db;
-    background: #f9fafb;
+    border-color: var(--color-primary);
+    color: var(--color-primary-light);
+    background: var(--color-primary-tint);
     transform: translateY(-1px);
   }
 }
 
-/* Fade-in animation */
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade-in {
-  animation: fadeUp 0.6s ease both;
-
-  &--delay {
-    animation-delay: 0.15s;
+@media (prefers-reduced-motion: reduce) {
+  .hero__content,
+  .hero__preview {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

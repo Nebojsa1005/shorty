@@ -1,24 +1,20 @@
 <div class="top-links-card">
   <div class="top-links-header">
     <h4 class="top-links-title">Top Links</h4>
-    @if (planLinksCount() > 0) {
-      <div class="period-selector">
-        @for (period of periods; track period) {
-          <button
-            class="period-btn"
-            [class.period-btn--active]="activePeriod() === period"
-            (click)="selectPeriod(period)"
-          >
-            {{ period | titlecase }}
-          </button>
-        }
-      </div>
-    }
+    <div class="period-selector">
+      @for (period of periods; track period) {
+        <button
+          class="period-btn"
+          [class.period-btn--active]="activePeriod() === period"
+          (click)="selectPeriod(period)"
+        >
+          {{ period | titlecase }}
+        </button>
+      }
+    </div>
   </div>
 
-  @if (planLinksCount() === 0) {
-    <app-upgrade-prompt message="Top links analytics requires a Pro or Ultimate plan."></app-upgrade-prompt>
-  } @else if (displayedLinks().length === 0) {
+  @if (displayedLinks().length === 0) {
     <p class="top-links-empty">No visit data yet.</p>
   } @else {
     <div class="top-links-list">

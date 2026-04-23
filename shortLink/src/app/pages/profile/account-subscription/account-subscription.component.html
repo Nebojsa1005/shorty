@@ -1,8 +1,19 @@
 <div class="card p-4">
   <h3 class="card-title">Subscription</h3>
 
+  <!-- Free Plan Card (no active subscription) -->
+  @if (!hasSubscription()) {
+    <div class="plan-card mb-0">
+      <div class="plan-info">
+        <h4 class="plan-name">Free</h4>
+        <mat-chip class="current-plan-chip">Current plan</mat-chip>
+      </div>
+      <span class="plan-price">$0 / mo</span>
+    </div>
+  }
+
   <!-- Current Plan Card -->
-  @if (userSubscription()) {
+  @if (hasSubscription()) {
     <div class="plan-card mb-0">
       <div class="plan-info">
         <h4 class="plan-name">{{ subscriptionProduct()?.attributes?.name }}</h4>
@@ -72,7 +83,7 @@
   <div class="action-buttons">
     <button (click)="onChangePlan()" mat-stroked-button class="action-btn">
       <mat-icon>swap_horiz</mat-icon>
-      Change Plan
+      {{ hasSubscription() ? 'Change Plan' : 'Upgrade Plan' }}
     </button>
   </div>
 </div>

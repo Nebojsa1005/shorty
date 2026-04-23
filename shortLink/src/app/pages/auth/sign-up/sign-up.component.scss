@@ -364,3 +364,19 @@
     }
   }
 }
+
+
+/* Entrance animations handled by GSAP in sign-up.component.ts */
+@media (prefers-reduced-motion: reduce) {
+  .auth-brand-panel,
+  .auth-logo--mobile,
+  .form-header,
+  .google-area,
+  .or-divider,
+  mat-form-field,
+  .submit-btn,
+  .form-footer {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
