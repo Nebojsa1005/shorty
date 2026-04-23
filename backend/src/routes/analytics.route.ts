@@ -123,11 +123,6 @@ const analyticsRoutes = (app: Express) => {
 
       const planFeatures = await getPlanFeaturesHelper(userId);
 
-      // Essential: no top links feature
-      if (planFeatures.topLinksCount === 0) {
-        return ServerResponse.serverSuccess(res, 200, "Top links fetched", []);
-      }
-
       const analyticsIds = await getAnalyticsIdsForUser(userId);
       if (analyticsIds.length === 0) {
         return ServerResponse.serverSuccess(res, 200, "No links found", []);
@@ -147,7 +142,7 @@ const analyticsRoutes = (app: Express) => {
         { $match: matchStage },
         { $group: { _id: "$analytics", visitCount: { $sum: 1 } } },
         { $sort: { visitCount: -1 } },
-        { $limit: planFeatures.topLinksCount },
+        { $limit: 50 },
         {
           $lookup: {
             from: "analytics",

@@ -1,5 +1,14 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import gsap from 'gsap';
+import { prefersReducedMotion } from 'src/app/shared/utils/gsap-animations';
 
 export interface Feature {
   icon: string;
@@ -15,7 +24,10 @@ export interface Feature {
   templateUrl: './features.component.html',
   styleUrl: './features.component.scss',
 })
-export class FeaturesComponent {
+export class FeaturesComponent implements AfterViewInit, OnDestroy {
+  private el = inject(ElementRef<HTMLElement>);
+  private gsapCtx?: gsap.Context;
+
   features: Feature[] = [
     {
       icon: 'link',
@@ -51,7 +63,35 @@ export class FeaturesComponent {
       icon: 'zap',
       title: 'Instant redirects',
       description:
-        'Sub-50ms redirect latency globally. Your audience gets where theyre going without the wait.',
+        'Sub-50ms redirect latency globally. Your audience gets where they\'re going without the wait.',
     },
   ];
+
+  ngAfterViewInit(): void {
+    if (prefersReducedMotion()) return;
+
+    this.gsapCtx = gsap.context(() => {
+      gsap.from('.section-label, .section-title, .section-sub', {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        stagger: 0.08,
+        ease: 'power2.out',
+        clearProps: 'all',
+      });
+      gsap.from('.feature-card', {
+        opacity: 0,
+        y: 28,
+        duration: 0.5,
+        stagger: 0.07,
+        delay: 0.2,
+        ease: 'power2.out',
+        clearProps: 'all',
+      });
+    }, this.el.nativeElement);
+  }
+
+  ngOnDestroy(): void {
+    this.gsapCtx?.revert();
+  }
 }

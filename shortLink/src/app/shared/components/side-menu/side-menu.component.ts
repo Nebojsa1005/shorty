@@ -1,33 +1,35 @@
-import { Component, computed, inject, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
-import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
-import { UrlService } from 'src/app/services/url.service';
-import { PlanFeaturesService } from '../../../services/plan-features.service';
+import { Component, inject, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { Router, RouterModule } from '@angular/router';
+import { UrlService } from 'src/app/services/url.service';
 import { environment } from 'src/environments/environment';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
-    selector: 'app-side-menu',
-    imports: [CommonModule, MatListModule, MatIconModule, RouterModule, MatButtonModule],
-    templateUrl: './side-menu.component.html',
-    styleUrls: ['./side-menu.component.scss']
+  selector: 'app-side-menu',
+  imports: [
+    CommonModule,
+    MatListModule,
+    MatIconModule,
+    RouterModule,
+    MatButtonModule,
+  ],
+  templateUrl: './side-menu.component.html',
+  styleUrls: ['./side-menu.component.scss'],
 })
 export class SideMenuComponent {
   private authService = inject(AuthService);
   private urlService = inject(UrlService);
-  private planFeaturesService = inject(PlanFeaturesService);
   private router = inject(Router);
 
-  planName = computed(() => this.planFeaturesService.planName());
-     environment = environment; // FEATURE FLAG  
+  environment = environment; // FEATURE FLAG
 
   itemClicked = output<void>();
   constructor() {
-    console.log({environment});
-    
+    console.log({ environment });
   }
 
   navigate(path: string) {
@@ -43,6 +45,6 @@ export class SideMenuComponent {
   }
 
   newLink() {
-    this.urlService.updateState('isCreateEditLinkDrawerOpened', true)
+    this.urlService.updateState('isCreateEditLinkDrawerOpened', true);
   }
 }

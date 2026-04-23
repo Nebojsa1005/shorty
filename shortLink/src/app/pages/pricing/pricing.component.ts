@@ -1,11 +1,16 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
-  computed,
   CUSTOM_ELEMENTS_SCHEMA,
+  ElementRef,
+  OnDestroy,
+  computed,
   inject,
   signal,
 } from '@angular/core';
+import gsap from 'gsap';
+import { prefersReducedMotion } from 'src/app/shared/utils/gsap-animations';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -36,7 +41,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
   styleUrl: './pricing.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class PricingComponent {
+export class PricingComponent implements AfterViewInit, OnDestroy {
   private pricingService = inject(PricingService);
   private authService = inject(AuthService);
   private socketService = inject(SocketService);
@@ -50,11 +55,12 @@ export class PricingComponent {
   user = computed(() => this.authService.user());
   userProduct = computed(() => this.user()?.subscription?.productId);
 
+  private el = inject(ElementRef<HTMLElement>);
+  private gsapCtx?: gsap.Context;
   private currentDialogRef: MatDialogRef<ConfirmationComponent> | null = null;
   isCheckoutOpen = signal(false);
 
   constructor() {
-    this.pricingService.getAllProducts().pipe(takeUntilDestroyed()).subscribe();
 
     // Listen for payment success
     this.socketService.paymentSuccess$
@@ -113,6 +119,25 @@ export class PricingComponent {
           });
         }
       });
+  }
+
+
+  ngAfterViewInit(): void {
+    if (prefersReducedMotion()) return;
+    this.gsapCtx = gsap.context(() => {
+      gsap.from('.pricing-card', {
+        opacity: 0,
+        y: 28,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: 'power2.out',
+        clearProps: 'all',
+      });
+    }, this.el.nativeElement);
+  }
+
+  ngOnDestroy(): void {
+    this.gsapCtx?.revert();
   }
 
   onBuyNow(buyNowUrl: string) {

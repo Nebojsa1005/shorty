@@ -180,3 +180,15 @@
     flex-direction: column;
   }
 }
+
+@media (min-width: 1024px) {
+  :host {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .card {
+    flex: 1;
+  }
+}

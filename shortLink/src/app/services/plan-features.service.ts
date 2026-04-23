@@ -35,7 +35,7 @@ export class PlanFeaturesService {
 
   // Analytics flags
   analyticsRetentionDays   = computed(() => this.isEssential() ? 7 : this.isPro() ? 90 : null);
-  topLinksCount            = computed(() => this.isEssential() ? 0 : this.isPro() ? 10 : 50);
+  topLinksCount            = computed(() => this.isEssential() ? 5 : this.isPro() ? 10 : 50);
   canExportAnalytics       = computed(() => !this.isEssential());
   canViewAdvancedAnalytics = computed(() => !this.isEssential()); // device + location breakdown
 
