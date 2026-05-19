@@ -83,6 +83,28 @@ const pricingRoutes = (app: Express, io: Server) => {
     }
   });
 
+  // Generate a direct PDF download URL for a single invoice
+  app.get("/api/billing/invoice/:invoiceId", async (req, res) => {
+    try {
+      const { invoiceId } = req.params;
+
+      const generateResponse = await fetch(
+        `${lemonSqueezyApiUrl}/subscription-invoices/${invoiceId}/generate-invoice`,
+        { method: "POST", headers: lemonSqueezyHeaders }
+      );
+      const generateData = await generateResponse.json();
+      const downloadUrl = generateData.meta?.urls?.download_invoice;
+
+      if (!downloadUrl) {
+        return ServerResponse.serverError(res, 404, "Could not generate invoice URL");
+      }
+
+      return res.status(200).json({ invoice_url: downloadUrl });
+    } catch (error) {
+      return ServerResponse.serverError(res, 500, "Error generating invoice: " + error.message);
+    }
+  });
+
   // Proxy route: Get billing history (all subscription invoices for a user)
   app.get("/api/subscription-invoices", async (req, res) => {
     try {
@@ -141,9 +163,6 @@ const pricingRoutes = (app: Express, io: Server) => {
 
       return res.status(200).json({
         data: paginatedInvoices,
-        invoiceResults,
-        allInvoices,
-        subscriptions,
         meta: {
           page: {
             currentPage: page,

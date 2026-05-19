@@ -29,20 +29,42 @@
   margin: 0;
 }
 
-.invoice-link {
-  font-size: var(--text-sm);
-  color: var(--color-primary);
-  font-family: var(--font-family);
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-    color: var(--color-primary-light);
-  }
+.invoice-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
 }
 
 .invoice-total {
   font-weight: var(--font-semibold);
   font-family: var(--font-family);
   color: var(--color-text-primary);
+}
+
+.receipt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
+  height: 28px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+  font-family: var(--font-family);
+  color: var(--color-primary);
+  background: transparent;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary);
+    color: #fff;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
