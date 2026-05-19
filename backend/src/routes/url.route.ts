@@ -28,8 +28,8 @@ const isLinkExpired = (record: any): boolean => {
   if (record.status === LinkStatus.EXPIRED) return true;
 
   const now = Date.now();
-  if (record.expirationDate && new Date(record.expirationDate).getTime() < now) return true;
-  if (record.planExpiresAt && new Date(record.planExpiresAt).getTime() < now) return true;
+  if (record.userExpirationDate && new Date(record.userExpirationDate).getTime() < now) return true;
+  if (record.planExpirationDate && new Date(record.planExpirationDate).getTime() < now) return true;
 
   return false;
 };
@@ -113,7 +113,7 @@ const urlRoutes = (app: Express) => {
             suffix: record.suffix,
             password: record.password,
             security: record.security,
-            expirationDate: record.expirationDate,
+            userExpirationDate: record.userExpirationDate,
             status: LinkStatus.EXPIRED,
             analytics: record.analytics,
             user: record.user,
@@ -145,7 +145,7 @@ const urlRoutes = (app: Express) => {
 
         const suffix = formData.suffix;
         const security = formData.security;
-        const expirationDate = formData.expirationDate;
+        const userExpirationDate = formData.userExpirationDate;
         const shortLinkId = nanoid(10);
 
         const shortLink = `${BASE_URL}${
@@ -182,14 +182,14 @@ const urlRoutes = (app: Express) => {
           }
 
           // 3. Custom expiration date range check
-          if (expirationDate && planFeatures.maxExpirationDays !== null) {
+          if (userExpirationDate && planFeatures.maxExpirationDays !== null) {
             const maxMs = planFeatures.maxExpirationDays * 86400000;
-            if (new Date(expirationDate).getTime() - Date.now() > maxMs) {
+            if (new Date(userExpirationDate).getTime() - Date.now() > maxMs) {
               return ServerResponse.serverError(res, 403, `Expiration date cannot exceed ${planFeatures.maxExpirationDays} days on your plan`);
             }
           }
 
-          const planExpiresAt = expirationDate
+          const planExpirationDate = userExpirationDate
             ? null  // user set a custom expiration date → skip plan-based expiration
             : expirationConfig.planExpirationDays != null
               ? new Date(Date.now() + expirationConfig.planExpirationDays * 86400000)
@@ -203,13 +203,13 @@ const urlRoutes = (app: Express) => {
             urlName: formData.urlName,
             suffix,
             password,
-            expirationDate,
+            userExpirationDate,
             security,
             analytics: analytics._id,
             user: userId,
             shortLinkId,
             status: LinkStatus.ACTIVE,
-            planExpiresAt,
+            planExpirationDate,
             deleteAfterExpiredDays: expirationConfig.deleteAfterExpiredDays,
           });
 
@@ -270,7 +270,7 @@ const urlRoutes = (app: Express) => {
   app.put("/api/url/reactivate/:id", async (req: Request, res: Response): Promise<any> => {
     try {
       const { id } = req.params;
-      const { expirationDate, userId, noExpiration } = req.body;
+      const { userExpirationDate, userId, noExpiration } = req.body;
 
       const record = await UrlModel.findById(id);
       if (!record) {
@@ -282,7 +282,7 @@ const urlRoutes = (app: Express) => {
       const productId = user.subscription?.productId;
       const expirationConfig = getExpirationConfigForProduct(productId);
 
-      const planExpiresAt = (expirationDate || noExpiration)
+      const planExpirationDate = (userExpirationDate || noExpiration)
         ? null  // custom date OR explicitly "never" → skip plan-based expiration
         : expirationConfig.planExpirationDays != null
           ? new Date(Date.now() + expirationConfig.planExpirationDays * 86400000)
@@ -292,9 +292,9 @@ const urlRoutes = (app: Express) => {
         id,
         {
           status: LinkStatus.ACTIVE,
-          expirationDate: expirationDate || null,
+          userExpirationDate: userExpirationDate || null,
           expiredAt: null,
-          planExpiresAt,
+          planExpirationDate,
           deleteAfterExpiredDays: expirationConfig.deleteAfterExpiredDays,
         },
         { new: true }
@@ -331,7 +331,7 @@ const urlRoutes = (app: Express) => {
       const productId = user.subscription?.productId;
       const expirationConfig = getExpirationConfigForProduct(productId);
 
-      const planExpiresAt = expirationConfig.planExpirationDays != null
+      const planExpirationDate = expirationConfig.planExpirationDays != null
         ? new Date(Date.now() + expirationConfig.planExpirationDays * 86400000)
         : undefined;
 
@@ -353,7 +353,7 @@ const urlRoutes = (app: Express) => {
         user: userId,
         shortLinkId,
         status: LinkStatus.ACTIVE,
-        planExpiresAt,
+        planExpirationDate,
         deleteAfterExpiredDays: expirationConfig.deleteAfterExpiredDays,
       });
 

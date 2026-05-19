@@ -94,7 +94,7 @@ export class LinkFormComponent {
     suffix: ['', [Validators.maxLength(20)]],
     security: [0],
     password: [''],
-    expirationDate: [''],
+    userExpirationDate: [''],
   });
 
   resetAnalyticsControl = new FormControl<AnalyticsOption>(ANALYTICS_OPTIONS.KEEP);
@@ -177,7 +177,7 @@ export class LinkFormComponent {
       if (existingUrlLink) {
         this.formGroup.patchValue({
           destinationUrl: existingUrlLink.destinationUrl,
-          expirationDate: existingUrlLink.expirationDate,
+          userExpirationDate: existingUrlLink.userExpirationDate,
           security: existingUrlLink.security,
           suffix: existingUrlLink.suffix,
           urlName: existingUrlLink.urlName,

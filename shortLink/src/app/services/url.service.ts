@@ -236,13 +236,13 @@ export class UrlService {
       );
   }
 
-  reactivateLink(id: string, expirationDate: string | null, noExpiration: boolean = false) {
+  reactivateLink(id: string, userExpirationDate: string | null, noExpiration: boolean = false) {
     const userId = this.user()?._id;
     if (!userId) return of(null);
 
     return this.http
       .put<Response>(`${environment.apiUrl}/api/url/reactivate/${id}`, {
-        expirationDate,
+        userExpirationDate,
         userId,
         noExpiration,
       })

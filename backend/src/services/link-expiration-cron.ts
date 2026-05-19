@@ -41,8 +41,8 @@ const markExpiredLinks = async (io: Server) => {
     const query = {
       status: LinkStatus.ACTIVE,
       $or: [
-        { expirationDate: { $lt: now, $ne: null } },
-        { planExpiresAt: { $lt: now, $ne: null } },
+        { userExpirationDate: { $lt: now, $ne: null } },
+        { planExpirationDate: { $lt: now, $ne: null } },
       ],
     };
 

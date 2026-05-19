@@ -9,10 +9,10 @@ export interface UrlLink {
   security: SecurityOptions;
   suffix?: string;
   password?: string;
-  expirationDate?: string;
+  userExpirationDate?: string;
   status?: LinkStatus;
   expiredAt?: string;
-  planExpiresAt?: string;
+  planExpirationDate?: string;
   deleteAfterExpiredDays?: number;
   createdAt?: string;
   analytics: Analytics;

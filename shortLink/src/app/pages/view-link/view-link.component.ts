@@ -54,12 +54,12 @@ export class ViewLinkComponent {
       return false;
     }
 
-    if (!shortLink.expirationDate) {
+    if (!shortLink.userExpirationDate) {
       return true;
     }
 
     const valid =
-      new Date(shortLink.expirationDate).getTime() > new Date().getTime();
+      new Date(shortLink.userExpirationDate).getTime() > new Date().getTime();
 
     if (!valid) {
       return false;

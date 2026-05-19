@@ -5,12 +5,12 @@ export const populateAnalytics = async (url: UrlDocument) => {
 }
 
 export const expirationDateCheck = (url: UrlDocument): boolean => {
-	if (!url.expirationDate) return true
+	if (!url.userExpirationDate) return true
 
 	const now = new Date().getTime()
-	const expirationDate = new Date(url.expirationDate).getTime()
+	const userExpirationDate = new Date(url.userExpirationDate).getTime()
 
-	if (expirationDate < now) return false
+	if (userExpirationDate < now) return false
 
 	return true
 }

@@ -36,27 +36,44 @@
 
     <!-- Status Column -->
     <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-mobile">Status</th>
-      <td mat-cell *matCellDef="let row" class="hide-mobile">
-        <div class="status-cell">
-          <span
-            class="status-badge"
-            [class.active]="row.status === LinkStatus.ACTIVE || !row.status"
-            [class.expired]="row.status === LinkStatus.EXPIRED"
-          >
-            {{ row.status === LinkStatus.EXPIRED ? 'Expired' : 'Active' }}
-          </span>
-          <span class="expiration-info">{{ row | linkExpirationInfo }}</span>
-        </div>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <td mat-cell *matCellDef="let row">
+        <span
+          class="status-badge"
+          [class.active]="row.status === LinkStatus.ACTIVE || !row.status"
+          [class.expired]="row.status === LinkStatus.EXPIRED"
+        >
+          {{ row.status === LinkStatus.EXPIRED ? 'Expired' : 'Active' }}
+        </span>
       </td>
     </ng-container>
 
     <!-- Created At Column -->
     <ng-container matColumnDef="createdAt">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-mobile">Created At</th>
-      <td mat-cell *matCellDef="let row" class="hide-mobile">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Created At</th>
+      <td mat-cell *matCellDef="let row">
         {{ row.createdAt | date : "mediumDate" }}
       </td>
+    </ng-container>
+
+    <!-- Plan Expiry Column -->
+    <ng-container matColumnDef="planExpirationDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Plan Expiry</th>
+      <td mat-cell *matCellDef="let row">{{ row.planExpirationDate | planExpiryDisplay }}</td>
+    </ng-container>
+
+    <!-- Custom Expiry Column -->
+    <ng-container matColumnDef="userExpirationDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Custom Expiry</th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.userExpirationDate ? (row.userExpirationDate | date : "mediumDate") : '—' }}
+      </td>
+    </ng-container>
+
+    <!-- Deletion Column -->
+    <ng-container matColumnDef="deletionDate">
+      <th mat-header-cell *matHeaderCellDef>Deletion</th>
+      <td mat-cell *matCellDef="let row">{{ row | deletionDate }}</td>
     </ng-container>
 
     <!-- Actions Column -->

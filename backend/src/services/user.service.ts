@@ -25,11 +25,14 @@ export const creteShortLinkCheck = async (res: Response, userId: string) => {
   const isSubscribed = hasSubscriptionId ? await isUserSubscribed(user.subscription.subscriptionId) : false;
 
   if (!isSubscribed) {
-    return ServerResponse.serverError(
-      res,
-      403,
-      "You need to be subscribed to create more short links."
-    );
+    if (user.shortLinks.length >= 1) {
+      return ServerResponse.serverError(
+        res,
+        403,
+        "Upgrade your plan to create more links"
+      );
+    }
+    return true;
   }
 
   const maxLinksReached = await checkMaxLinks(userId);

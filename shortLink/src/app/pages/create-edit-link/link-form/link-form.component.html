@@ -83,7 +83,7 @@
         <input
           matInput
           [matDatepicker]="picker"
-          [formControl]="controls.expirationDate"
+          [formControl]="controls.userExpirationDate"
           [max]="expirationMaxDate()"
         />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -95,7 +95,7 @@
         <input
           matInput
           type="time"
-          [value]="controls.expirationDate.value | date : 'HH:mm'"
+          [value]="controls.userExpirationDate.value | date : 'HH:mm'"
         />
       </mat-form-field>
     </div>

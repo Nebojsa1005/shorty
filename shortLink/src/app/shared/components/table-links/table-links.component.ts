@@ -25,9 +25,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { CopyClipboardDirective } from '../../../directives/copy-clipboard.directive';
+import { PlanExpiryDisplayPipe } from '../../pipes/plan-expiry-display.pipe';
+import { DeletionDatePipe } from '../../pipes/deletion-date.pipe';
 import { UrlService } from '../../../services/url.service';
 import { LinkStatus } from '../../enums/link-status.enum';
-import { LinkExpirationInfoPipe } from '../../pipes/link-expiration-info.pipe';
 import { UrlLink } from '../../types/url.interface';
 import { ReactivateLinkDialogComponent } from '../reactivate-link-dialog/reactivate-link-dialog.component';
 
@@ -51,7 +52,8 @@ export interface ShortLink {
     DatePipe,
     MatTooltipModule,
     CopyClipboardDirective,
-    LinkExpirationInfoPipe,
+    PlanExpiryDisplayPipe,
+    DeletionDatePipe,
   ],
   templateUrl: './table-links.component.html',
   styleUrls: ['./table-links.component.scss'],
@@ -74,7 +76,7 @@ export class TableLinksComponent {
   total = computed(() => this.data()?.length ?? 0);
 
   dataSource = new MatTableDataSource<UrlLink>([])
-  displayedColumns = ['urlName', 'shortLink', 'status', 'createdAt', 'actions'];
+  displayedColumns = ['urlName', 'shortLink', 'status', 'createdAt', 'planExpirationDate', 'userExpirationDate', 'deletionDate', 'actions'];
 
   constructor() {
     // keep one dataSource; just replace its data when input changes

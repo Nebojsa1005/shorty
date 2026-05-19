@@ -14,10 +14,10 @@ export interface UrlDocument extends Document {
   suffix: string;
   security: SecurityOptions;
   password: string;
-  expirationDate: Date;
+  userExpirationDate: Date;
   status: LinkStatus;
   expiredAt: Date;
-  planExpiresAt: Date;
+  planExpirationDate: Date;
   deleteAfterExpiredDays: number;
   analytics: AnalyticsDocument;
   user: UserDocument;
@@ -49,7 +49,7 @@ const UrlSchema = new Schema<UrlDocument>({
   },
   password: { type: String },
   security: { type: Number },
-  expirationDate: { type: Date },
+  userExpirationDate: { type: Date },
   status: {
     type: String,
     enum: Object.values(LinkStatus),
@@ -57,14 +57,14 @@ const UrlSchema = new Schema<UrlDocument>({
     index: true,
   },
   expiredAt: { type: Date },
-  planExpiresAt: { type: Date },
+  planExpirationDate: { type: Date },
   deleteAfterExpiredDays: { type: Number },
   analytics: { type: Schema.Types.ObjectId, ref: "Analytics", required: true },
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });
 
-UrlSchema.index({ status: 1, expirationDate: 1 });
-UrlSchema.index({ status: 1, planExpiresAt: 1 });
+UrlSchema.index({ status: 1, userExpirationDate: 1 });
+UrlSchema.index({ status: 1, planExpirationDate: 1 });
 UrlSchema.index({ status: 1, expiredAt: 1 });
 
 UrlSchema.post("findOneAndDelete", async function (doc) {
