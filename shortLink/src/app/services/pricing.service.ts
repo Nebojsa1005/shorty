@@ -96,24 +96,6 @@ export class PricingService {
     );
   }
 
-  getInvoiceUrl(invoiceId: string) {
-    return this.http
-      .get<{ invoice_url: string }>(
-        `${environment.apiUrl}/api/billing/invoice/${invoiceId}`
-      )
-      .pipe(
-        map((res) => res.invoice_url),
-        catchError((error) => {
-          this.toastService.presentToast({
-            position: 'bottom',
-            message: error.error?.message || 'Failed to fetch invoice',
-            color: 'danger',
-          });
-          return EMPTY;
-        })
-      );
-  }
-
   // State updaters
   updateState<K extends keyof PricingState>(prop: K, value: PricingState[K]) {
     this.state.update((state) => ({
