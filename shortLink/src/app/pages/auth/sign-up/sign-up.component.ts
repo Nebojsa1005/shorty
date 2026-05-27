@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, computed, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, computed, inject } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -17,6 +17,7 @@ import { take } from 'rxjs';
 import { AuthService, UserCredentials } from '../../../services/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GoogleAuthService } from 'src/app/services/google-auth.service';
+import { SeoService } from 'src/app/core/services/seo.service';
 import gsap from 'gsap';
 import { prefersReducedMotion } from 'src/app/shared/utils/gsap-animations';
 
@@ -41,10 +42,11 @@ interface SignUpForm {
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.scss',
 })
-export class SignUpComponent implements AfterViewInit, OnDestroy {
+export class SignUpComponent implements OnInit, AfterViewInit, OnDestroy {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private googleAuthService = inject(GoogleAuthService);
+  private seo = inject(SeoService);
   private el = inject(ElementRef<HTMLElement>);
   private gsapCtx?: gsap.Context;
 
@@ -59,6 +61,13 @@ export class SignUpComponent implements AfterViewInit, OnDestroy {
     this.formGroup = this.fb.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
+    });
+  }
+
+  ngOnInit(): void {
+    this.seo.setPageSeo({
+      title: 'Create Free Account — Shorty',
+      description: 'Join Shorty for free. Create branded short links with custom suffixes, click analytics, password protection, and expiration dates.',
     });
   }
 

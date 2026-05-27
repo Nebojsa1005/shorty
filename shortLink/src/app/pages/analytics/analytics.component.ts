@@ -6,7 +6,6 @@ import { UrlService } from 'src/app/services/url.service';
 import { AnalyticsDataService } from 'src/app/services/analytics-data.service';
 import { PlanFeaturesService } from 'src/app/services/plan-features.service';
 import { BestPreformingComponent } from './best-preforming/best-preforming.component';
-import { TimeSpanComponent } from './time-span/time-span.component';
 import { OverviewCardsComponent } from './overview-cards/overview-cards.component';
 import { TopLinksComponent } from './top-links/top-links.component';
 import { DeviceBreakdownComponent } from './device-breakdown/device-breakdown.component';
@@ -21,7 +20,6 @@ import { prefersReducedMotion } from 'src/app/shared/utils/gsap-animations';
     RouterModule,
     CommonModule,
     BestPreformingComponent,
-    TimeSpanComponent,
     OverviewCardsComponent,
     TopLinksComponent,
     DeviceBreakdownComponent,

@@ -5,6 +5,7 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
   OnDestroy,
+  OnInit,
   computed,
   inject,
   signal,
@@ -18,33 +19,32 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { PricingService } from 'src/app/services/pricing.service';
 import { PricingPlan } from 'src/app/shared/enums/pricing.enum';
-import { IsSubscribedPipe } from 'src/app/shared/pipes/is-subscribed.pipe';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmationComponent } from './dialogs/confirmation/confirmation.component';
 import { SocketService } from 'src/app/services/socket.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { SeoService } from 'src/app/core/services/seo.service';
 
 @Component({
   selector: 'app-pricing',
   imports: [
     MatToolbarModule,
     MatButtonModule,
-    IsSubscribedPipe,
     CommonModule,
     MatProgressSpinnerModule,
     MatDialogModule,
     MatSnackBarModule,
-    ConfirmationComponent,
   ],
   templateUrl: './pricing.component.html',
   styleUrl: './pricing.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class PricingComponent implements AfterViewInit, OnDestroy {
+export class PricingComponent implements OnInit, AfterViewInit, OnDestroy {
   private pricingService = inject(PricingService);
   private authService = inject(AuthService);
   private socketService = inject(SocketService);
+  private seo = inject(SeoService);
   private router = inject(Router);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
@@ -60,13 +60,19 @@ export class PricingComponent implements AfterViewInit, OnDestroy {
   private currentDialogRef: MatDialogRef<ConfirmationComponent> | null = null;
   isCheckoutOpen = signal(false);
 
+  ngOnInit(): void {
+    this.seo.setPageSeo({
+      title: 'Pricing — Shorty',
+      description: 'Choose the plan that fits your needs. Essential, Pro, or Ultimate — Shorty has flexible pricing for every use case.',
+    });
+  }
+
   constructor() {
 
     // Listen for payment success
     this.socketService.paymentSuccess$
       .pipe(takeUntilDestroyed())
       .subscribe((data) => {
-        console.log('Payment success received:', data);
         if (this.currentDialogRef) {
           this.currentDialogRef.componentInstance.updateStatus('success', data.message);
           // Auto-close dialog after 3 seconds
@@ -86,7 +92,6 @@ export class PricingComponent implements AfterViewInit, OnDestroy {
     this.socketService.paymentFailed$
       .pipe(takeUntilDestroyed())
       .subscribe((data) => {
-        console.error('Payment failed received:', data);
         if (this.currentDialogRef) {
           this.currentDialogRef.componentInstance.updateStatus('failed', data.message);
         } else {
@@ -101,7 +106,6 @@ export class PricingComponent implements AfterViewInit, OnDestroy {
     this.socketService.subscriptionUpdated$
       .pipe(takeUntilDestroyed())
       .subscribe((data) => {
-        console.log('Subscription updated received:', data);
         // Close dialog if subscription is updated (created/cancelled)
         if (this.currentDialogRef &&
             (data.eventType === 'subscription_created' ||

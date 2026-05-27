@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { PersonalInfoPayload, PasswordUpdatePayload, User } from '../shared/types/user.type';
@@ -27,6 +28,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private toastService = inject(ToastService);
   private router = inject(Router);
+  private platformId = inject(PLATFORM_ID);
 
   state = signal<AuthState>({
     user: null,
@@ -41,6 +43,8 @@ export class AuthService {
   isSignUpButtonLoading = computed(() => this.state().isSignUpButtonLoading);
 
   constructor() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     // Migration: move old 'User' JSON object to new 'UserId' string
     const oldUserRaw = localStorage.getItem('User');
     if (oldUserRaw) {
@@ -86,7 +90,9 @@ export class AuthService {
           this.state.update((state) => ({ ...state, userLoading: false }));
         }),
         catchError(() => {
-          localStorage.removeItem(LocalStorageKeys.USER_ID);
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.removeItem(LocalStorageKeys.USER_ID);
+          }
           this.updateUser(null);
           this.state.update((state) => ({ ...state, userLoading: false }));
           return of(null);
@@ -162,15 +168,20 @@ export class AuthService {
   }
 
   saveUserIdToLocalStorage(userId: string) {
-    localStorage.setItem(LocalStorageKeys.USER_ID, userId);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(LocalStorageKeys.USER_ID, userId);
+    }
   }
 
   getUserIdFromLocalStorage(): string | null {
+    if (!isPlatformBrowser(this.platformId)) return null;
     return localStorage.getItem(LocalStorageKeys.USER_ID);
   }
 
   logout() {
-    localStorage.removeItem(LocalStorageKeys.USER_ID);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(LocalStorageKeys.USER_ID);
+    }
     this.updateUser(null);
     this.router.navigate(['auth/sign-in']);
   }

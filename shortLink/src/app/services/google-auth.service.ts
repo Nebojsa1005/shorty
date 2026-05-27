@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser, DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { catchError, of, take, tap } from 'rxjs';
@@ -18,16 +19,20 @@ export class GoogleAuthService {
   private router = inject(Router);
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
+  private platformId = inject(PLATFORM_ID);
+  private doc = inject(DOCUMENT);
 
   async initializeGoogleSignIn() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     await google.accounts.id.initialize({
       client_id: `${environment.oAuthClientId}`,
       callback: (response: any) => this.handleCredentialResponse(response),
     });
 
     await google.accounts.id.renderButton(
-      document.getElementById('google-signin-button'),
-      { theme: 'outline', size: 'large' } // customization attributes
+      this.doc.getElementById('google-signin-button'),
+      { theme: 'outline', size: 'large' }
     );
 
   }

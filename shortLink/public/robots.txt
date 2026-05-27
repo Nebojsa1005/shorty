@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /landing
+Allow: /auth/sign-up
+
+Disallow: /auth/sign-in
+Disallow: /all-links
+Disallow: /analytics
+Disallow: /profile
+Disallow: /coming-soon
+
+# Update this URL to match your deployed domain
+Sitemap: https://YOUR_NETLIFY_URL/sitemap.xml

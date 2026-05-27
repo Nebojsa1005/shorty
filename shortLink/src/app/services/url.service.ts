@@ -67,10 +67,6 @@ export class UrlService {
 
   // State updaters
   updateState<K extends keyof UrlState>(prop: K, value: UrlState[K]) {
-    console.log({
-      prop, value
-    });
-    
     this.state.update((state) => ({
       ...state,
       [prop]: value,

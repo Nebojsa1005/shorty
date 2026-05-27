@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, computed, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, computed, inject } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -17,6 +17,7 @@ import { RouterLink, RouterModule } from '@angular/router';
 import { take } from 'rxjs';
 import { GoogleAuthService } from 'src/app/services/google-auth.service';
 import { AuthService, UserCredentials } from '../../../services/auth.service';
+import { SeoService } from 'src/app/core/services/seo.service';
 import gsap from 'gsap';
 import { prefersReducedMotion } from 'src/app/shared/utils/gsap-animations';
 
@@ -42,10 +43,11 @@ interface LoginForm {
   templateUrl: './sign-in.component.html',
   styleUrl: './sign-in.component.scss',
 })
-export class SignInComponent implements AfterViewInit, OnDestroy {
+export class SignInComponent implements OnInit, AfterViewInit, OnDestroy {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private googleAuthService = inject(GoogleAuthService);
+  private seo = inject(SeoService);
   private el = inject(ElementRef<HTMLElement>);
   private gsapCtx?: gsap.Context;
 
@@ -70,6 +72,14 @@ export class SignInComponent implements AfterViewInit, OnDestroy {
     this.formGroup = this.fb.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(4)]],
+    });
+  }
+
+  ngOnInit(): void {
+    this.seo.setPageSeo({
+      title: 'Sign In — Shorty',
+      description: 'Sign in to your Shorty account to manage your short links, view analytics, and more.',
+      noindex: true,
     });
   }
 

@@ -4,8 +4,10 @@ import {
   Component,
   ElementRef,
   OnDestroy,
+  PLATFORM_ID,
   inject,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import gsap from 'gsap';
 import { prefersReducedMotion } from 'src/app/shared/utils/gsap-animations';
@@ -29,6 +31,7 @@ export interface PlanTeaser {
 })
 export class PricingTeaserComponent implements AfterViewInit, OnDestroy {
   private el = inject(ElementRef<HTMLElement>);
+  private platformId = inject(PLATFORM_ID);
   private gsapCtx?: gsap.Context;
   private observer?: IntersectionObserver;
 
@@ -60,6 +63,8 @@ export class PricingTeaserComponent implements AfterViewInit, OnDestroy {
   ];
 
   ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     this.observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {

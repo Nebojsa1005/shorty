@@ -2,8 +2,6 @@ import { Component, computed, DestroyRef, inject, input, signal, OnInit } from '
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 import { PricingService } from 'src/app/services/pricing.service';
 import { BillingHistoryItemComponent } from '../billing-history-item/billing-history-item.component';
 
@@ -12,8 +10,6 @@ import { BillingHistoryItemComponent } from '../billing-history-item/billing-his
   imports: [
     CommonModule,
     MatProgressSpinner,
-    MatIconButton,
-    MatIcon,
     BillingHistoryItemComponent,
   ],
   templateUrl: './billing-history-list.component.html',
