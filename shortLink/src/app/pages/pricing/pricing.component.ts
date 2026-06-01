@@ -62,8 +62,8 @@ export class PricingComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.seo.setPageSeo({
-      title: 'Pricing — Shorty',
-      description: 'Choose the plan that fits your needs. Essential, Pro, or Ultimate — Shorty has flexible pricing for every use case.',
+      title: 'Pricing — Minculum',
+      description: 'Choose the plan that fits your needs. Essential, Pro, or Ultimate — Minculum has flexible pricing for every use case.',
     });
   }
 

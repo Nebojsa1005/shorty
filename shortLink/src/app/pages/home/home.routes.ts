@@ -64,6 +64,11 @@ export const homeRoutes: Routes = [
             (m) => m.ViewLinkComponent
           ),
       },
+      {
+        path: '**',
+        pathMatch: 'full',
+        redirectTo: 'all-links',
+      }
     ],
   },
 ];

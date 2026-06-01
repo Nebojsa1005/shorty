@@ -5,10 +5,11 @@
         mat-flat-button
         color="primary"
         class="add-new-link-btn"
+        [disabled]="!canCreateLink()"
         (click)="newLink()"
       >
         <mat-icon class="material-symbols-outlined">add</mat-icon>
-        Add New Minified Link
+        Add New Link
       </button>
     </div>
 

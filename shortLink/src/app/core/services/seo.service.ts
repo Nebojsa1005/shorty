@@ -10,7 +10,7 @@ export interface SeoConfig {
   noindex?: boolean;
 }
 
-const SITE_NAME = 'Shorty';
+const SITE_NAME = 'Minculum';
 const DEFAULT_OG_IMAGE = '/assets/og-image.png';
 
 @Injectable({ providedIn: 'root' })

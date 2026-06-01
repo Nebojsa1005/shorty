@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, output } from '@angular/core';
+import { Component, computed, inject, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -26,6 +26,7 @@ export class SideMenuComponent {
   private router = inject(Router);
 
   environment = environment; // FEATURE FLAG
+  canCreateLink = computed(() => this.urlService.canCreateLink());
 
   itemClicked = output<void>();
   constructor() {

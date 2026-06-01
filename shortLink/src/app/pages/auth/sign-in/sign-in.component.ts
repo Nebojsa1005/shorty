@@ -77,8 +77,8 @@ export class SignInComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.seo.setPageSeo({
-      title: 'Sign In — Shorty',
-      description: 'Sign in to your Shorty account to manage your short links, view analytics, and more.',
+      title: 'Sign In — Minculum',
+      description: 'Sign in to your Minculum account to manage your short links, view analytics, and more.',
       noindex: true,
     });
   }

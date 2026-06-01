@@ -98,7 +98,7 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.seo.setPageSeo({
-      title: 'Shorty — Create Branded Short Links in Seconds',
+      title: 'Minculum — Create Branded Short Links in Seconds',
       description: 'Shorten URLs, track clicks, and analyze your audience. Create custom short links with powerful analytics, password protection, and expiration dates.',
     });
 
@@ -110,19 +110,19 @@ export class LandingComponent implements OnInit, OnDestroy {
           '@type': 'WebSite',
           '@id': `${origin}/#website`,
           url: `${origin}/`,
-          name: 'Shorty',
+          name: 'Minculum',
           description: 'URL shortener with analytics, password protection, and custom link management.',
         },
         {
           '@type': 'Organization',
           '@id': `${origin}/#organization`,
-          name: 'Shorty',
+          name: 'Minculum',
           url: `${origin}/`,
           logo: `${origin}/assets/logo.png`,
         },
         {
           '@type': 'SoftwareApplication',
-          name: 'Shorty',
+          name: 'Minculum',
           applicationCategory: 'UtilitiesApplication',
           operatingSystem: 'Web',
           offers: {

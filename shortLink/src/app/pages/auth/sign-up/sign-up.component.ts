@@ -66,8 +66,8 @@ export class SignUpComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.seo.setPageSeo({
-      title: 'Create Free Account — Shorty',
-      description: 'Join Shorty for free. Create branded short links with custom suffixes, click analytics, password protection, and expiration dates.',
+      title: 'Create Free Account — Minculum',
+      description: 'Join Minculum for free. Create branded short links with custom suffixes, click analytics, password protection, and expiration dates.',
     });
   }
 
