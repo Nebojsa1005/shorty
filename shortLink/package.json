@@ -1,10 +1,10 @@
 {
-  "name": "short-link",
-  "version": "0.0.0",
+  "name": "minculum",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start:ssr": "ng build && node dist/short-link/server/server.mjs",
+    "start:ssr": "ng build && node dist/minculum/server/server.mjs",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
