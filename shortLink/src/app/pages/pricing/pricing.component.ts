@@ -145,6 +145,11 @@ export class PricingComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onBuyNow(buyNowUrl: string) {
+    if (!this.user()) {
+      this.router.navigate(['/auth/sign-in']);
+      return;
+    }
+
     if (this.isCheckoutOpen()) return;
 
     this.isCheckoutOpen.set(true);

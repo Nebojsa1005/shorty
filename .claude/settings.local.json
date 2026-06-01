@@ -21,7 +21,9 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:docs.lemonsqueezy.com)",
       "WebFetch(domain:www.postman.com)",
-      "Bash(grep -E \"\\\\.\\(scss|css\\)$\")"
+      "Bash(grep -E \"\\\\.\\(scss|css\\)$\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\lazar\\\\Desktop\\\\projects\\\\short-link\\\\shorty\\\\shortLink\\\\src\\\\app\" -Recurse -Name -File)",
+      "Bash(Find C:\\\\Users\\\\lazar\\\\Desktop\\\\projects\\\\short-link\\\\shorty\\\\shortLink\\\\src\\\\app\\\\services *)"
     ]
   }
 }

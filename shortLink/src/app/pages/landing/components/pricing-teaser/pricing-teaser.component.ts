@@ -41,7 +41,7 @@ export class PricingTeaserComponent implements AfterViewInit, OnDestroy {
       price: '$9',
       period: '/mo',
       description: 'For individuals and small projects.',
-      features: ['50 short links', 'Click analytics', 'Custom slugs', 'CSV export'],
+      features: ['50 short links', 'Click analytics', 'Custom slugs'],
       featured: false,
     },
     {

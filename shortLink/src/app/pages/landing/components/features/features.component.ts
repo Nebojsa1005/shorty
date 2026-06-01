@@ -54,12 +54,6 @@ export class FeaturesComponent implements AfterViewInit, OnDestroy {
         'Add a password to any link to keep private content away from unintended audiences.',
     },
     {
-      icon: 'download',
-      title: 'Export reports',
-      description:
-        'Download CSV exports of your analytics data to share with your team or run further analysis.',
-    },
-    {
       icon: 'zap',
       title: 'Instant redirects',
       description:
