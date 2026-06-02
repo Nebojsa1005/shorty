@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { toObservable } from '@angular/core/rxjs-interop';
@@ -13,12 +13,11 @@ export class AuthGuard {
   private authService = inject(AuthService);
   private userLoading$ = toObservable(this.authService.userLoading);
 
-  canActivate(): boolean | Observable<boolean> {
+  canActivate(): boolean | UrlTree | Observable<boolean | UrlTree> {
     const userId = this.authService.getUserIdFromLocalStorage();
 
     if (!userId) {
-      this.router.navigate(['landing']);
-      return false;
+      return this.router.createUrlTree(['landing']);
     }
 
     if (this.authService.user()) {
@@ -32,13 +31,11 @@ export class AuthGuard {
           if (this.authService.user()) {
             return true;
           }
-          this.router.navigate(['auth/sign-in']);
-          return false;
+          return this.router.createUrlTree(['auth/sign-in']);
         })
       );
     }
 
-    this.router.navigate(['auth/sign-in']);
-    return false;
+    return this.router.createUrlTree(['auth/sign-in']);
   }
 }

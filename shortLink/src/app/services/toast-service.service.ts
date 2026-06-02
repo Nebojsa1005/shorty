@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import {
   MatSnackBar,
   MatSnackBarConfig,
@@ -18,8 +19,10 @@ interface ToastPayload {
 @Injectable({ providedIn: 'root' })
 export class ToastService {
   private snackBar = inject(MatSnackBar);
+  private platformId = inject(PLATFORM_ID);
 
   presentToast({ position = 'bottom', message, duration = ToastDuration.MEDIUM, color }: ToastPayload) {
+    if (!isPlatformBrowser(this.platformId)) return;
     const config: MatSnackBarConfig = {
       duration,
       verticalPosition: position as MatSnackBarVerticalPosition,

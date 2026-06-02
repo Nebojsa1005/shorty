@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "start:ssr": "ng build && node dist/minculum/server/server.mjs",
+    "serve:ssr": "node dist/minculum/server/server.mjs",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

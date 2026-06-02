@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 import { CopyClipboardDirective } from 'src/app/directives/copy-clipboard.directive';
 import { AnalyticsDataService } from 'src/app/services/analytics-data.service';
+import { SeoService } from 'src/app/core/services/seo.service';
 import { LinkAnalyticsData } from 'src/app/shared/types/analytics.interface';
 import {
   D3LineChartComponent,
@@ -42,10 +43,11 @@ import {
   templateUrl: './link-analytics.component.html',
   styleUrl: './link-analytics.component.scss',
 })
-export class LinkAnalyticsComponent {
+export class LinkAnalyticsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private analyticsService = inject(AnalyticsDataService);
+  private seo = inject(SeoService);
   private destroyRef = inject(DestroyRef);
 
   loading = signal(true);
@@ -97,6 +99,15 @@ export class LinkAnalyticsComponent {
       .sort((a, b) => a.count - b.count)
       .map((b) => ({ name: b._id, value: b.count }));
   });
+
+  ngOnInit(): void {
+    this.seo.updateMeta({
+      title: 'Link Analytics — Minculum',
+      description: 'Detailed click analytics for a specific short link including views, devices, browsers, and geographic data.',
+      keywords: 'link analytics, click tracking, URL statistics',
+      noindex: true,
+    });
+  }
 
   constructor() {
     const linkId = this.route.snapshot.queryParamMap.get('linkId');

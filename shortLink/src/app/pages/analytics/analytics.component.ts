@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, DestroyRef, ElementRef, OnDestroy, computed, inject } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, OnDestroy, OnInit, computed, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { UrlService } from 'src/app/services/url.service';
@@ -13,6 +13,7 @@ import { LocationBreakdownComponent } from './location-breakdown/location-breakd
 import { UpgradePromptComponent } from 'src/app/shared/components/upgrade-prompt/upgrade-prompt.component';
 import gsap from 'gsap';
 import { prefersReducedMotion } from 'src/app/shared/utils/gsap-animations';
+import { SeoService } from 'src/app/core/services/seo.service';
 
 @Component({
   selector: 'app-analytics',
@@ -29,11 +30,12 @@ import { prefersReducedMotion } from 'src/app/shared/utils/gsap-animations';
   templateUrl: './analytics.component.html',
   styleUrl: './analytics.component.scss',
 })
-export class AnalyticsComponent implements AfterViewInit, OnDestroy {
+export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
   private urlService = inject(UrlService);
   private analyticsDataService = inject(AnalyticsDataService);
   private destroyRef = inject(DestroyRef);
   private planFeaturesService = inject(PlanFeaturesService);
+  private seo = inject(SeoService);
   private el = inject(ElementRef<HTMLElement>);
   private gsapCtx?: gsap.Context;
 
@@ -60,6 +62,15 @@ export class AnalyticsComponent implements AfterViewInit, OnDestroy {
   constructor() {
     this.urlService.fetchAllUrls().pipe(takeUntilDestroyed()).subscribe();
     this.analyticsDataService.fetchAll().pipe(takeUntilDestroyed()).subscribe();
+  }
+
+  ngOnInit(): void {
+    this.seo.updateMeta({
+      title: 'Analytics — Minculum',
+      description: 'View click analytics, top-performing links, device breakdown, and location data for all your short links.',
+      keywords: 'link analytics, click tracking, URL statistics',
+      noindex: true,
+    });
   }
 
   ngAfterViewInit(): void {

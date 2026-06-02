@@ -5,6 +5,7 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 export interface SeoConfig {
   title: string;
   description: string;
+  keywords?: string;
   ogImage?: string;
   canonicalUrl?: string;
   noindex?: boolean;
@@ -24,6 +25,9 @@ export class SeoService {
     this.titleService.setTitle(config.title);
 
     this.meta.updateTag({ name: 'description', content: config.description });
+    if (config.keywords) {
+      this.meta.updateTag({ name: 'keywords', content: config.keywords });
+    }
     this.meta.updateTag({ property: 'og:title', content: config.title });
     this.meta.updateTag({ property: 'og:description', content: config.description });
     this.meta.updateTag({ property: 'og:site_name', content: SITE_NAME });
@@ -40,6 +44,10 @@ export class SeoService {
       this.meta.updateTag({ property: 'og:url', content: url });
       this.setCanonicalLink(url);
     }
+  }
+
+  updateMeta(config: SeoConfig): void {
+    this.setPageSeo(config);
   }
 
   private setCanonicalLink(url: string): void {

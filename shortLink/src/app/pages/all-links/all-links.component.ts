@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, computed, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, computed, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,6 +16,7 @@ import { PlanFeaturesService } from '../../services/plan-features.service';
 import { TableLinksComponent } from '../../shared/components/table-links/table-links.component';
 import gsap from 'gsap';
 import { prefersReducedMotion } from 'src/app/shared/utils/gsap-animations';
+import { SeoService } from 'src/app/core/services/seo.service';
 
 @Component({
   selector: 'app-all-links',
@@ -34,10 +35,11 @@ import { prefersReducedMotion } from 'src/app/shared/utils/gsap-animations';
   templateUrl: './all-links.component.html',
   styleUrl: './all-links.component.scss',
 })
-export class AllLinksComponent implements AfterViewInit, OnDestroy {
+export class AllLinksComponent implements OnInit, AfterViewInit, OnDestroy {
   private urlService = inject(UrlService);
   private socketService = inject(SocketService);
   private planFeatures = inject(PlanFeaturesService);
+  private seo = inject(SeoService);
   private el = inject(ElementRef<HTMLElement>);
   private gsapCtx?: gsap.Context;
 
@@ -70,6 +72,15 @@ export class AllLinksComponent implements AfterViewInit, OnDestroy {
         takeUntilDestroyed()
       )
       .subscribe();
+  }
+
+  ngOnInit(): void {
+    this.seo.updateMeta({
+      title: 'My Links — Minculum',
+      description: 'Manage all your shortened links. View, edit, and track performance in one place.',
+      keywords: 'short links, URL management, link dashboard',
+      noindex: true,
+    });
   }
 
   ngAfterViewInit(): void {
