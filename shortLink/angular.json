@@ -25,6 +25,7 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/assets",
+              "src/sitemap.xml",
               {
                 "glob": "**/*",
                 "input": "public"
