@@ -1,7 +1,7 @@
 import { compare, hash } from "bcrypt";
 import * as dotenv from "dotenv";
 import { Express, Request, Response } from "express";
-import { nanoid } from "nanoid";
+import { generateUniqueShortLinkId } from "../utils/generate-short-link-id";
 import { UrlModel } from "../models/url.model";
 import { UserModel } from "../models/user.model";
 import {
@@ -146,7 +146,7 @@ const urlRoutes = (app: Express) => {
         const suffix = formData.suffix;
         const security = formData.security;
         const userExpirationDate = formData.userExpirationDate;
-        const shortLinkId = nanoid(10);
+        const shortLinkId = await generateUniqueShortLinkId();
 
         const shortLink = `${BASE_URL}${
           suffix ? "/" + suffix : ""
@@ -335,7 +335,7 @@ const urlRoutes = (app: Express) => {
         ? new Date(Date.now() + expirationConfig.planExpirationDays * 86400000)
         : undefined;
 
-      const shortLinkId = nanoid(10);
+      const shortLinkId = await generateUniqueShortLinkId();
       const shortLink = `${BASE_URL}${
         original.suffix ? "/" + original.suffix : ""
       }/${shortLinkId}`;
