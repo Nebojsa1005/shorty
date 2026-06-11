@@ -161,8 +161,15 @@ const urlRoutes = (app: Express) => {
         try {
 
           const check = await creteShortLinkCheck(res, userId);
-          if (check !== true) {
+          if (!check) {
             return;
+          }
+
+          // Enforce Essential-tier restrictions for free trial users
+          if (check.isFreeTrialUser) {
+            formData.security = SecurityOptions.NONE;
+            formData.password = '';
+            formData.userExpirationDate = null;
           }
 
           // Look up user's subscription to get plan-based expiration config
@@ -172,7 +179,7 @@ const urlRoutes = (app: Express) => {
           const planFeatures = getPlanFeaturesForProduct(productId);
 
           // 1. Password protection check
-          if (security === SecurityOptions.PASSWORD && !planFeatures.canUsePassword) {
+          if (formData.security === SecurityOptions.PASSWORD && !planFeatures.canUsePassword) {
             return ServerResponse.serverError(res, 403, "Password protection requires a Pro or Ultimate plan");
           }
 
@@ -182,14 +189,14 @@ const urlRoutes = (app: Express) => {
           }
 
           // 3. Custom expiration date range check
-          if (userExpirationDate && planFeatures.maxExpirationDays !== null) {
+          if (formData.userExpirationDate && planFeatures.maxExpirationDays !== null) {
             const maxMs = planFeatures.maxExpirationDays * 86400000;
-            if (new Date(userExpirationDate).getTime() - Date.now() > maxMs) {
+            if (new Date(formData.userExpirationDate).getTime() - Date.now() > maxMs) {
               return ServerResponse.serverError(res, 403, `Expiration date cannot exceed ${planFeatures.maxExpirationDays} days on your plan`);
             }
           }
 
-          const planExpirationDate = userExpirationDate
+          const planExpirationDate = formData.userExpirationDate
             ? null  // user set a custom expiration date → skip plan-based expiration
             : expirationConfig.planExpirationDays != null
               ? new Date(Date.now() + expirationConfig.planExpirationDays * 86400000)
@@ -202,15 +209,16 @@ const urlRoutes = (app: Express) => {
             shortLink,
             urlName: formData.urlName,
             suffix,
-            password,
-            userExpirationDate,
-            security,
+            password: formData.security === SecurityOptions.PASSWORD ? password : '',
+            userExpirationDate: formData.userExpirationDate,
+            security: formData.security,
             analytics: analytics._id,
             user: userId,
             shortLinkId,
             status: LinkStatus.ACTIVE,
             planExpirationDate,
-            deleteAfterExpiredDays: expirationConfig.deleteAfterExpiredDays,
+            isFreeTrialLink: check.isFreeTrialUser,
+            deleteAfterExpiredDays: check.isFreeTrialUser ? 0 : expirationConfig.deleteAfterExpiredDays,
           });
 
           await updateUserShortLinks(userId, url._id);

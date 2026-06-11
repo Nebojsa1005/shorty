@@ -19,7 +19,7 @@ export const populateUserSubscription = async (userId: string) => {
   return user.populate("subscription");
 };
 
-export const creteShortLinkCheck = async (res: Response, userId: string) => {
+export const creteShortLinkCheck = async (res: Response, userId: string): Promise<{ allowed: true; isFreeTrialUser: boolean } | void> => {
   const user = await populateUserSubscription(userId);
   const hasSubscriptionId = user.subscription?.subscriptionId;
   const isSubscribed = hasSubscriptionId ? await isUserSubscribed(user.subscription.subscriptionId) : false;
@@ -29,10 +29,10 @@ export const creteShortLinkCheck = async (res: Response, userId: string) => {
       return ServerResponse.serverError(
         res,
         403,
-        "Upgrade your plan to create more links"
+        "Your free trial link has already been used. Subscribe to create more links."
       );
     }
-    return true;
+    return { allowed: true, isFreeTrialUser: true };
   }
 
   const maxLinksReached = await checkMaxLinks(userId);
@@ -45,5 +45,5 @@ export const creteShortLinkCheck = async (res: Response, userId: string) => {
     );
   }
 
-  return true
+  return { allowed: true, isFreeTrialUser: false };
 };

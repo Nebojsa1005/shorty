@@ -19,6 +19,7 @@ export interface UrlDocument extends Document {
   expiredAt: Date;
   planExpirationDate: Date;
   deleteAfterExpiredDays: number;
+  isFreeTrialLink: boolean;
   analytics: AnalyticsDocument;
   user: UserDocument;
 }
@@ -59,6 +60,7 @@ const UrlSchema = new Schema<UrlDocument>({
   expiredAt: { type: Date },
   planExpirationDate: { type: Date },
   deleteAfterExpiredDays: { type: Number },
+  isFreeTrialLink: { type: Boolean, default: false },
   analytics: { type: Schema.Types.ObjectId, ref: "Analytics", required: true },
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
 });

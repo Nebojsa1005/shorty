@@ -10,6 +10,12 @@
       [isEdit]="isEdit ?? false"
     />
 
+    @if (planNotice()) {
+      <div class="plan-notice" [class.plan-notice--warning]="planNotice()!.warning">
+        {{ planNotice()!.message }}
+      </div>
+    }
+
     <div class="actions-row">
       <button
         mat-flat-button

@@ -33,7 +33,7 @@
     <span class="usage-badge">
       {{ linksUsed() }} / {{ linksAllowed() !== null ? linksAllowed() : 'Unlimited' }} links
     </span>
-    <button mat-flat-button color="primary" [disabled]="!canCreateLink()" (click)="newLink()"> <mat-icon>add</mat-icon> New Link</button>
+    <button mat-flat-button color="primary" (click)="newLink()"> <mat-icon>add</mat-icon> New Link</button>
   </div>
 </div>
 

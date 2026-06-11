@@ -36,6 +36,20 @@ export class CreateEditLinkComponent {
 
   idToEdit = computed(() => this.urlService.idToEdit());
 
+  planNotice = computed((): { message: string; warning: boolean } | null => {
+    if (this.isEdit) return null;
+    const user = this.urlService.user();
+    const hasSubscription = !!user?.subscription?.subscriptionId;
+    const hasLinks = this.urlService.allUrls().length > 0;
+    if (!hasSubscription && !hasLinks) {
+      return { message: 'You can create your first link for free! Try it out before subscribing.', warning: false };
+    }
+    if (!this.canCreateLink()) {
+      return { message: 'You have no available links. Please upgrade your plan.', warning: true };
+    }
+    return null;
+  });
+
   constructor() {
     effect(() => {
       const idToEdit = this.idToEdit();
@@ -47,16 +61,6 @@ export class CreateEditLinkComponent {
           .getShortLinkById(this.id)
           .pipe(take(1))
           .subscribe((e) => (this.existingLink = e?.data));
-      }
-    });
-
-    effect(() => {
-      if (!this.canCreateLink() && !this.isEdit) {
-        this.toastService.presentToast({
-          position: 'bottom',
-          message: 'You have no available links. Please upgrade your plan.',
-          color: 'warning',
-        });
       }
     });
   }

@@ -60,9 +60,11 @@ export class UrlService {
   isCreateEditLinkDrawerOpened = computed(() => this.state().isCreateEditLinkDrawerOpened)
   idToEdit = computed(() => this.state().idToEdit)
   canCreateLink = computed(() => {
-    const linksAllowed = this.user()?.subscription?.linksAllowed ?? 0;
+    const user = this.user();
+    const linksAllowed = user?.subscription?.linksAllowed ?? 0;
     const currentLinkCount = this.allUrls().length;
-    return currentLinkCount < linksAllowed;
+    const isFreeTrialEligible = !user?.subscription?.subscriptionId && currentLinkCount === 0;
+    return currentLinkCount < linksAllowed || isFreeTrialEligible;
   });
 
   // State updaters
