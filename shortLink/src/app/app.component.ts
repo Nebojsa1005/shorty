@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, computed, effect, inject, PLATFORM_ID } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { SocketService } from './services/socket.service';
 import { AuthService } from './services/auth.service';
@@ -40,8 +40,12 @@ export class AppComponent {
 
   user = computed(() => this.authService.user());
 
+  private platformId = inject(PLATFORM_ID);
+
   constructor() {
-    this.pricingService.getAllProducts().pipe(takeUntilDestroyed()).subscribe();
+    if (isPlatformBrowser(this.platformId)) {
+      this.pricingService.getAllProducts().pipe(takeUntilDestroyed()).subscribe();
+    }
 
     effect(() => {
       const user = this.user();
