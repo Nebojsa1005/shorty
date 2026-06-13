@@ -1,4 +1,5 @@
 {
+  "outputDirectory": "dist/minculum/browser",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
